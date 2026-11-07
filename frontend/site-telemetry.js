@@ -47,6 +47,8 @@
 
   function start() {
     if (!/^https?:$/.test(window.location.protocol) || window.location.pathname.startsWith('/api/')) return;
+    const testMode = new URLSearchParams(window.location.search).get('internal_test') === '1';
+    if (testMode || window.navigator.webdriver === true) return;
     sessionId = getSessionId();
     if (!sessionId) return;
     send('pageview', true);

@@ -3,6 +3,7 @@ AUTOProfit AI - GitHub Web Factory Tools Library
 Generates 10+ turnkey interactive client-side web tools with built-in monetization slots.
 """
 import sys
+import html
 from pathlib import Path
 from typing import Dict, List, Any
 import json
@@ -23,7 +24,6 @@ TOOL_DEFINITIONS = [
         "category": "Developer & SEO Utilities",
         "price_usd": 2.99,
         "price_vnd": 70000,
-        "stars": 1420,
         "description": "Format, validate and minify JSON data, generate Schema.org JSON-LD for SEO rich snippets instantly.",
         "icon": "⚡"
     },
@@ -33,7 +33,6 @@ TOOL_DEFINITIONS = [
         "category": "Marketing & Social Growth",
         "price_usd": 1.99,
         "price_vnd": 50000,
-        "stars": 890,
         "description": "Preview and generate Facebook, Twitter, Discord, and Google Rich Snippet meta tags in 1 click.",
         "icon": "🌐"
     },
@@ -43,7 +42,6 @@ TOOL_DEFINITIONS = [
         "category": "E-Commerce & Fintech",
         "price_usd": 3.49,
         "price_vnd": 85000,
-        "stars": 2350,
         "description": "Generate zero-fee Napas247 VietQR codes and Binance USDT BEP20 deep-links with custom amounts.",
         "icon": "💳"
     },
@@ -53,7 +51,6 @@ TOOL_DEFINITIONS = [
         "category": "AI & Developer Tools",
         "price_usd": 2.49,
         "price_vnd": 60000,
-        "stars": 3100,
         "description": "Calculate exact token count, input/output cost estimates across GPT-4o, Claude 3.5 Sonnet, and Gemini 2.0 Flash.",
         "icon": "🤖"
     },
@@ -63,7 +60,6 @@ TOOL_DEFINITIONS = [
         "category": "Web3 & Crypto Tools",
         "price_usd": 4.99,
         "price_vnd": 120000,
-        "stars": 4200,
         "description": "Simulate and scan real-time crypto price spreads between Binance, Bybit, Uniswap, and PancakeSwap with gas estimation.",
         "icon": "📈"
     },
@@ -73,7 +69,6 @@ TOOL_DEFINITIONS = [
         "category": "Web3 & Crypto Tools",
         "price_usd": 2.99,
         "price_vnd": 70000,
-        "stars": 1150,
         "description": "Calculate daily/monthly/annual staking compound returns with flexible APY and inflation adjustments.",
         "icon": "🪙"
     },
@@ -83,7 +78,6 @@ TOOL_DEFINITIONS = [
         "category": "Cybersecurity & Privacy",
         "price_usd": 1.99,
         "price_vnd": 50000,
-        "stars": 980,
         "description": "Test password strength, bits of entropy, and crack time estimates with 100% offline client-side evaluation.",
         "icon": "🔒"
     },
@@ -93,7 +87,6 @@ TOOL_DEFINITIONS = [
         "category": "Data & Automation",
         "price_usd": 2.99,
         "price_vnd": 70000,
-        "stars": 1820,
         "description": "Parse large CSV tables, clean encoding, remove duplicates, and export valid JSON or sanitized Excel.",
         "icon": "📊"
     },
@@ -103,7 +96,6 @@ TOOL_DEFINITIONS = [
         "category": "Frontend UI / UX",
         "price_usd": 1.99,
         "price_vnd": 50000,
-        "stars": 2400,
         "description": "Visual drag-and-drop frosted glass CSS backdrop-filter generator with instant copy-paste HTML/CSS.",
         "icon": "🎨"
     },
@@ -113,7 +105,6 @@ TOOL_DEFINITIONS = [
         "category": "Web3 & Crypto Tools",
         "price_usd": 3.99,
         "price_vnd": 95000,
-        "stars": 3600,
         "description": "Track high-potential Layer-2 and testnet quests (Scroll, Berachain, Monad) with step-by-step checklist.",
         "icon": "🚀"
     },
@@ -123,7 +114,6 @@ TOOL_DEFINITIONS = [
         "category": "Developer & AI Writing Tools",
         "price_usd": 2.49,
         "price_vnd": 60000,
-        "stars": 0,
         "description": "Convert Markdown into safe standalone HTML and format reusable prompt notes locally in your browser.",
         "icon": "✍️"
     },
@@ -133,7 +123,6 @@ TOOL_DEFINITIONS = [
         "category": "Business & Productivity",
         "price_usd": 1.99,
         "price_vnd": 50000,
-        "stars": 0,
         "description": "Estimate SaaS acquisition payback and LTV-to-CAC from your inputs, with a configurable Pomodoro plan.",
         "icon": "⏱️"
     }
@@ -222,7 +211,7 @@ def _tool_processor_js(slug: str) -> str:
         const account = String(data.account || data.account_number || '').replace(/\s+/g, '');
         const amount = Math.floor(Number(data.amount));
         if (!/^[A-Za-z0-9]{2,12}$/.test(bank) || !/^\d{6,20}$/.test(account) || !Number.isFinite(amount) || amount <= 0) {
-          throw new Error('Nhập bank, account và amount hợp lệ. Ví dụ: {"bank":"MB","account":"0123456789","amount":50000,"name":"NGUYEN VAN A","memo":"ORDER-01"}.');
+          throw new Error('Nhập bank, account và amount hợp lệ. Ví dụ: {"bank":"MB","account":"123456","amount":50000,"name":"NGUYEN VAN A","memo":"ORDER-01"}.');
         }
         const name = String(data.name || '').trim();
         const memo = String(data.memo || '').trim();
@@ -463,6 +452,24 @@ def generate_tool_html(tool: Dict[str, Any]) -> str:
     price_vnd = tool["price_vnd"]
     desc = tool["description"]
     processor_js = _tool_processor_js(slug)
+    # Generated apps are public static pages. Never embed the owner's payout
+    # destinations in generated HTML; users of the standalone VietQR tool
+    # enter their own destination in the tool itself.
+    bank_markup = '<p style="color:#fbbf24;">Thanh toán chưa được cấu hình cho trang công cụ này.</p>'
+    payment_select = '<option value="" selected>Chưa cấu hình thanh toán</option>'
+    payment_disabled = " disabled"
+    top_ad_markup = (
+        f"<div class='ad-banner'><iframe data-aa='{html.escape(CONFIG.AADS_UNIT_ID_TOP, quote=True)}' "
+        f"src='//acceptable.a-ads.com/{html.escape(CONFIG.AADS_UNIT_ID_TOP, quote=True)}/?size=Adaptive' "
+        "style='border:0;padding:0;width:100%;height:70px;overflow:hidden;'></iframe></div>"
+        if CONFIG.AADS_UNIT_ID_TOP else "<div class='ad-banner' aria-label='Ad placement not configured'></div>"
+    )
+    bottom_ad_markup = (
+        f"<div class='ad-banner'><iframe data-aa='{html.escape(CONFIG.AADS_UNIT_ID_BOTTOM, quote=True)}' "
+        f"src='//acceptable.a-ads.com/{html.escape(CONFIG.AADS_UNIT_ID_BOTTOM, quote=True)}/?size=Adaptive' "
+        "style='border:0;padding:0;width:100%;height:70px;overflow:hidden;'></iframe></div>"
+        if CONFIG.AADS_UNIT_ID_BOTTOM else "<div class='ad-banner' aria-label='Ad placement not configured'></div>"
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="vi">
@@ -674,11 +681,8 @@ def generate_tool_html(tool: Dict[str, Any]) -> str:
       <div class="tag">{category}</div>
     </header>
 
-    <!-- Top A-Ads Slot -->
-    <div class="ad-banner">
-      <iframe data-aa='{CONFIG.AADS_UNIT_ID_TOP}' src='//acceptable.a-ads.com/{CONFIG.AADS_UNIT_ID_TOP}/?size=Adaptive' 
-              style='border:0; padding:0; width:100%; height:70px; overflow:hidden;'></iframe>
-    </div>
+    <!-- Top ad placement appears only when an ad unit is configured. -->
+    {top_ad_markup}
 
     <main class="app-card">
       <h1>{name}</h1>
@@ -708,11 +712,8 @@ def generate_tool_html(tool: Dict[str, Any]) -> str:
       </div>
     </main>
 
-    <!-- Bottom A-Ads Slot -->
-    <div class="ad-banner">
-      <iframe data-aa='{CONFIG.AADS_UNIT_ID_BOTTOM}' src='//acceptable.a-ads.com/{CONFIG.AADS_UNIT_ID_BOTTOM}/?size=Adaptive' 
-              style='border:0; padding:0; width:100%; height:70px; overflow:hidden;'></iframe>
-    </div>
+    <!-- Bottom ad placement appears only when an ad unit is configured. -->
+    {bottom_ad_markup}
 
     <footer>
       Hệ thống Web App thương mại tự động hóa bởi AUTOProfit AI Enterprise &copy; 2026.
@@ -726,27 +727,21 @@ def generate_tool_html(tool: Dict[str, Any]) -> str:
       <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">Sản phẩm: {name}</p>
       
       <div style="background: #1e293b; padding: 14px; border-radius: 10px; margin-bottom: 14px;">
-        <img src="https://img.vietqr.io/image/{CONFIG.BANK_NAME}-{CONFIG.BANK_ACCOUNT_NO}-compact2.png?amount={price_vnd}&addInfo=MUA%20CODE%20{slug}&accountName=LE%20HONG%20VAN" 
-             alt="VietQR" style="max-width: 190px; border-radius: 8px; margin-bottom: 8px;">
-        <div style="font-size: 13px; color: #f8fafc; font-weight:700;">{CONFIG.BANK_NAME}: {CONFIG.BANK_ACCOUNT_NO}</div>
-        <div style="font-size: 12px; color: #94a3b8;">Chủ TK: <strong>{CONFIG.BANK_ACCOUNT_NAME}</strong></div>
-        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Dự phòng: ACB - {CONFIG.SECONDARY_BANK_ACCOUNT_NO} ({CONFIG.SECONDARY_BANK_ACCOUNT_NAME})</div>
+        {bank_markup}
         <div style="font-size: 13px; color: #38bdf8; font-weight:700; margin-top: 6px;">Số tiền: {price_vnd:,} VND</div>
       </div>
 
-      <div style="font-size: 12px; color: #94a3b8; margin-bottom: 16px;">Hoặc Binance Pay ID: <br><strong style="color:#10b981; font-size: 14px;">{CONFIG.BINANCE_ID}</strong></div>
       <p style="font-size:12px; color:#fbbf24; margin-bottom:8px;">Báo cáo sẽ được lưu để đối soát thủ công. Hệ thống không tự xác minh giao dịch hoặc cấp mã nguồn.</p>
       <label for="paymentMethod" style="display:block; text-align:left; font-size:12px; color:#cbd5e1;">Phương thức thanh toán</label>
       <select id="paymentMethod" class="checkout-field">
-        <option value="BANK_TRANSFER">Chuyển khoản ngân hàng / VietQR</option>
-        <option value="BINANCE_PAY">Binance Pay</option>
+        {payment_select}
       </select>
       <label for="paymentReference" style="display:block; text-align:left; font-size:12px; color:#cbd5e1;">Mã giao dịch hoặc ghi chú (không bắt buộc)</label>
       <input id="paymentReference" class="checkout-field" type="text" maxlength="120" autocomplete="off" placeholder="Nhập mã giao dịch để chủ cửa hàng đối soát nhanh hơn">
 
       <div style="display: flex; gap: 8px; justify-content: center;">
         <button type="button" class="btn btn-outline" onclick="copyPaymentReference()">📋 Sao chép nội dung chuyển khoản</button>
-        <button type="button" id="reportPaymentButton" class="btn btn-primary" onclick="reportPaymentStatus()">Tôi đã chuyển khoản</button>
+        <button type="button" id="reportPaymentButton" class="btn btn-primary" onclick="reportPaymentStatus()"{payment_disabled}>Tôi đã chuyển khoản</button>
         <button type="button" class="btn btn-outline" onclick="closeCheckout()">Đóng</button>
       </div>
       <div id="paymentStatus" role="status" aria-live="polite" style="display:none; font-size:12px; margin-top:12px;"></div>

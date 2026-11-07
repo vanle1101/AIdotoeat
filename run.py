@@ -17,6 +17,10 @@ if sys.platform == "win32":
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env", override=False)
+
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -78,9 +82,9 @@ def view_deliverables():
 def run_opportunity_cycle():
     console.print("\n[bold yellow]>>> ĐANG KHỞI ĐỘNG CHU TRÌNH TẠO SẢN PHẨM & TÌM DOANH THU (0 VND)...[/bold yellow]")
     
-    bank_code = Prompt.ask("Nhập mã ngân hàng của bạn (ví dụ: MB, VCB, TCB, ACB, VPB)", default="MB")
-    acc_no = Prompt.ask("Nhập số tài khoản ngân hàng của bạn", default="0000000000")
-    acc_name = Prompt.ask("Nhập tên chủ tài khoản (không dấu)", default="CHU TAI KHOAN")
+    bank_code = Prompt.ask("Nhập mã ngân hàng của bạn (ví dụ: MB, VCB, TCB, ACB, VPB)")
+    acc_no = Prompt.ask("Nhập số tài khoản ngân hàng của bạn")
+    acc_name = Prompt.ask("Nhập tên chủ tài khoản (không dấu)")
 
     orchestrator = ZeroCostOrchestrator()
     result = orchestrator.run_zero_cost_venture(
@@ -140,10 +144,16 @@ if __name__ == "__main__":
         display_banner()
         console.print("[bold yellow]>>> CHẾ ĐỘ TỰ ĐỘNG KHỞI CHẠY (ZERO-TOUCH OWNER MODE)...[/bold yellow]")
         orchestrator = ZeroCostOrchestrator()
+        bank_code = os.getenv("AUTOPROFIT_BANK_NAME", "").strip()
+        acc_no = os.getenv("AUTOPROFIT_BANK_ACCOUNT_NO", "").strip()
+        acc_name = os.getenv("AUTOPROFIT_BANK_ACCOUNT_NAME", "").strip()
+        if not all((bank_code, acc_no, acc_name)):
+            console.print("[bold red]Thiếu cấu hình tài khoản nhận tiền trong môi trường.[/bold red]")
+            raise SystemExit(2)
         result = orchestrator.run_zero_cost_venture(
-            bank_code="MB",
-            account_no="0000000000",
-            account_name="CHU TAI KHOAN"
+            bank_code=bank_code,
+            account_no=acc_no,
+            account_name=acc_name
         )
         console.print(Panel(
             f"[bold green]ĐÃ TỰ ĐỘNG HOÀN THÀNH CHU TRÌNH VỚI CHI PHÍ: 0 VND![/bold green]\n\n"

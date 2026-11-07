@@ -27,7 +27,9 @@ class ZeroCostOrchestrator:
     def __init__(self):
         self.active_role: Optional[LogicalRole] = None
 
-    def execute_role_action(self, role_id: str, task_name: str, action_func, **kwargs) -> Any:
+    def execute_role_action(
+        self, role_id: str, task_name: str, action_func, *, budget_action_id: Optional[str] = None, **kwargs
+    ) -> Any:
         """
         Executes a task under a specific logical role.
         Enforces budget auditing before and after execution.
@@ -36,7 +38,15 @@ class ZeroCostOrchestrator:
         self.active_role = role
 
         # 1. Zero-Cost Policy Pre-check
-        BudgetAuditor.audit_action(task_name, {"estimated_cost_vnd": 0.0, "role": role_id})
+        BudgetAuditor.audit_action(
+            budget_action_id or "",
+            {
+                "estimated_cost_vnd": 0.0,
+                "provider": "offline_rule_based",
+                "operation": action_func,
+                "role": role_id,
+            },
+        )
 
         # 2. Record a real task run before execution.
         run_id = str(uuid.uuid4())
@@ -97,7 +107,7 @@ class ZeroCostOrchestrator:
             conn.close()
             self.active_role = None
 
-    def run_zero_cost_venture(self, bank_code: str = "MB", account_no: str = "0000000000", account_name: str = "CHU TAI KHOAN") -> Dict[str, Any]:
+    def run_zero_cost_venture(self, bank_code: str, account_no: str, account_name: str) -> Dict[str, Any]:
         """
         Runs an end-to-end autonomous business cycle:
         1. Market Scout scans top demand (Role: MKT_TREND_SCOUT)
@@ -111,7 +121,8 @@ class ZeroCostOrchestrator:
         opportunities = self.execute_role_action(
             "MKT_TREND_SCOUT",
             "Quét nhu cầu thị trường miễn phí",
-            MarketScout.get_validated_opportunities
+            MarketScout.get_validated_opportunities,
+            budget_action_id="local.static_catalog_read",
         )
         target_opp = opportunities[0]  # E-commerce scraper / Data tool
 
@@ -119,13 +130,15 @@ class ZeroCostOrchestrator:
         ext_path = self.execute_role_action(
             "DEV_CHROME_EXT_BUILDER",
             "Lập trình Chrome Extension trích xuất dữ liệu",
-            ProductBuilder.build_chrome_extension
+            ProductBuilder.build_chrome_extension,
+            budget_action_id="local.file_generation",
         )
 
         scraper_path = self.execute_role_action(
             "DEV_SCRAPER_SPECIALIST",
             "Lập trình Python Web Scraper tự động hóa",
-            ProductBuilder.build_python_scraper_bundle
+            ProductBuilder.build_python_scraper_bundle,
+            budget_action_id="local.file_generation",
         )
 
         # Step 3: Sales Pitch & Proposal
@@ -133,17 +146,28 @@ class ZeroCostOrchestrator:
             "OPS_PROPOSAL_CRAFTER",
             "Soạn thảo kịch bản chào giá & bàn giao",
             ProposalCrafter.craft_proposal,
+            budget_action_id="local.text_generation",
             client_need=target_opp["title"],
             price_vnd=target_opp["estimated_value_vnd"]
         )
 
         # Step 4: VietQR Generation (Owner bank account)
+        BudgetAuditor.audit_action(
+            "local.qr_generation",
+            {"estimated_cost_vnd": 0.0, "provider": "offline_rule_based",
+             "operation": VietQRVault.generate_vietqr_url},
+        )
         qr_url = VietQRVault.generate_vietqr_url(
             bank_id=bank_code,
             account_no=account_no,
             account_name=account_name,
             amount=target_opp["estimated_value_vnd"],
             memo="Thanh toan tool tu dong"
+        )
+        BudgetAuditor.audit_action(
+            "local.qr_generation",
+            {"estimated_cost_vnd": 0.0, "provider": "offline_rule_based",
+             "operation": VietQRVault.generate_local_qr_png},
         )
         local_qr_img = OUTPUTS_DIR / "owner_vietqr.png"
         VietQRVault.generate_local_qr_png(qr_url, local_qr_img)

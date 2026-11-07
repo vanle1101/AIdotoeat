@@ -22,6 +22,9 @@ class ZeroCostPolicy:
     ALLOW_AUTO_BILLING: bool = False
     ALLOW_PAID_HOSTING: bool = False
 
+    # Only these audited local operations may pass the zero-cost gate.
+    VERIFIED_LOCAL_PROVIDER: str = "offline_rule_based"
+
     # 2. RUNTIME & CONCURRENCY CONSTRAINTS
     MAX_CONCURRENT_AGENTS: int = 1   # Single worker to prevent rate limits & RAM bloat
     TOKEN_CHATTER_LIMIT_PER_STEP: int = 0  # No idle agent-to-agent chit chat
@@ -30,5 +33,12 @@ class ZeroCostPolicy:
     # 3. OWNER CONTROL
     REQUIRE_OWNER_CONFIRMATION_ON_PAYMENT: bool = True
     ALLOW_AI_SELF_REINVESTMENT: bool = False  # Revenue always stays with Owner
+
+    @staticmethod
+    def kill_switch_enabled() -> bool:
+        # Fail closed until the owner explicitly disables the global stop.
+        return os.getenv("AUTOPROFIT_BUDGET_KILL_SWITCH", "true").strip().lower() not in {
+            "0", "false", "no", "off"
+        }
 
 POLICY = ZeroCostPolicy()

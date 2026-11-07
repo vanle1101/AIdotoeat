@@ -4,7 +4,11 @@ Verifies compliance with the 18 ZERO-COST Rules.
 """
 import unittest
 import sys
+import os
+import tempfile
+import importlib.util
 from pathlib import Path
+from unittest import mock
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -15,8 +19,28 @@ from core.roles import list_all_roles, get_role
 from core.db import init_db, get_connection
 from core.orchestrator import ZeroCostOrchestrator
 from modules.qr_vault import VietQRVault
+from modules.product_builder import ProductBuilder
+import core.config as core_config
+import core.db as core_db
+import core.orchestrator as orchestrator_module
+import modules.product_builder as product_builder_module
 
 class TestZeroCostPolicy(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls._temporary = tempfile.TemporaryDirectory(prefix="autoprofit-engine-tests-")
+        temp_root = Path(cls._temporary.name)
+        core_db.DB_PATH = temp_root / "company.db"
+        core_config.OUTPUTS_DIR = temp_root / "outputs"
+        core_config.OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+        orchestrator_module.OUTPUTS_DIR = core_config.OUTPUTS_DIR
+        product_builder_module.OUTPUTS_DIR = core_config.OUTPUTS_DIR
+        os.environ["AUTOPROFIT_BUDGET_KILL_SWITCH"] = "false"
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._temporary.cleanup()
 
     def setUp(self):
         init_db()
@@ -40,7 +64,11 @@ class TestZeroCostPolicy(unittest.TestCase):
             BudgetAuditor.audit_action("Auto-billing subscription", {"auto_billing": True})
 
         # Zero cost action must pass cleanly
-        passed, msg = BudgetAuditor.audit_action("Free Local Python Script", {"estimated_cost_vnd": 0.0})
+        passed, msg = BudgetAuditor.audit_action(
+            "local.file_generation",
+            {"estimated_cost_vnd": 0.0, "provider": "offline_rule_based",
+             "operation": ProductBuilder.build_chrome_extension},
+        )
         self.assertTrue(passed)
 
     def test_03_fifty_logical_roles_integrity(self):
@@ -65,11 +93,19 @@ class TestZeroCostPolicy(unittest.TestCase):
     def test_05_end_to_end_venture_run(self):
         """Rules 14 & 15: Run actual value-producing cycle without inter-agent chatter."""
         orchestrator = ZeroCostOrchestrator()
-        result = orchestrator.run_zero_cost_venture(
-            bank_code="TCB",
-            account_no="190367888888",
-            account_name="NGUYEN TEST OWNER"
-        )
+        if importlib.util.find_spec("segno") is None:
+            def write_test_placeholder(_content, output_path):
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                output_path.write_bytes(b"isolated-test-placeholder")
+                return output_path
+            with mock.patch.object(VietQRVault, "generate_local_qr_png", side_effect=write_test_placeholder):
+                result = orchestrator.run_zero_cost_venture(
+                    bank_code="TCB", account_no="190367888888", account_name="NGUYEN TEST OWNER"
+                )
+        else:
+            result = orchestrator.run_zero_cost_venture(
+                bank_code="TCB", account_no="190367888888", account_name="NGUYEN TEST OWNER"
+            )
         self.assertEqual(result["status"], "SUCCESS")
         self.assertEqual(result["total_budget_spent_vnd"], 0)
         self.assertTrue(Path(result["deliverable_paths"]["chrome_extension"]).exists())

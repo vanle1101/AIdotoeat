@@ -36,12 +36,20 @@ def _now() -> str:
 def _admin(request: Request) -> bool:
     expected = os.getenv("AUTOPROFIT_ADMIN_API_KEY", "")
     supplied = request.headers.get("X-Admin-Key", "")
-    return bool(expected and supplied and hmac.compare_digest(expected, supplied))
+    return bool(
+        request.url.scheme == "https"
+        and len(expected) >= 32
+        and supplied
+        and hmac.compare_digest(expected, supplied)
+    )
 
 
 def _require_admin(request: Request) -> None:
-    if not os.getenv("AUTOPROFIT_ADMIN_API_KEY", ""):
+    expected = os.getenv("AUTOPROFIT_ADMIN_API_KEY", "")
+    if len(expected) < 32:
         raise HTTPException(status_code=503, detail="Quản trị chưa được cấu hình trên máy chủ.")
+    if request.url.scheme != "https":
+        raise HTTPException(status_code=403, detail="Quản trị chỉ được phép qua HTTPS.")
     if not _admin(request):
         raise HTTPException(status_code=403, detail="Cần khóa quản trị hợp lệ.")
 
@@ -183,6 +191,7 @@ def _insert_transaction(source: str, amount_usd: float, payment_method: str, tx_
                         amount_vnd: Optional[float] = None) -> None:
     conn = get_connection()
     try:
+        conn.execute("BEGIN IMMEDIATE")
         if tx_hash and conn.execute("SELECT 1 FROM transactions WHERE lower(tx_hash)=lower(?)", (tx_hash,)).fetchone():
             raise HTTPException(status_code=409, detail="Mã giao dịch đã được ghi nhận.")
         conn.execute(
@@ -190,13 +199,20 @@ def _insert_transaction(source: str, amount_usd: float, payment_method: str, tx_
             (tx_hash, source, amount_usd, amount_vnd, payment_method, _now()),
         )
         conn.commit()
+    except HTTPException:
+        conn.rollback()
+        raise
+    except sqlite3.Error:
+        conn.rollback()
+        raise HTTPException(status_code=503, detail="Không thể ghi nhận giao dịch.")
     finally:
         conn.close()
 
 
 def _verify_workflow_payment(kind: str, record_id: str, amount_usd: float, payment_method: str,
                              statement_reference: str, amount_vnd: Optional[float],
-                             patch: Dict[str, Any], audit_action: str) -> Dict[str, Any]:
+                             patch: Dict[str, Any], audit_action: str,
+                             allowed_statuses: Optional[set[str]] = None) -> Dict[str, Any]:
     """Record owner-attested payment and status change atomically."""
     conn = get_connection()
     try:
@@ -208,6 +224,8 @@ def _verify_workflow_payment(kind: str, record_id: str, amount_usd: float, payme
         if row["status"] == "PAID_VERIFIED":
             conn.rollback()
             return {**current, "already_verified": True}
+        if allowed_statuses is not None and row["status"] not in allowed_statuses:
+            raise HTTPException(status_code=409, detail="Bản ghi không còn ở trạng thái chờ xác minh.")
         if conn.execute("SELECT 1 FROM transactions WHERE lower(tx_hash)=lower(?)", (statement_reference,)).fetchone():
             raise HTTPException(status_code=409, detail="Mã giao dịch đã được ghi nhận.")
 
@@ -250,8 +268,7 @@ def verify_admin_key(request: Request):
 
 @router.get("/api/audit-logs")
 def audit_logs(request: Request, limit: int = Query(default=100, ge=1, le=500)):
-    if not _admin(request):
-        return {"items": [], "total": 0, "status": "owner_auth_required"}
+    _require_admin(request)
     conn = get_connection()
     try:
         rows = conn.execute("SELECT * FROM workflow_events ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
@@ -264,7 +281,8 @@ def audit_logs(request: Request, limit: int = Query(default=100, ge=1, le=500)):
 
 
 @router.get("/api/opportunities")
-def opportunities():
+def opportunities(request: Request):
+    _require_admin(request)
     items = _list_records("opportunity")
     return {"items": items, "total": len(items), "status": "observed" if items else "no_data", "source": "local_workflow_records"}
 
@@ -328,13 +346,15 @@ def download_product(slug: str):
 
 
 @router.get("/api/marketing")
-def marketing():
+def marketing(request: Request):
+    _require_admin(request)
     items = _list_records("marketing", 200)
     return {"items": items, "total": len(items), "status": "observed" if items else "no_data"}
 
 
 @router.post("/api/marketing/generate/{product_id}")
 def generate_marketing(product_id: str, request: Request):
+    _require_admin(request)
     product = _find_product(product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại.")
@@ -351,6 +371,7 @@ def generate_marketing(product_id: str, request: Request):
 
 @router.get("/api/employees")
 def employees(request: Request):
+    _require_admin(request)
     try:
         from core.roles import list_all_roles
         roles = list_all_roles()
@@ -359,8 +380,6 @@ def employees(request: Request):
     items = [{"id": role.role_id, "name": role.name, "role": role.role_id, "department": role.department,
               "status": "IDLE", "runtime_connected": False} for role in roles]
     dynamic = _list_records("employee_proposal", 200)
-    if not _admin(request):
-        dynamic = [item for item in dynamic if item.get("status") in {"APPROVED_PENDING_RUNTIME", "RETIRED"}]
     items.extend({"id": item["id"], "employee_id": item["id"], "name": item.get("full_name_vi"),
                   "role": item.get("role_code"), "department": item.get("department_id"),
                   "status": item["status"], "runtime_connected": False,
@@ -569,10 +588,9 @@ def verify_donation(donation_id: str, request: Request, payload: Dict[str, Any] 
 
 @router.get("/api/settings/budgets")
 def get_budgets(request: Request):
+    _require_admin(request)
     budgets = _setting("budgets", {"operating_mode": "GUARDED_AUTONOMY", "max_daily_tasks": 5,
         "daily_budget_limit_usd": 0, "monthly_budget_limit_usd": 0, "task_budget_limit_usd": 0})
-    if not _admin(request):
-        return {"status": "owner_auth_required", "settings": None}
     return {"status": "observed", "settings": budgets, **budgets}
 
 
@@ -596,11 +614,10 @@ def update_budgets(request: Request, payload: Dict[str, Any] = Body(...)):
 
 @router.get("/api/payout-policies")
 def get_payout_policy(request: Request):
+    _require_admin(request)
     policy = _setting("payout_policy", {"minimum_payout_threshold_usd": 20, "max_payout_amount_usd": 500,
         "max_total_employees": 15, "max_employees_per_day": 3, "require_owner_confirmation": True,
         "approved_destinations": []})
-    if not _admin(request):
-        return {"status": "owner_auth_required", "policy": {"require_owner_confirmation": True}}
     return {"status": "observed", "policy": policy}
 
 
@@ -626,8 +643,8 @@ def update_payout_policy(request: Request, payload: Dict[str, Any] = Body(...)):
 def update_aads_config(request: Request, payload: Dict[str, Any] = Body(...)):
     _require_admin(request)
     unit_id = str(payload.get("aads_unit_id", "")).strip()
-    if not re.fullmatch(r"\d{5,12}", unit_id) or unit_id == "517750":
-        raise HTTPException(status_code=422, detail="Cần mã Ad Unit A-Ads 5-12 chữ số, không dùng User ID.")
+    if not re.fullmatch(r"\d{5,12}", unit_id):
+        raise HTTPException(status_code=422, detail="Cần mã Ad Unit A-Ads gồm 5-12 chữ số.")
     settings = _setting("aads", {}) or {}
     settings["top_ad_unit_id"] = unit_id
     _set_setting("aads", settings)
@@ -799,8 +816,7 @@ def update_pricing(product_id: str, request: Request, payload: Dict[str, Any] = 
 
 @router.get("/api/pricing/history")
 def pricing_history(request: Request):
-    if not _admin(request):
-        return {"items": [], "total": None, "status": "owner_auth_required"}
+    _require_admin(request)
     items = _list_records("price_change") + _list_records("pricing_quote")
     items.sort(key=lambda item: item.get("created_at", ""), reverse=True)
     return {"items": items[:200], "total": len(items), "status": "observed" if items else "no_data"}
@@ -808,8 +824,7 @@ def pricing_history(request: Request):
 
 @router.get("/api/pricing/recommendations")
 def pricing_recommendations(request: Request):
-    if not _admin(request):
-        return {"items": [], "total": None, "status": "owner_auth_required"}
+    _require_admin(request)
     items = _list_records("pricing_recommendation")
     return {"items": items, "total": len(items), "status": "observed" if items else "no_data"}
 
@@ -905,8 +920,7 @@ def calculate_quote(payload: Dict[str, Any] = Body(...)):
 
 @router.get("/api/orders")
 def list_orders(request: Request):
-    if not _admin(request):
-        return {"items": [], "total": None, "status": "owner_auth_required"}
+    _require_admin(request)
     items = _list_records("order")
     return {"items": items, "total": len(items), "status": "observed" if items else "no_data"}
 
@@ -949,11 +963,6 @@ def create_order(request: Request, payload: Dict[str, Any] = Body(...)):
 @router.post("/api/payments/submit-mbbank-proof", status_code=202)
 def submit_bank_proof(request: Request, payload: Dict[str, Any] = Body(...)):
     order_id = str(payload.get("order_id", ""))
-    order = _get_record("order", order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Không tìm thấy đơn hàng.")
-    if order["status"] in {"PAID_VERIFIED", "FULFILLED"}:
-        raise HTTPException(status_code=409, detail="Đơn hàng đã được xác minh thanh toán.")
     reference = str(payload.get("bank_tx_ref", "")).strip()[:120]
     try:
         amount = float(payload.get("amount_vnd", 0))
@@ -961,12 +970,44 @@ def submit_bank_proof(request: Request, payload: Dict[str, Any] = Body(...)):
         raise HTTPException(status_code=422, detail="Số tiền VND không hợp lệ.")
     if len(reference) < 4 or amount <= 0:
         raise HTTPException(status_code=422, detail="Cần mã giao dịch và số tiền chuyển khoản.")
-    if abs(amount - float(order["net_amount_vnd"])) > 1:
-        raise HTTPException(status_code=409, detail="Số tiền chuyển khoản không khớp đơn hàng.")
-    updated = _update_record("order", order_id, "PENDING_VERIFICATION", {"payment_reference": reference,
-        "submitted_amount_vnd": amount, "payment_method": "MB_BANK_TRANSFER"})
-    _audit("bank_payment_proof_submitted", "order", order_id, "owner")
-    return {"status": updated["status"], "message": "Đã lưu mã tham chiếu. Cần đối chiếu sao kê trước khi ghi nhận doanh thu."}
+    conn = get_connection()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        row = conn.execute(
+            "SELECT status, payload_json FROM workflow_records WHERE kind='order' AND id=?", (order_id,)
+        ).fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Không tìm thấy đơn hàng.")
+        if row["status"] != "PENDING_PAYMENT":
+            raise HTTPException(status_code=409, detail="Đơn hàng không còn chờ gửi bằng chứng thanh toán.")
+        order = _decode(row["payload_json"], {}) or {}
+        if abs(amount - float(order.get("net_amount_vnd", 0))) > 1:
+            raise HTTPException(status_code=409, detail="Số tiền chuyển khoản không khớp đơn hàng.")
+        now = _now()
+        order.update({"status": "PENDING_VERIFICATION", "payment_reference": reference,
+                      "submitted_amount_vnd": amount, "payment_method": "MB_BANK_TRANSFER"})
+        cursor = conn.execute(
+            "UPDATE workflow_records SET status='PENDING_VERIFICATION', payload_json=?, updated_at=? "
+            "WHERE kind='order' AND id=? AND status='PENDING_PAYMENT'",
+            (json.dumps(order, ensure_ascii=False), now, order_id),
+        )
+        if cursor.rowcount != 1:
+            raise HTTPException(status_code=409, detail="Đơn hàng đã được cập nhật ở phiên khác.")
+        conn.execute(
+            "INSERT INTO workflow_events(action, record_kind, record_id, actor, details_json, created_at) "
+            "VALUES('bank_payment_proof_submitted', 'order', ?, 'customer', ?, ?)",
+            (order_id, json.dumps({"reference_submitted": True}, ensure_ascii=False), now),
+        )
+        conn.commit()
+    except HTTPException:
+        conn.rollback()
+        raise
+    except sqlite3.Error:
+        conn.rollback()
+        raise HTTPException(status_code=503, detail="Không thể lưu bằng chứng thanh toán.")
+    finally:
+        conn.close()
+    return {"status": "PENDING_VERIFICATION", "message": "Đã lưu mã tham chiếu. Cần đối chiếu sao kê trước khi ghi nhận doanh thu."}
 
 
 @router.post("/api/payments/verify-mbbank-tx")
@@ -985,16 +1026,21 @@ def verify_bank_payment(request: Request, payload: Dict[str, Any] = Body(...)):
         raise HTTPException(status_code=422, detail="Số tiền VND không hợp lệ.")
     if abs(amount_vnd - float(order["net_amount_vnd"])) > 1:
         raise HTTPException(status_code=409, detail="Số tiền sao kê không khớp đơn hàng.")
-    _insert_transaction("order:" + order_id, float(order["net_amount_usd"]), "MB_BANK_TRANSFER", reference, amount_vnd)
-    _update_record("order", order_id, "PAID_VERIFIED", {"verified_by": "owner_manual_statement", "payment_reference": reference})
-    _audit("bank_payment_verified", "order", order_id, "owner")
+    verified = _verify_workflow_payment(
+        "order", order_id, float(order["net_amount_usd"]), "MB_BANK_TRANSFER", reference, amount_vnd,
+        {"verified_by": "owner_manual_statement", "payment_reference": reference}, "bank_payment_verified",
+        allowed_statuses={"PENDING_VERIFICATION"},
+    )
+    if verified.get("already_verified"):
+        return {"status": "PAID_VERIFIED", "order_number": order["order_number"], "revenue_recorded": True,
+                "already_verified": True}
     return {"status": "PAID_VERIFIED", "order_number": order["order_number"], "revenue_recorded": True}
 
 
 def _verify_bsc_receipt(tx_hash: str, expected_usd: float) -> float:
-    wallet = os.getenv("AUTOPROFIT_BSC_USDT_WALLET", "0xe55dd69db44609553fe54e30498f0d3a705acb9e").strip().lower()
-    rpc_url = os.getenv("AUTOPROFIT_BSC_RPC_URL", "https://bsc-dataseed.binance.org/").strip()
-    token = os.getenv("AUTOPROFIT_BSC_USDT_CONTRACT", "0x55d398326f99059ff775485246999027b3197955").lower()
+    wallet = CONFIG.BSC_USDT_WALLET.strip().lower()
+    rpc_url = CONFIG.BSC_RPC_URL.strip()
+    token = CONFIG.BSC_USDT_CONTRACT.strip().lower()
     if not wallet:
         raise HTTPException(status_code=503, detail="Chưa cấu hình ví nhận USDT BEP20 trên máy chủ; không thể xác minh hoặc giao hàng tự động.")
     if not re.fullmatch(r"0x[0-9a-fA-F]{64}", tx_hash):
@@ -1036,9 +1082,12 @@ def verify_bsc_order_payment(request: Request, payload: Dict[str, Any] = Body(..
     if not order:
         raise HTTPException(status_code=404, detail="Không tìm thấy đơn hàng.")
     amount = _verify_bsc_receipt(str(payload.get("tx_hash", "")).lower(), float(order["net_amount_usd"]))
-    _insert_transaction("order:" + order_id, amount, "BSC_USDT_BEP20", str(payload["tx_hash"]).lower())
-    _update_record("order", order_id, "PAID_VERIFIED", {"tx_hash": str(payload["tx_hash"]).lower(), "verified_by": "bsc_rpc"})
-    _audit("bsc_payment_verified", "order", order_id, "system", {"amount_usd": amount})
+    tx_hash = str(payload["tx_hash"]).lower()
+    verified = _verify_workflow_payment(
+        "order", order_id, amount, "BSC_USDT_BEP20", tx_hash, round(amount * 25500),
+        {"tx_hash": tx_hash, "verified_by": "bsc_rpc"}, "bsc_payment_verified",
+        allowed_statuses={"PENDING_PAYMENT", "PENDING_VERIFICATION"},
+    )
     return {"status": "PAID_VERIFIED", "order_number": order["order_number"], "amount_usd": amount}
 
 
@@ -1053,13 +1102,49 @@ def verify_public_bsc_payment(payload: Dict[str, Any] = Body(...)):
         raise HTTPException(status_code=422, detail="Cần email hợp lệ để lưu đơn hàng.")
     tx_hash = str(payload.get("tx_hash", "")).lower()
     amount = _verify_bsc_receipt(tx_hash, float(product["price_usd"]))
-    order = _record("order", {"order_number": "WEB-" + tx_hash[2:10].upper(), "customer_id": email,
-        "customer_email": email, "product_id": product["id"], "product_name": product["name"],
-        "payment_provider": "BSC_USDT_BEP20", "tx_hash": tx_hash, "net_amount_usd": amount,
-        "net_amount_vnd": round(amount * 25500), "verified_by": "bsc_rpc"}, "PAID_VERIFIED")
-    _insert_transaction("order:" + order["id"], amount, "BSC_USDT_BEP20", tx_hash)
-    _audit("public_bsc_payment_verified", "order", order["id"], "system", {"product_id": product["id"]})
-    return {"accepted": True, "order_id": order["id"], "status": "PAID_VERIFIED", "amount_usd": amount,
+    order_id = str(uuid.uuid4())
+    now = _now()
+    order_payload = {
+        "id": order_id,
+        "order_number": "WEB-" + tx_hash[2:10].upper(),
+        "customer_id": email,
+        "customer_email": email,
+        "product_id": product["id"],
+        "product_name": product["name"],
+        "payment_provider": "BSC_USDT_BEP20",
+        "tx_hash": tx_hash,
+        "net_amount_usd": amount,
+        "net_amount_vnd": round(amount * 25500),
+        "verified_by": "bsc_rpc",
+        "status": "PAID_VERIFIED",
+    }
+    conn = get_connection()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        if conn.execute("SELECT 1 FROM transactions WHERE lower(tx_hash)=lower(?)", (tx_hash,)).fetchone():
+            raise HTTPException(status_code=409, detail="Mã giao dịch đã được ghi nhận.")
+        conn.execute(
+            "INSERT INTO workflow_records(id, kind, status, payload_json, created_at, updated_at) VALUES(?, 'order', 'PAID_VERIFIED', ?, ?, ?)",
+            (order_id, json.dumps(order_payload, ensure_ascii=False), now, now),
+        )
+        conn.execute(
+            "INSERT INTO transactions(tx_hash, source, amount_usd, amount_vnd, payment_method, status, created_at) VALUES(?, ?, ?, ?, ?, 'PAID_VERIFIED', ?)",
+            (tx_hash, "order:" + order_id, amount, round(amount * 25500), "BSC_USDT_BEP20", now),
+        )
+        conn.execute(
+            "INSERT INTO workflow_events(action, record_kind, record_id, actor, details_json, created_at) VALUES(?, 'order', ?, 'system', ?, ?)",
+            ("public_bsc_payment_verified", order_id, json.dumps({"product_id": product["id"]}), now),
+        )
+        conn.commit()
+    except HTTPException:
+        conn.rollback()
+        raise
+    except sqlite3.Error:
+        conn.rollback()
+        raise HTTPException(status_code=503, detail="Không thể ghi nhận giao dịch.")
+    finally:
+        conn.close()
+    return {"accepted": True, "order_id": order_id, "status": "PAID_VERIFIED", "amount_usd": amount,
             "product_slug": product["id"], "download_url": product["download_url"]}
 
 
@@ -1107,7 +1192,7 @@ def approve_task(task_id: str, request: Request):
 
 
 def _set_system_status(status: str, reason: Optional[str] = None) -> Dict[str, Any]:
-    state = _setting("system", {"system_status": "RUNNING", "operating_mode": "GUARDED_AUTONOMY"}) or {}
+    state = _setting("system", {"system_status": "IDLE", "operating_mode": "GUARDED_AUTONOMY"}) or {}
     state["system_status"] = status
     state["emergency_reason"] = reason
     state["updated_at"] = _now()
@@ -1126,7 +1211,7 @@ def pause_system(request: Request):
 @router.post("/api/system/resume")
 def resume_system(request: Request):
     _require_admin(request)
-    state = _set_system_status("RUNNING")
+    state = _set_system_status("IDLE")
     _audit("system_resumed", "system", None, "owner")
     return state
 
@@ -1143,7 +1228,7 @@ def emergency_stop(request: Request, payload: Dict[str, Any] = Body(...)):
 @router.post("/api/agents/run-cycle")
 def run_agent_cycle(request: Request):
     _require_admin(request)
-    state = _setting("system", {"system_status": "RUNNING"}) or {}
+    state = _setting("system", {"system_status": "IDLE"}) or {}
     if state.get("system_status") in {"PAUSED", "EMERGENCY_STOP"}:
         raise HTTPException(status_code=409, detail=f"Hệ thống đang ở trạng thái {state['system_status']}.")
     _audit("agent_cycle_requested", "system", None, "owner", {"status": "not_connected"})

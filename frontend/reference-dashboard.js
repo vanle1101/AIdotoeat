@@ -553,8 +553,10 @@
     body.innerHTML = '<p class="ap-detail-loading">Đang tải chi tiết sự kiện…</p>';
     try {
       const headers = {};
-      const adminKey = sessionStorage.getItem('autoprofit_owner_admin_key');
-      if (adminKey) headers['X-Admin-Key'] = adminKey;
+      if (window.location.protocol === 'https:') {
+        const adminKey = sessionStorage.getItem('autoprofit_owner_admin_key');
+        if (adminKey) headers['X-Admin-Key'] = adminKey;
+      }
       const response = await fetch(`/api/dashboard/activity/${encodeURIComponent(eventId)}`, { headers, cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const event = await response.json();

@@ -4,6 +4,8 @@ High-concurrency, zero-lock, persistent storage.
 """
 import sqlite3
 import json
+import hashlib
+import time
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
@@ -164,6 +166,19 @@ def init_db():
     """)
     c.execute("CREATE INDEX IF NOT EXISTS idx_workflow_events_time ON workflow_events(created_at DESC)")
 
+    # Shared fixed-window rate limits prevent two Uvicorn workers from each
+    # granting a separate allowance. The table contains hashes, never raw IPs.
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS request_rate_limits (
+        bucket_id TEXT PRIMARY KEY,
+        scope_hash TEXT NOT NULL,
+        window_start INTEGER NOT NULL,
+        expires_at INTEGER NOT NULL,
+        hits INTEGER NOT NULL
+    )
+    """)
+    c.execute("CREATE INDEX IF NOT EXISTS idx_request_rate_limits_expiry ON request_rate_limits(expires_at)")
+
     c.execute("""
     CREATE TABLE IF NOT EXISTS dashboard_meta (
         key TEXT PRIMARY KEY,
@@ -177,6 +192,36 @@ def init_db():
 
     conn.commit()
     conn.close()
+
+
+def consume_rate_limit(scope: str, limit: int, window_seconds: int) -> bool:
+    """Atomically reserve one request slot in a shared SQLite time bucket."""
+    if limit < 1 or window_seconds < 1:
+        raise ValueError("Rate limit and window must be positive")
+    now = int(time.time())
+    window_start = (now // window_seconds) * window_seconds
+    scope_hash = hashlib.sha256(scope.encode("utf-8", errors="replace")).hexdigest()
+    bucket_id = hashlib.sha256(f"{scope_hash}:{window_seconds}:{window_start}".encode()).hexdigest()
+    conn = get_connection()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        conn.execute("DELETE FROM request_rate_limits WHERE expires_at < ?", (now,))
+        row = conn.execute("SELECT hits FROM request_rate_limits WHERE bucket_id=?", (bucket_id,)).fetchone()
+        if row and int(row["hits"]) >= limit:
+            conn.rollback()
+            return False
+        conn.execute(
+            "INSERT INTO request_rate_limits(bucket_id, scope_hash, window_start, expires_at, hits) "
+            "VALUES(?, ?, ?, ?, 1) ON CONFLICT(bucket_id) DO UPDATE SET hits=hits+1",
+            (bucket_id, scope_hash, window_start, window_start + window_seconds,)
+        )
+        conn.commit()
+        return True
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
     init_db()

@@ -5,7 +5,9 @@ High-Performance, Zero-Downtime, SQLite WAL Powered Live Backend.
 import sys
 import os
 import asyncio
+import copy
 import hmac
+import ipaddress
 import json
 import re
 import sqlite3
@@ -23,13 +25,12 @@ if sys.platform == "win32":
         pass
 
 from fastapi import Body, FastAPI, HTTPException, Query, Request, Response
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from config import CONFIG, APPS_DIR
-from database import get_connection, init_db
+from database import consume_rate_limit, get_connection, init_db
 from apps_library import TOOL_DEFINITIONS, build_all_tools
 from dashboard_data import (
     CORE_DB_PATH,
@@ -59,14 +60,6 @@ app = FastAPI(
     description="Autonomous AI Enterprise Workforce & Real LLM Token Ledger"
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Register the complete dashboard workflows before the static frontend mount.
 # This router supplies persistence and validation for the controls in the UI.
 from workflow_api import router as workflow_router, _audit as audit_workflow_event, _verify_bsc_receipt
@@ -77,9 +70,9 @@ FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 # System capabilities and runtime mode. Business values are read from data stores.
 SYSTEM_STATE = {
     "operating_mode": "GUARDED_AUTONOMY",
-    "system_status": "RUNNING",
+    "system_status": "IDLE",
     "emergency_reason": None,
-    "payment_mode": "live_napas247_vietqr",
+    "payment_mode": "not_configured",
     "ai_provider": "NOT_CONNECTED",
     "ai_provider_mode": "NO_VERIFIED_PROVIDER_SESSION",
     "backend_health": "ONLINE",
@@ -90,6 +83,7 @@ SYSTEM_STATE = {
 class TelemetryPayload(BaseModel):
     session_id: str = Field(min_length=16, max_length=80)
     path: Optional[str] = Field(default=None, max_length=300)
+    internal_test: bool = False
 
 
 class PaymentReportPayload(BaseModel):
@@ -117,7 +111,71 @@ def _validate_telemetry_request(request: Request, session_id: str) -> str:
 def _is_admin(request: Request) -> bool:
     expected = os.getenv("AUTOPROFIT_ADMIN_API_KEY", "")
     provided = request.headers.get("X-Admin-Key", "")
-    return bool(expected and provided and hmac.compare_digest(expected, provided))
+    return bool(
+        request.url.scheme == "https"
+        and len(expected) >= 32
+        and provided
+        and hmac.compare_digest(expected, provided)
+    )
+
+
+_PUBLIC_RATE_LIMITS = {
+    "/api/telemetry/pageview": (30, 60),
+    "/api/telemetry/heartbeat": (60, 60),
+    "/api/public/payment-reports": (5, 3600),
+    "/api/public/payment-reports/status": (10, 300),
+    "/api/payments/submit-mbbank-proof": (5, 3600),
+    "/api/public/orders/verify-bsc-tx": (5, 3600),
+    "/api/public/advertising-inquiries": (3, 3600),
+    "/api/public/donations": (3, 3600),
+    "/api/employees/propose": (10, 60),
+    "/api/public/notebook/interact": (30, 60),
+    "/api/opportunities/analyze-freelance-job": (10, 60),
+    "/api/internet/live-scan": (3, 60),
+    "/api/products/live-audit-demo": (10, 60),
+    "/api/admin/auth/verify": (10, 300),
+}
+
+
+@app.middleware("http")
+async def enforce_same_origin_and_rate_limits(request: Request, call_next):
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        origin = request.headers.get("origin")
+        if origin:
+            parts = urlparse(origin)
+            request_host = request.headers.get("host", "").lower()
+            if (parts.scheme != request.url.scheme or not parts.netloc
+                    or parts.netloc.lower() != request_host):
+                return JSONResponse(status_code=403, content={"detail": "Cross-origin mutations are not accepted"})
+
+    policy = _PUBLIC_RATE_LIMITS.get(request.url.path)
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"} and policy is None and request.url.path.startswith("/api/"):
+        # Cover mutating routes outside the public-form list and /api/admin
+        # namespace too (for example /api/system and /api/orders).
+        policy = (120, 60)
+    if request.url.path.startswith("/api/admin/") and request.url.path != "/api/admin/auth/verify":
+        policy = (30, 60)
+    if policy and request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        client_host = request.client.host if request.client else "unknown"
+        if client_host in {"127.0.0.1", "::1", "testclient"}:
+            forwarded = request.headers.get("x-real-ip", "").strip()
+            try:
+                ipaddress.ip_address(forwarded)
+                client_host = forwarded
+            except ValueError:
+                pass
+        scope = f"{request.url.path}:{client_host}"
+        try:
+            allowed = consume_rate_limit(scope, policy[0], policy[1])
+        except sqlite3.Error:
+            return JSONResponse(status_code=503, content={"detail": "Request protection is unavailable"})
+        if not allowed:
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "Too many requests; try again later"},
+                headers={"Retry-After": str(policy[1])},
+            )
+    return await call_next(request)
 
 # -------------------------------------------------------------
 # CORE API ENDPOINTS
@@ -136,6 +194,8 @@ def api_health():
 
 @app.post("/api/telemetry/pageview", status_code=202)
 def api_telemetry_pageview(payload: TelemetryPayload, request: Request):
+    if payload.internal_test:
+        return {"accepted": False, "status": "internal_test_ignored"}
     session_id = _validate_telemetry_request(request, payload.session_id)
     path = (payload.path or "/")
     path = path.split("?", 1)[0].split("#", 1)[0]
@@ -165,6 +225,8 @@ def api_telemetry_pageview(payload: TelemetryPayload, request: Request):
 
 @app.post("/api/telemetry/heartbeat", status_code=202)
 def api_telemetry_heartbeat(payload: TelemetryPayload, request: Request):
+    if payload.internal_test:
+        return {"accepted": False, "status": "internal_test_ignored"}
     session_id = _validate_telemetry_request(request, payload.session_id)
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     conn = get_connection()
@@ -386,20 +448,31 @@ def api_public_payment_report_status(payload: Dict[str, Any]):
 
 
 @app.get("/api/dashboard/summary")
-def api_dashboard_summary(window: str = Query(default="today", pattern="^(realtime|today|7d|30d)$")):
-    return dashboard_summary(window)
+def api_dashboard_summary(request: Request, window: str = Query(default="today", pattern="^(realtime|today|7d|30d)$")):
+    snapshot = dashboard_summary(window)
+    if not _is_admin(request):
+        snapshot = copy.deepcopy(snapshot)
+        metrics = snapshot.get("metrics", {})
+        if "revenue_usd" in metrics:
+            metrics["revenue_usd"] = {"value_usd": None, "status": "owner_auth_required"}
+    return snapshot
 
 
 @app.get("/api/dashboard/activity")
 def api_dashboard_activity(
+    request: Request,
     limit: int = Query(default=25, ge=1, le=100),
     before_id: Optional[int] = Query(default=None, ge=1),
 ):
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Admin API key required over HTTPS")
     return list_activity(limit=limit, before_id=before_id)
 
 
 @app.get("/api/dashboard/activity/stream")
 async def api_dashboard_activity_stream(request: Request, after_id: int = Query(default=0, ge=0)):
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Admin API key required over HTTPS")
     source_status = list_activity(limit=1).get("status")
     if source_status not in {"observed", "no_data"}:
         return JSONResponse(
@@ -435,19 +508,21 @@ async def api_dashboard_activity_stream(request: Request, after_id: int = Query(
 
 @app.get("/api/dashboard/activity/{event_id}")
 def api_dashboard_activity_detail(event_id: int, request: Request):
-    event = task_event_by_id(event_id, include_sensitive=_is_admin(request))
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Admin API key required over HTTPS")
+    event = task_event_by_id(event_id, include_sensitive=True)
     if event is None:
         raise HTTPException(status_code=404, detail="Activity event not found")
-    if not _is_admin(request):
-        event["sensitive_details"] = "restricted"
-        event["result"] = None
-        event["error_details"] = None
-        event["artifact_refs"] = []
     return event
 
 @app.get("/api/dashboard")
-def api_dashboard():
+def api_dashboard(request: Request):
     snapshot = dashboard_summary("today")
+    is_owner = _is_admin(request)
+    if not is_owner:
+        snapshot = copy.deepcopy(snapshot)
+        if "revenue_usd" in snapshot.get("metrics", {}):
+            snapshot["metrics"]["revenue_usd"] = {"value_usd": None, "status": "owner_auth_required"}
     conn = get_connection()
     try:
         workflow_row = conn.execute("SELECT value FROM system_state WHERE key = 'workflow:system'").fetchone()
@@ -456,8 +531,12 @@ def api_dashboard():
         workflow_system = {}
     finally:
         conn.close()
+    # Older persisted workflow state could say RUNNING even though this
+    # source tree has no connected execution worker.
+    if workflow_system.get("system_status") == "RUNNING":
+        workflow_system["system_status"] = "IDLE"
     metrics = snapshot.get("metrics", {})
-    revenue = metrics.get("revenue_usd", {}).get("value_usd")
+    revenue = metrics.get("revenue_usd", {}).get("value_usd") if is_owner else None
     agents = metrics.get("active_agents", {}).get("value")
     pageviews = metrics.get("pageviews_today", {}).get("value")
     session_count = metrics.get("sessions_today", {}).get("value")
@@ -518,14 +597,18 @@ def api_pricing_catalog():
     return api_products()
 
 @app.get("/api/tasks")
-def api_tasks():
+def api_tasks(request: Request):
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Admin API key required over HTTPS")
     items = list_core_tasks()
     availability = list_activity(limit=1).get("status")
     status = "observed" if items else "no_data" if availability == "no_data" else availability
     return {"items": items, "total": len(items) if status in {"observed", "no_data"} else None, "status": status}
 
 @app.get("/api/transactions")
-def api_transactions():
+def api_transactions(request: Request):
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Admin API key required over HTTPS")
     conn = get_connection()
     try:
         rows = conn.execute(
@@ -536,11 +619,15 @@ def api_transactions():
         conn.close()
 
 @app.get("/api/wallet/binance-usdt")
-def api_wallet():
+def api_wallet(request: Request):
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Admin API key required over HTTPS")
+    if not (CONFIG.BINANCE_USDT_BEP20 or CONFIG.BSC_USDT_WALLET):
+        raise HTTPException(status_code=503, detail="Payment destination is not configured")
     return {
-        "wallet_address": CONFIG.BINANCE_USDT_BEP20,
+        "wallet_address": CONFIG.BINANCE_USDT_BEP20 or CONFIG.BSC_USDT_WALLET,
         "network": "BNB Smart Chain (BEP20)",
-        "status": "ONLINE",
+        "status": "configured",
         "receiving_token": "USDT"
     }
 
@@ -558,7 +645,12 @@ def api_aads_config():
         "top_ad_unit_id": saved.get("top_ad_unit_id", CONFIG.AADS_UNIT_ID_TOP),
         "bottom_ad_unit_id": CONFIG.AADS_UNIT_ID_BOTTOM,
         "monetag_tag": CONFIG.MONETAG_TAG_ID,
-        "status": "CONNECTED"
+        "monetag_zone_id": CONFIG.MONETAG_ZONE_ID,
+        "status": "configured_no_verified_telemetry" if any((
+            saved.get("top_ad_unit_id", CONFIG.AADS_UNIT_ID_TOP),
+            CONFIG.AADS_UNIT_ID_BOTTOM,
+            CONFIG.MONETAG_TAG_ID,
+        )) else "not_configured"
     }
 
 
@@ -642,4 +734,4 @@ if FRONTEND_DIR.exists():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="127.0.0.1", port=8450, reload=False)
