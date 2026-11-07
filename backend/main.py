@@ -686,15 +686,60 @@ def api_aads_live_telemetry():
 
 @app.get("/api/llm/token-ledger")
 def api_llm_token_ledger(limit: int = Query(default=25, ge=1, le=100)):
-    # Keep the legacy read route compatible while reporting that no provider
-    # token session is connected. Never return synthetic calls or token totals.
-    return {
-        "status": "not_connected",
-        "source": "no_verified_llm_provider_session",
-        "summary": None,
-        "recent_calls": [],
-        "limit": limit,
-    }
+    """Read real provider usage only; never expose prompts, outputs, or credentials."""
+    conn = get_connection()
+    try:
+        exists = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='llm_usage'").fetchone()
+        if not exists:
+            return {"status": "not_connected", "source": "no_verified_llm_provider_session",
+                    "summary": None, "recent_calls": [], "limit": limit}
+        aggregate = conn.execute(
+            """SELECT
+                 SUM(CASE WHEN status IN ('SUCCESS','FAILURE','PENDING') THEN 1 ELSE 0 END) AS total_requests,
+                 SUM(CASE WHEN status='CACHE_HIT' THEN 1 ELSE 0 END) AS cache_hits,
+                 SUM(CASE WHEN status='FAILURE' THEN 1 ELSE 0 END) AS failure_count,
+                 SUM(CASE WHEN status='DEGRADED' THEN 1 ELSE 0 END) AS degraded_runs,
+                 SUM(CASE WHEN status IN ('SUCCESS','FAILURE') AND prompt_tokens IS NULL THEN 1 ELSE 0 END) AS unknown_token_events,
+                 SUM(prompt_tokens) AS prompt_tokens,
+                 SUM(completion_tokens) AS completion_tokens,
+                 AVG(latency_ms) AS average_latency_ms
+               FROM llm_usage"""
+        ).fetchone()
+        rows = conn.execute(
+            """SELECT id,task_kind,provider,model,prompt_tokens,completion_tokens,latency_ms,status,
+                      failure_code,confidence_estimate,confidence_label,created_at
+               FROM llm_usage ORDER BY id DESC LIMIT ?""", (limit,)
+        ).fetchall()
+        summary = {key: aggregate[key] for key in aggregate.keys()}
+        for key in ("total_requests", "cache_hits", "failure_count", "degraded_runs", "unknown_token_events",
+                    "prompt_tokens", "completion_tokens"):
+            summary[key] = int(summary[key] or 0)
+        summary["average_latency_ms"] = round(float(summary["average_latency_ms"] or 0), 1)
+        calls = []
+        for row in rows:
+            prompt = row["prompt_tokens"]
+            completion = row["completion_tokens"]
+            calls.append({
+                "request_id": str(row["id"]), "task_kind": row["task_kind"],
+                "provider": row["provider"], "model": row["model"],
+                "prompt_tokens": int(prompt) if prompt is not None else None,
+                "completion_tokens": int(completion) if completion is not None else None,
+                "total_tokens": int(prompt + completion) if prompt is not None and completion is not None else None,
+                "latency_ms": int(row["latency_ms"]), "status": row["status"],
+                "failure_code": row["failure_code"],
+                "confidence_estimate": row["confidence_estimate"],
+                "confidence_label": row["confidence_label"],
+                "created_at_iso": row["created_at"],
+            })
+        connected = summary["total_requests"] > 0
+        return {"status": "connected" if connected else "not_connected",
+                "source": "canonical_llm_usage_ledger", "summary": summary,
+                "recent_calls": calls, "limit": limit}
+    except sqlite3.Error:
+        return {"status": "not_connected", "source": "usage_ledger_unavailable",
+                "summary": None, "recent_calls": [], "limit": limit}
+    finally:
+        conn.close()
 
 # -------------------------------------------------------------
 # GITHUB WEB FACTORY APPS ROUTER

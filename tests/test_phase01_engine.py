@@ -46,12 +46,12 @@ class EngineTestCase(unittest.TestCase):
 
 class MigrationTests(EngineTestCase):
     def test_migrations_are_idempotent_and_all_domain_projections_exist(self):
-        self.assertEqual(engine.ensure_schema(), 5)
-        self.assertEqual(engine.ensure_schema(), 5)
+        self.assertEqual(engine.ensure_schema(), 6)
+        self.assertEqual(engine.ensure_schema(), 6)
         conn = engine.connect()
         try:
             versions = [row[0] for row in conn.execute("SELECT version FROM schema_migrations ORDER BY version")]
-            self.assertEqual(versions, [1, 2, 3, 4, 5])
+            self.assertEqual(versions, [1, 2, 3, 4, 5, 6])
             objects = {row["name"]: row["type"] for row in conn.execute("SELECT name,type FROM sqlite_master")}
             for name in ("opportunities", "evidence", "experiments", "customers", "leads", "offers", "products",
                          "assets", "tasks", "task_events", "agent_runs", "approval_requests", "orders",
@@ -62,6 +62,8 @@ class MigrationTests(EngineTestCase):
             self.assertEqual(objects["orders"], "view")
             self.assertEqual(objects["offers"], "view")
             self.assertEqual(objects["payment_claims"], "view")
+            self.assertEqual(objects["llm_usage"], "table")
+            self.assertEqual(objects["llm_cache"], "table")
         finally:
             conn.close()
 

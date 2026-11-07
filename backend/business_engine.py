@@ -143,6 +143,7 @@ def ensure_schema(path: Optional[Path | str] = None) -> int:
             (3, "003_legacy_projections.sql", _add_missing_event_columns),
             (4, "004_invocation_payload_hash.sql", None),
             (5, "005_workflow_event_idempotency.sql", None),
+            (6, "006_llm_runtime.sql", None),
         ]
         for version, filename, callback in migrations:
             if version in applied:
@@ -166,7 +167,7 @@ def ensure_schema(path: Optional[Path | str] = None) -> int:
             (iso(),),
         )
         conn.commit()
-        return 5
+        return 6
     finally:
         conn.close()
 

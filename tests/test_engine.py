@@ -6,9 +6,7 @@ import unittest
 import sys
 import os
 import tempfile
-import importlib.util
 from pathlib import Path
-from unittest import mock
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -90,27 +88,14 @@ class TestZeroCostPolicy(unittest.TestCase):
         self.assertIn("0123456789", qr_url)
         self.assertIn("amount=500000", qr_url)
 
-    def test_05_end_to_end_venture_run(self):
-        """Rules 14 & 15: Run actual value-producing cycle without inter-agent chatter."""
+    def test_05_venture_cycle_fails_closed_without_source_or_ready_model(self):
+        """Static catalogs and templates must not be presented as researched AI output."""
         orchestrator = ZeroCostOrchestrator()
-        if importlib.util.find_spec("segno") is None:
-            def write_test_placeholder(_content, output_path):
-                output_path.parent.mkdir(parents=True, exist_ok=True)
-                output_path.write_bytes(b"isolated-test-placeholder")
-                return output_path
-            with mock.patch.object(VietQRVault, "generate_local_qr_png", side_effect=write_test_placeholder):
-                result = orchestrator.run_zero_cost_venture(
-                    bank_code="TCB", account_no="190367888888", account_name="NGUYEN TEST OWNER"
-                )
-        else:
-            result = orchestrator.run_zero_cost_venture(
-                bank_code="TCB", account_no="190367888888", account_name="NGUYEN TEST OWNER"
-            )
-        self.assertEqual(result["status"], "SUCCESS")
-        self.assertEqual(result["total_budget_spent_vnd"], 0)
-        self.assertTrue(Path(result["deliverable_paths"]["chrome_extension"]).exists())
-        self.assertTrue(Path(result["deliverable_paths"]["python_scraper"]).exists())
-        self.assertTrue(Path(result["deliverable_paths"]["vietqr_image"]).exists())
+        result = orchestrator.run_zero_cost_venture(
+            bank_code="TCB", account_no="190367888888", account_name="NGUYEN TEST OWNER"
+        )
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["reason_code"], "source_material_required")
 
 if __name__ == "__main__":
     unittest.main()

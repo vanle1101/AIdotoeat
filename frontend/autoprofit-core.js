@@ -895,7 +895,7 @@
 
           ['MOCK MODE (Local Deterministic Engine — No Paid LLM Key Configured)', 'BẢN MÔ PHỎNG CỤC BỘ — chưa kết nối nhà cung cấp AI'],
 
-          ['LIVE LLM (gpt-oss-20b • Real Token Stream)', 'LLM TRỰC TIẾP — chưa xác minh kết nối'],
+          ['LLM PROVIDER STATUS', 'Trạng thái nhà cung cấp LLM'],
 
           ['GUARDED_AUTONOMY', 'TỰ HÀNH CÓ KIỂM SOÁT'],
 

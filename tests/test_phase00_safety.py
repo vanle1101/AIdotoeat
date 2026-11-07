@@ -260,6 +260,33 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsNone(response.json()["metrics"]["revenue_usd"]["value_usd"])
 
+    def test_llm_token_ledger_reads_only_real_usage_rows(self):
+        import business_engine as engine
+        engine.ensure_schema()
+        conn = engine.connect()
+        try:
+            conn.execute("DELETE FROM llm_usage")
+            conn.execute(
+                """INSERT INTO llm_usage(task_kind,provider,model,prompt_tokens,completion_tokens,latency_ms,
+                   status,confidence_estimate,confidence_label,trace_id,created_at)
+                   VALUES(?,?,?,?,?,?,?,?,?,?,?)""",
+                ("niche_classification", "ollama_local", "test-model", 23, 11, 87,
+                 "SUCCESS", 0.6, "model_estimate_unvalidated", "trace-test",
+                 "2026-11-08T00:00:00Z"),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        response = self.https_client.get("/api/llm/token-ledger?limit=25")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["source"], "canonical_llm_usage_ledger")
+        self.assertEqual(data["summary"]["total_requests"], 1)
+        self.assertEqual(data["recent_calls"][0]["prompt_tokens"], 23)
+        self.assertEqual(data["recent_calls"][0]["total_tokens"], 34)
+        self.assertNotIn("prompt_text", data["recent_calls"][0])
+        self.assertNotIn("response_text", data["recent_calls"][0])
+
     def test_public_owner_record_lists_return_no_private_records_without_admin(self):
         for path in ("/api/public/donations", "/api/public/advertising-inquiries", "/api/leads"):
             with self.subTest(path=path):

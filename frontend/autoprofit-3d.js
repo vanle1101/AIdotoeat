@@ -3829,61 +3829,23 @@ function init3DAIBaseWorld() {
         }
       };
 
-      window.triggerInstantRealAgentBuild = async function(kind) {
-        const isWebApp = (kind === 'WEBAPP');
-        const role = isWebApp ? 'PRODUCT_BUILDER' : 'MARKETPLACE_MANAGER';
-        const sampleWebApps = [
-          'Viết code HTML5/JS cho Web App tính lãi kép Crypto & ROI Staking kèm bảng quy đổi USDT/BTC thực tế.',
-          'Viết code công cụ kiểm tra tốc độ API, phân tích Header bảo mật CORS/CSP và tính chi phí Token LLM.',
-          'Viết code Web App tính toán lợi nhuận Quảng cáo CPM (A-Ads + Adsterra) và tỷ lệ chuyển đổi Affiliate.'
-        ];
-        const sampleAff = [
-          'Tạo trang đích Affiliate Đa Kênh đánh giá Top 4 Sàn Crypto (Binance, Bybit, OKX) & Ví lạnh bảo mật kèm ưu đãi giảm 20% phí.',
-          'Tạo trang đích Affiliate Đa Kênh so sánh Cloud VPS chạy AI Agent (Vultr, DigitalOcean, Hostinger) và công cụ kiếm tiền tự động.',
-          'Tạo trang đích Affiliate Đa Kênh tổng hợp bộ công cụ SEO, Rút gọn link trả tiền ($22/1k view) và Quảng cáo hiển thị.'
-        ];
-        const chosenPrompt = isWebApp
-          ? sampleWebApps[Math.floor(Math.random() * sampleWebApps.length)]
-          : sampleAff[Math.floor(Math.random() * sampleAff.length)];
-
+      window.triggerInstantRealAgentBuild = async function() {
         if (typeof showToast === 'function') {
-          showToast(isWebApp ? '⏳ AI Agent Quốc Bảo đang suy luận LLM & đóng gói file Web App thật trên Server...' : '⏳ AI Agent Đức Thịnh đang suy luận LLM & xuất bản Trang Affiliate Đa Kênh thật trên Server...');
+          showToast('Chưa kết nối backend tạo sản phẩm. Không có model hoặc file giả nào được tạo.', true);
         }
-        try {
-          const res = await window.executeRealInteractiveLlmPrompt('Lệnh Khởi Tạo Sản Phẩm Thật', role, chosenPrompt);
-          const rc = (res && res.llm_receipt) || {};
-          if (rc.artifact_url) {
-            const fullUrl = LIVE_BACKEND_URL + rc.artifact_url;
-            if (typeof showToast === 'function') {
-              showToast(`✅ Đã tạo xong file thật: ${rc.artifact_url} (${rc.total_tokens} tokens)! Đang mở trang...`);
-            }
-            window.open(fullUrl, '_blank', 'noopener');
-          }
-        } catch (_) {}
+        return { status: 'unavailable', reason_code: 'artifact_builder_not_connected' };
       };
-
       // Sync Real LLM Token Ledger from FastAPI Backend & Render into #humanNotebookEntriesStream
       window.syncRealLlmTokenLedgerFromBackend = async function() {
-        const urls = [
-          LIVE_BACKEND_URL + '/api/llm/token-ledger?limit=25&t=' + Date.now(),
-          (window.__IS_LOCAL_OWNER_ENV__ ? 'http://127.0.0.1:8000/api/llm/token-ledger?limit=25&t=' + Date.now() : '')
-        ].filter(Boolean);
-
-        for (const u of urls) {
-          try {
-            const r = await fetch(u, { cache: 'no-store' });
-            if (!r.ok) continue;
-            const data = await r.json();
-            if (data && data.summary && Array.isArray(data.recent_calls)) {
-              window.LIVE_LLM_TOKEN_LEDGER = data;
-              window.renderRealLlmLedgerToUI(data);
-              window.syncAllLiveBranchCountersUI();
-              window.recalculateAndSyncTotalVerifiedRevenueUI();
-              return data;
-            }
-          } catch (_) {}
+        try {
+          const data = await window.apiFetch('/api/llm/token-ledger?limit=25', {}, 8000);
+          if (!data || !Array.isArray(data.recent_calls)) return null;
+          window.LIVE_LLM_TOKEN_LEDGER = data;
+          window.renderRealLlmLedgerToUI(data);
+          return data;
+        } catch (_) {
+          return null;
         }
-        return null;
       };
 
       window.CURRENT_COPEE_DIARY_STATUS_FILTER = 'ALL';
@@ -3951,61 +3913,23 @@ function init3DAIBaseWorld() {
         }
       };
 
-      window.triggerInstantRealAgentBuild = async function(kind) {
-        const isWebApp = (kind === 'WEBAPP');
-        const role = isWebApp ? 'PRODUCT_BUILDER' : 'MARKETPLACE_MANAGER';
-        const sampleWebApps = [
-          'Viết code HTML5/JS cho Web App tính lãi kép Crypto & ROI Staking kèm bảng quy đổi USDT/BTC thực tế.',
-          'Viết code công cụ kiểm tra tốc độ API, phân tích Header bảo mật CORS/CSP và tính chi phí Token LLM.',
-          'Viết code Web App tính toán lợi nhuận Quảng cáo CPM (A-Ads + Adsterra) và tỷ lệ chuyển đổi Affiliate.'
-        ];
-        const sampleAff = [
-          'Tạo trang đích Affiliate Đa Kênh đánh giá Top 4 Sàn Crypto (Binance, Bybit, OKX) & Ví lạnh bảo mật kèm ưu đãi giảm 20% phí.',
-          'Tạo trang đích Affiliate Đa Kênh so sánh Cloud VPS chạy AI Agent (Vultr, DigitalOcean, Hostinger) và công cụ kiếm tiền tự động.',
-          'Tạo trang đích Affiliate Đa Kênh tổng hợp bộ công cụ SEO, Rút gọn link trả tiền ($22/1k view) và Quảng cáo hiển thị.'
-        ];
-        const chosenPrompt = isWebApp
-          ? sampleWebApps[Math.floor(Math.random() * sampleWebApps.length)]
-          : sampleAff[Math.floor(Math.random() * sampleAff.length)];
-
+      window.triggerInstantRealAgentBuild = async function() {
         if (typeof showToast === 'function') {
-          showToast(isWebApp ? '⏳ AI Agent Quốc Bảo đang suy luận LLM & đóng gói file Web App thật trên Server...' : '⏳ AI Agent Đức Thịnh đang suy luận LLM & xuất bản Trang Affiliate Đa Kênh thật trên Server...');
+          showToast('Chưa kết nối backend tạo sản phẩm. Không có model hoặc file giả nào được tạo.', true);
         }
-        try {
-          const res = await window.executeRealInteractiveLlmPrompt('Lệnh Khởi Tạo Sản Phẩm Thật', role, chosenPrompt);
-          const rc = (res && res.llm_receipt) || {};
-          if (rc.artifact_url) {
-            const fullUrl = LIVE_BACKEND_URL + rc.artifact_url;
-            if (typeof showToast === 'function') {
-              showToast(`✅ Đã tạo xong file thật: ${rc.artifact_url} (${rc.total_tokens} tokens)! Đang mở trang...`);
-            }
-            window.open(fullUrl, '_blank', 'noopener');
-          }
-        } catch (_) {}
+        return { status: 'unavailable', reason_code: 'artifact_builder_not_connected' };
       };
-
       // Sync Real LLM Token Ledger from FastAPI Backend & Render into #humanNotebookEntriesStream
       window.syncRealLlmTokenLedgerFromBackend = async function() {
-        const urls = [
-          LIVE_BACKEND_URL + '/api/llm/token-ledger?limit=25&t=' + Date.now(),
-          (window.__IS_LOCAL_OWNER_ENV__ ? 'http://127.0.0.1:8000/api/llm/token-ledger?limit=25&t=' + Date.now() : '')
-        ].filter(Boolean);
-
-        for (const u of urls) {
-          try {
-            const r = await fetch(u, { cache: 'no-store' });
-            if (!r.ok) continue;
-            const data = await r.json();
-            if (data && data.summary && Array.isArray(data.recent_calls)) {
-              window.LIVE_LLM_TOKEN_LEDGER = data;
-              window.renderRealLlmLedgerToUI(data);
-              window.syncAllLiveBranchCountersUI();
-              window.recalculateAndSyncTotalVerifiedRevenueUI();
-              return data;
-            }
-          } catch (_) {}
+        try {
+          const data = await window.apiFetch('/api/llm/token-ledger?limit=25', {}, 8000);
+          if (!data || !Array.isArray(data.recent_calls)) return null;
+          window.LIVE_LLM_TOKEN_LEDGER = data;
+          window.renderRealLlmLedgerToUI(data);
+          return data;
+        } catch (_) {
+          return null;
         }
-        return null;
       };
 
       window.CURRENT_COPEE_DIARY_STATUS_FILTER = 'ALL';
@@ -4098,428 +4022,116 @@ function init3DAIBaseWorld() {
 
       window.renderRealLlmLedgerToUI = function(data) {
         if (!data || !data.summary) return;
-        const s = data.summary;
         const calls = data.recent_calls || [];
-
-        const builtWebApps = Number(s.webapps_built_count || 27);
-        const builtAffPages = Number(s.affiliate_pages_built_count || 38);
-        window.syncAllLiveBranchCountersUI();
-
-        const streamEl = document.getElementById('humanNotebookEntriesStream') || document.getElementById('humanNotebookEntriesList');
-        if (streamEl && calls.length > 0) {
-          const esc = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const roleFilter = (document.getElementById('notebookFilterAgentSelect')?.value) || 'ALL';
-          const statusFilter = window.CURRENT_COPEE_DIARY_STATUS_FILTER || 'ALL';
-
-          const parseCopeeEntry = (c) => {
-            let rawText = String(c.response_text || '').trim();
-            let statusKey = 'DANG_LAM';
-            let statusBadge = '🟢 ĐANG LÀM';
-            let statusColor = '#10b981';
-            let statusBg = 'rgba(16,185,129,0.16)';
-
-            if (rawText.includes('[🔴 KHÔNG LÀM]') || rawText.includes('KHÔNG LÀM')) {
-              statusKey = 'KHONG_LAM';
-              statusBadge = '🔴 KHÔNG LÀM';
-              statusColor = '#f43f5e';
-              statusBg = 'rgba(244,63,94,0.18)';
-              rawText = rawText.replace('[🔴 KHÔNG LÀM]', '').trim();
-            } else if (rawText.includes('[🟡 ĐANG XÉT]') || rawText.includes('ĐANG XÉT')) {
-              statusKey = 'DANG_XET';
-              statusBadge = '🟡 ĐANG XÉT';
-              statusColor = '#f59e0b';
-              statusBg = 'rgba(245,158,11,0.18)';
-              rawText = rawText.replace('[🟡 ĐANG XÉT]', '').trim();
-            } else {
-              rawText = rawText.replace('[🟢 ĐANG LÀM]', '').trim();
-            }
-
-            return { statusKey, statusBadge, statusColor, statusBg, cleanBody: rawText };
-          };
-
-          const filteredCalls = calls.filter(c => {
-            const parsed = parseCopeeEntry(c);
-            if (statusFilter !== 'ALL' && parsed.statusKey !== statusFilter) return false;
-            if (roleFilter !== 'ALL' && c.agent_role !== roleFilter) return false;
-            return true;
-          });
-
-          const listToRender = filteredCalls.length > 0 ? filteredCalls : calls;
-
-          streamEl.innerHTML = listToRender.slice(0, 18).map((c) => {
-            const parsed = parseCopeeEntry(c);
-            const ts = c.created_at_iso ? new Date(c.created_at_iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Vừa xong';
-            const artUrl = c.artifact_url ? (LIVE_BACKEND_URL + c.artifact_url) : '';
-            const isWebApp = c.artifact_type === 'WEBAPP';
-            const btnLabel = isWebApp ? '🛠️ Xem Web App Vừa Code ↗' : '🔥 Xem Trang Affiliate Vừa Tạo ↗';
-            const itemCost = Number(c.cost_usd || ((Number(c.prompt_tokens || 100) * 0.00000018) + (Number(c.completion_tokens || 150) * 0.00000060))).toFixed(5);
-
-            return `
-              <div class="notebook-diary-entry" data-real-llm-id="${esc(c.request_id)}" style="border-left:3.5px solid ${parsed.statusColor}; background:rgba(15,23,42,0.96); margin-bottom:8px; padding:9px 11px; border-radius:9px; box-shadow:0 4px 12px rgba(0,0,0,0.28);">
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:6px;">
-                  <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                    <span style="font-size:10px; padding:2px 8px; border-radius:999px; background:${parsed.statusBg}; color:${parsed.statusColor}; border:1px solid ${parsed.statusColor}; font-weight:900; letter-spacing:0.2px;">
-                      ${parsed.statusBadge}
-                    </span>
-                    <strong style="color:#f8fafc; font-size:12px;">${esc(c.agent_name)}</strong>
-                  </div>
-                  <span style="font-size:10px; color:#94a3b8; font-family:var(--font-mono);">🕒 ${ts}</span>
-                </div>
-                <div style="font-size:11.8px; color:#e2e8f0; white-space:pre-wrap; line-height:1.52; background:rgba(2,6,23,0.72); padding:8px 10px; border-radius:7px; border:1px solid rgba(148,163,184,0.16);">${esc(parsed.cleanBody)}</div>
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-top:6px; font-size:9.8px; color:#64748b;">
-                  <span>⚡ Đã đốt: <strong style="color:#fde047;">${c.total_tokens} tokens</strong> (<strong style="color:#f87171;">-$${itemCost}</strong>) • Model: <code>${esc(c.model)}</code></span>
-                  ${artUrl ? `<a href="${esc(artUrl)}" target="_blank" rel="noopener" style="padding:2px 8px; border-radius:999px; background:rgba(56,189,248,0.16); border:1px solid rgba(56,189,248,0.45); color:#38bdf8; font-weight:800; font-size:10px; text-decoration:none;">${btnLabel}</a>` : ''}
-                </div>
-              </div>
-            `;
-          }).join('');
+        const esc = (value) => String(value == null ? '' : value)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const countText = (value) => value == null ? 'unknown' : Number(value).toLocaleString('vi-VN');
+        const renderEntry = (call) => {
+          const prompt = call.prompt_tokens == null ? 'unknown' : countText(call.prompt_tokens);
+          const completion = call.completion_tokens == null ? 'unknown' : countText(call.completion_tokens);
+          const confidence = call.confidence_estimate == null ? '—' : Number(call.confidence_estimate).toFixed(2);
+          const time = call.created_at_iso ? new Date(call.created_at_iso).toLocaleString('vi-VN') : '';
+          return '<article class="notebook-diary-entry" style="border-left:3px solid #38bdf8;background:rgba(15,23,42,.96);margin-bottom:8px;padding:9px 11px;border-radius:9px">' +
+            '<strong>' + esc(call.task_kind) + ' · ' + esc(call.status) + '</strong>' +
+            '<div>Provider/model: ' + esc(call.provider) + ' / ' + esc(call.model) + '</div>' +
+            '<div>Tokens: ' + prompt + ' prompt + ' + completion + ' completion · ' + countText(call.latency_ms) + ' ms</div>' +
+            '<div>Confidence estimate: ' + confidence + ' · ' + esc(call.confidence_label) + '</div>' +
+            '<small>' + esc(time) + '</small></article>';
+        };
+        const stream = document.getElementById('humanNotebookEntriesStream') || document.getElementById('humanNotebookEntriesList');
+        if (stream) {
+          stream.innerHTML = calls.length
+            ? calls.slice(0, 18).map(renderEntry).join('')
+            : '<div>Chưa có lời gọi model được ghi nhận.</div>';
         }
-
-        // Also inject live AI-built WebApps into Tab 4 (TAB_WEBAPP_STORE) and AI-built Affiliate Pages into Tab 2 (TAB_AFFILIATE_HUB)
-        const tab4Panel = document.querySelector('.overview-ws-panel[data-ws-tab="TAB_WEBAPP_STORE"]');
-        if (tab4Panel && calls.length > 0) {
-          let liveBox = document.getElementById('liveAiBuiltWebAppsShowcaseBox');
-          if (!liveBox) {
-            liveBox = document.createElement('div');
-            liveBox.id = 'liveAiBuiltWebAppsShowcaseBox';
-            liveBox.style.cssText = 'margin-bottom:12px; padding:12px; border-radius:10px; background:linear-gradient(90deg,rgba(16,185,129,0.14),rgba(15,23,42,0.96)); border:1px solid #10b981;';
-            tab4Panel.insertBefore(liveBox, tab4Panel.firstChild);
-          }
-          const webAppCalls = calls.filter(x => x.artifact_type === 'WEBAPP' && x.artifact_url);
-          if (webAppCalls.length > 0) {
-            liveBox.innerHTML = `
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                <strong style="color:#34d399; font-size:13px;">🛠️ KHO WEB APP DO AI AGENT TỰ ĐỘNG CODE TRÊN SERVER (+${builtWebApps} Web App Mới):</strong>
-                <button type="button" onclick="window.triggerInstantRealAgentBuild('WEBAPP')" class="btn btn-sm btn-primary" style="font-size:11px; font-weight:800;">⚡ Yêu Cầu AI Code Thêm 1 Web App Ngay</button>
-              </div>
-              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:8px;">
-                ${webAppCalls.slice(0, 6).map(w => `
-                  <div style="padding:8px 10px; border-radius:8px; background:#020617; border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:5px;">
-                    <div style="font-size:11.5px; font-weight:800; color:#38bdf8;">${w.artifact_title || w.artifact_url}</div>
-                    <div style="font-size:10px; color:#94a3b8;">Agent: ${w.agent_name} • ⚡ ${w.total_tokens} tokens</div>
-                    <a href="${LIVE_BACKEND_URL + w.artifact_url}" target="_blank" rel="noopener" style="display:inline-block; text-align:center; padding:4px 8px; border-radius:6px; background:#10b981; color:#020617; font-weight:800; font-size:10.5px; text-decoration:none;">🚀 Mở Web App Thật (${w.artifact_url}) ↗</a>
-                  </div>
-                `).join('')}
-              </div>
-            `;
-          }
-        }
-
-        const tab2Panel = document.querySelector('.overview-ws-panel[data-ws-tab="TAB_AFFILIATE_HUB"]');
-        if (tab2Panel && calls.length > 0) {
-          let liveAffBox = document.getElementById('liveAiBuiltAffiliateShowcaseBox');
-          if (!liveAffBox) {
-            liveAffBox = document.createElement('div');
-            liveAffBox.id = 'liveAiBuiltAffiliateShowcaseBox';
-            liveAffBox.style.cssText = 'margin-bottom:12px; padding:12px; border-radius:10px; background:linear-gradient(90deg,rgba(249,115,22,0.14),rgba(15,23,42,0.96)); border:1px solid #f97316;';
-            tab2Panel.insertBefore(liveAffBox, tab2Panel.firstChild);
-          }
-          const affCalls = calls.filter(x => x.artifact_type === 'AFFILIATE_PAGE' && x.artifact_url);
-          if (affCalls.length > 0) {
-            liveAffBox.innerHTML = `
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
-                <strong style="color:#fb923c; font-size:13px;">🔥 NHÁNH TRANG ĐÍCH AFFILIATE ĐA KÊNH DO AI AGENT TỰ TẠO (+${builtAffPages} Trang Đích Mới):</strong>
-                <button type="button" onclick="window.triggerInstantRealAgentBuild('AFFILIATE_PAGE')" class="btn btn-sm" style="background:#f97316; color:#020617; font-size:11px; font-weight:800;">⚡ Yêu Cầu AI Đẻ Thêm 1 Nhánh Affiliate Ngay</button>
-              </div>
-              <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:8px;">
-                ${affCalls.slice(0, 6).map(a => `
-                  <div style="padding:8px 10px; border-radius:8px; background:#020617; border:1px solid rgba(249,115,22,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:5px;">
-                    <div style="font-size:11.5px; font-weight:800; color:#fdba74;">${a.artifact_title || a.artifact_url}</div>
-                    <div style="font-size:10px; color:#94a3b8;">Agent: ${a.agent_name} • ⚡ ${a.total_tokens} tokens</div>
-                    <a href="${LIVE_BACKEND_URL + a.artifact_url}" target="_blank" rel="noopener" style="display:inline-block; text-align:center; padding:4px 8px; border-radius:6px; background:#f59e0b; color:#020617; font-weight:800; font-size:10.5px; text-decoration:none;">🔥 Mở Trang Affiliate Thật (${a.artifact_url}) ↗</a>
-                  </div>
-                `).join('')}
-              </div>
-            `;
-          }
-        }
-
         const modalList = document.getElementById('liveLlmModalLedgerList');
-        if (modalList && calls.length > 0) {
-          const esc = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          modalList.innerHTML = calls.slice(0, 12).map(c => {
-            const artUrl = c.artifact_url ? (LIVE_BACKEND_URL + c.artifact_url) : '';
-            return `
-            <div style="padding:8px 10px; border-radius:8px; background:#020617; border:1px solid rgba(56,189,248,0.28); margin-bottom:6px; font-size:11.5px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; color:#6ee7b7; font-weight:800; margin-bottom:3px;">
-                <span>${esc(c.agent_name)}</span>
-                <span>⚡ ${c.prompt_tokens}p + ${c.completion_tokens}c = ${c.total_tokens} tokens (${c.latency_ms}ms)</span>
-              </div>
-              <div style="color:#f8fafc; white-space:pre-wrap; background:rgba(15,23,42,0.9); padding:6px 8px; border-radius:6px;">${esc(c.response_text)}</div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; font-size:10px; color:#64748b;">
-                <span>Request ID: <code>${esc(c.request_id)}</code> • Model: <code>${esc(c.model)}</code></span>
-                ${artUrl ? `<a href="${esc(artUrl)}" target="_blank" rel="noopener" style="color:#fde047; font-weight:800;">🚀 Mở Sản Phẩm Thật (${esc(c.artifact_url)}) ↗</a>` : ''}
-              </div>
-            </div>
-          `;
-          }).join('');
-        }
-        const modalStats = document.getElementById('liveLlmModalSummaryBar');
-        if (modalStats) {
-          const mCost = Number(s.total_cost_usd || ((Number(s.prompt_tokens || 0) * 0.00000018) + (Number(s.completion_tokens || 0) * 0.00000060)) || 0.0105);
-          modalStats.innerHTML = `Tổng Request LLM Thật: <strong style="color:#34d399;">${s.total_requests}</strong> • Đã xử lý: <strong style="color:#fde047;">${s.total_tokens.toLocaleString('vi-VN')} Tokens</strong> • Chi phí Token đã tiêu: <strong style="color:#f87171;">-$${mCost.toFixed(4)} USD</strong> • Đã tạo: <strong style="color:#38bdf8;">${builtWebApps} Web Apps</strong> &amp; <strong style="color:#fb923c;">${builtAffPages} Trang Affiliate</strong>!`;
+        if (modalList) modalList.innerHTML = calls.length
+          ? calls.slice(0, 25).map(renderEntry).join('')
+          : '<div>Chưa có lời gọi model được ghi nhận.</div>';
+        const summary = data.summary;
+        const stats = document.getElementById('liveLlmModalSummaryBar');
+        if (stats) {
+          stats.textContent = 'Provider calls: ' + countText(summary.total_requests) +
+            ' · Cache hits: ' + countText(summary.cache_hits) +
+            ' · Failures: ' + countText(summary.failure_count) +
+            ' · Tokens chưa được provider báo được giữ là unknown.';
         }
       };
-
       window.renderHumanStyleAiNotebook = function() {
         if (window.LIVE_LLM_TOKEN_LEDGER && window.LIVE_LLM_TOKEN_LEDGER.recent_calls && window.LIVE_LLM_TOKEN_LEDGER.recent_calls.length > 0) {
           window.renderRealLlmLedgerToUI(window.LIVE_LLM_TOKEN_LEDGER);
         }
       };
 
-      // Override generateNextRealActivityDialogueTurn so 3D Speech Bubbles use real server LLM calls & show real built file paths
-      const origGenTurn = window.generateNextRealActivityDialogueTurn;
-      window.generateNextRealActivityDialogueTurn = function() {
-        const calls = (window.LIVE_LLM_TOKEN_LEDGER && window.LIVE_LLM_TOKEN_LEDGER.recent_calls) || [];
-        if (calls.length > 0) {
-          window.__LLM_BUBBLE_IDX = (Number(window.__LLM_BUBBLE_IDX || 0) + 1) % calls.length;
-          const item = calls[window.__LLM_BUBBLE_IDX];
-          const shortResp = String(item.response_text || '').replace(/\s+/g, ' ').slice(0, 135);
-          return {
-            speakerRole: item.agent_role || 'PRODUCT_BUILDER',
-            listenerRole: 'STRATEGY_DIRECTOR',
-            speakerText: `[⚡ ${item.total_tokens} tokens • ${item.tool_called || 'build_artifact'} ➔ ${item.artifact_url || '/ai-apps'}] ${shortResp}...`,
-            listenerReply: `Đã xuất bản file thật ${item.artifact_url || ''} lên Server & ghi nhận Request #${String(item.request_id).slice(0, 10)} (${item.prompt_tokens}p+${item.completion_tokens}c tokens)!`
-          };
-        }
-        return typeof origGenTurn === 'function' ? origGenTurn() : null;
+      window.generateNextRealActivityDialogueTurn = function() { return null; };
+
+      window.requestRuleBasedNotebookReply = async function(visitorName, targetRole, questionText) {
+        const fetcher = window.apiFetch;
+        if (typeof fetcher !== 'function') throw new Error('API client unavailable');
+        return fetcher('/api/public/notebook/interact', {
+          method: 'POST',
+          body: JSON.stringify({
+            visitor_name: visitorName || 'Khách ghé thăm',
+            target_agent_role: targetRole || 'CUSTOMER_SUPPORT_AGENT',
+            question: questionText
+          })
+        }, 12000);
       };
-
-      window.executeRealInteractiveLlmPrompt = async function(visitorName, targetRole, questionText) {
-        const rolePrompts = {
-          PRODUCT_BUILDER: 'Bạn là Quốc Bảo, Kỹ sư trưởng Full-Stack AI tại AutoProfit AI. Hãy viết code thực tế và giải thích ngắn gọn bằng tiếng Việt để đóng gói thành Web App.',
-          STRATEGY_DIRECTOR: 'Bạn là Minh Anh, Giám đốc Chiến lược AI tại AutoProfit AI. Hãy phân tích chiến lược sản phẩm và Affiliate đa kênh bằng tiếng Việt.',
-          OPPORTUNITY_HUNTER: 'Bạn là Tuấn Kiệt, Trưởng nhóm Săn cơ hội & Phân tích GitHub tại AutoProfit AI. Hãy trả lời thực tế bằng tiếng Việt.',
-          PRICING_ARCHITECT: 'Bạn là Khánh Linh, Kiến trúc sư Định giá & Tokenomics tại AutoProfit AI. Hãy tính toán chi tiết bằng tiếng Việt.',
-          MARKETPLACE_MANAGER: 'Bạn là Đức Thịnh, Quản lý Phân phối & Affiliate Đa Kênh tại AutoProfit AI. Hãy soạn nội dung trang đích Affiliate chuyển đổi cao bằng tiếng Việt.',
-          GROWTH_MARKETER: 'Bạn là Hoàng Nam, Chuyên gia SEO Kỹ thuật & Affiliate tại AutoProfit AI. Hãy trả lời chuyên sâu bằng tiếng Việt.',
-          FINANCE_CONTROLLER: 'Bạn là Bảo Trâm, Kiểm soát viên Ngân sách & Sổ cái Token tại AutoProfit AI. Hãy trả lời minh bạch bằng tiếng Việt.',
-          RISK_COMPLIANCE: 'Bạn là Ngọc Ánh, Giám đốc Bảo mật & Rủi ro tại AutoProfit AI. Hãy trả lời chuẩn mực bằng tiếng Việt.'
-        };
-        const sysPrompt = rolePrompts[targetRole] || rolePrompts.PRODUCT_BUILDER;
-        let clientLlmPayload = null;
-        const t0 = performance.now();
-
-        try {
-          const rDirect = await fetch('https://text.pollinations.ai/openai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              model: 'openai',
-              reasoning_effort: 'low',
-              messages: [
-                { role: 'system', content: sysPrompt },
-                { role: 'user', content: questionText }
-              ],
-              temperature: 0.7
-            })
-          });
-          if (rDirect.ok) {
-            const d = await rDirect.json();
-            const msg = (d.choices && d.choices[0] && d.choices[0].message) || {};
-            if (msg.content) {
-              clientLlmPayload = {
-                id: d.id || ('pllns_' + Date.now()),
-                model: d.model || 'gpt-oss-20b',
-                content: msg.content,
-                reasoning: msg.reasoning || '',
-                usage: d.usage || {},
-                latency_ms: Math.round(performance.now() - t0)
-              };
-            }
-          }
-        } catch (_) {}
-
-        const apiTargets = [
-          LIVE_BACKEND_URL + '/api/public/notebook/interact',
-          (window.__IS_LOCAL_OWNER_ENV__ ? 'http://127.0.0.1:8000/api/public/notebook/interact' : '')
-        ].filter(Boolean);
-
-        for (const endpoint of apiTargets) {
-          try {
-            const resp = await fetch(endpoint, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                visitor_name: visitorName || 'Khách kiểm chứng',
-                target_agent_role: targetRole || 'PRODUCT_BUILDER',
-                question: questionText,
-                client_llm_payload: clientLlmPayload
-              })
-            });
-            if (resp.ok) {
-              const resJson = await resp.json();
-              await window.syncRealLlmTokenLedgerFromBackend();
-              return resJson;
-            }
-          } catch (_) {}
-        }
-
-        if (clientLlmPayload) {
-          const fallbackEntry = {
-            request_id: clientLlmPayload.id,
-            created_at_iso: new Date().toISOString(),
-            agent_role: targetRole || 'PRODUCT_BUILDER',
-            agent_name: 'Quốc Bảo (Kỹ Sư Trưởng Full-Stack AI)',
-            caller_type: 'VISITOR_INTERACTIVE',
-            model: clientLlmPayload.model,
-            prompt_text: questionText,
-            reasoning_text: clientLlmPayload.reasoning,
-            response_text: clientLlmPayload.content,
-            prompt_tokens: (clientLlmPayload.usage && clientLlmPayload.usage.prompt_tokens) || 115,
-            completion_tokens: (clientLlmPayload.usage && clientLlmPayload.usage.completion_tokens) || 210,
-            total_tokens: (clientLlmPayload.usage && clientLlmPayload.usage.total_tokens) || 325,
-            latency_ms: clientLlmPayload.latency_ms,
-            cost_usd: 0.00018,
-            tool_called: 'build_and_deploy_webapp_artifact',
-            artifact_type: 'WEBAPP',
-            artifact_url: ''
-          };
-          window.LIVE_LLM_TOKEN_LEDGER.recent_calls.unshift(fallbackEntry);
-          window.renderRealLlmLedgerToUI(window.LIVE_LLM_TOKEN_LEDGER);
-          return {
-            ok: true,
-            agent_human_name: fallbackEntry.agent_name,
-            inner_thought: fallbackEntry.reasoning_text,
-            reply_message: fallbackEntry.response_text,
-            llm_receipt: fallbackEntry
-          };
-        }
-        throw new Error('LLM request failed');
-      };
-
       window.submitVisitorNotebookQuestion = async function() {
         const nameEl = document.getElementById('visitorChatName');
         const roleEl = document.getElementById('visitorChatAgentRole');
         const qEl = document.getElementById('visitorChatQuestion');
         const replyBox = document.getElementById('visitorChatLiveReplyBox');
         if (!qEl || !qEl.value.trim()) {
-          if (typeof showToast === 'function') showToast('Vui lòng nhập yêu cầu để AI Agent suy luận LLM và tạo Web App / Trang Affiliate thật!', true);
+          if (typeof showToast === 'function') showToast('Vui lòng nhập câu hỏi.', true);
           return;
         }
-        const visitor = (nameEl && nameEl.value.trim()) || 'Khách kiểm chứng';
-        const role = (roleEl && roleEl.value) || 'PRODUCT_BUILDER';
+        const visitor = (nameEl && nameEl.value.trim()) || 'Khách ghé thăm';
+        const role = (roleEl && roleEl.value) || 'CUSTOMER_SUPPORT_AGENT';
         const question = qEl.value.trim();
-
         if (replyBox) {
           replyBox.style.display = 'block';
-          replyBox.innerHTML = `<div style="color:#fde047; font-weight:700;">⏳ AI Agent đang gọi mô hình LLM thật (gpt-oss-20b) &amp; đóng gói sản phẩm trên máy chủ cho yêu cầu: "${question.replace(/</g, '&lt;')}"...</div>`;
+          replyBox.textContent = 'Đang gửi câu hỏi tới trợ lý quy tắc; chưa gọi LLM.';
         }
-
         try {
-          const data = await window.executeRealInteractiveLlmPrompt(visitor, role, question);
+          const data = await window.requestRuleBasedNotebookReply(visitor, role, question);
           qEl.value = '';
-          const rc = data.llm_receipt || {};
-          const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const artLink = rc.artifact_url ? (LIVE_BACKEND_URL + rc.artifact_url) : '';
+          const esc = (value) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
           if (replyBox) {
-            replyBox.style.display = 'block';
-            replyBox.innerHTML = `
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
-                <strong style="color:#34d399; font-size:12px;">✅ ${esc(data.agent_human_name || 'AI Agent')} — Đã Thực Thi Tool &amp; Tạo Sản Phẩm Thật:</strong>
-                <span style="font-size:10px; padding:2px 8px; border-radius:999px; background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#6ee7b7; font-weight:800;">
-                  ⚡ ${rc.prompt_tokens || 110}p + ${rc.completion_tokens || 220}c = ${rc.total_tokens || 330} tokens (${rc.latency_ms || 1800}ms)
-                </span>
-              </div>
-              ${artLink ? `<div style="margin-bottom:6px;"><a href="${esc(artLink)}" target="_blank" rel="noopener" style="display:inline-block; padding:5px 12px; border-radius:8px; background:linear-gradient(135deg,#10b981,#0284c7); color:#020617; font-weight:900; font-size:11.5px; text-decoration:none;">🚀 Mở Ngay Web App / Trang Affiliate AI Vừa Tạo (${esc(rc.artifact_url)}) ↗</a></div>` : ''}
-              ${data.inner_thought ? `<div style="font-size:10.5px; color:#fde68a; margin-bottom:5px;">🧠 <em>Chain-of-Thought: ${esc(data.inner_thought)}</em></div>` : ''}
-              <div style="color:#f8fafc; white-space:pre-wrap; font-size:11.5px; background:#020617; padding:8px 10px; border-radius:6px; border:1px solid rgba(56,189,248,0.3);">${esc(data.reply_message)}</div>
-              <div style="font-size:10px; color:#94a3b8; margin-top:4px;">Request ID: <code>${esc(rc.request_id || 'pllns_live')}</code> • Tool: <code>${esc(rc.tool_called || 'build_artifact')}</code></div>
-            `;
+            replyBox.innerHTML = '<strong>Trợ lý theo quy tắc · ' + esc(data.status || 'rules_based') + ' · LLM chưa kết nối</strong>' +
+              '<div style="white-space:pre-wrap;margin-top:6px">' + esc(data.reply_message) + '</div>';
           }
-        } catch (err) {
-          if (replyBox) {
-            replyBox.innerHTML = `<span style="color:#f87171;">⚠️ Đang chờ kết nối LLM (giới hạn 1 request/30s mỗi IP). Vui lòng thử lại sau vài giây!</span>`;
-          }
+        } catch (_) {
+          if (replyBox) replyBox.textContent = 'Backend chưa phản hồi. Không có kết quả LLM hoặc token giả được tạo.';
         }
       };
-
-      window.openLiveLlmTokenTesterModal = function() {
+      window.openLiveLlmTokenTesterModal = async function() {
+        await window.syncRealLlmTokenLedgerFromBackend();
         let modal = document.getElementById('liveLlmTokenTesterModal');
         if (!modal) {
           modal = document.createElement('div');
           modal.id = 'liveLlmTokenTesterModal';
-          modal.style.cssText = 'position:fixed; inset:0; background:rgba(2,6,23,0.88); z-index:100099; display:flex; align-items:center; justify-content:center; padding:14px;';
-          modal.innerHTML = `
-            <div style="background:#0f172a; border:2px solid #10b981; border-radius:14px; max-width:860px; width:100%; max-height:90vh; overflow-y:auto; padding:18px; color:#f8fafc; box-shadow:0 24px 60px rgba(0,0,0,0.85);">
-              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(16,185,129,0.3); padding-bottom:10px; margin-bottom:12px;">
-                <div>
-                  <div style="font-size:15px; font-weight:900; color:#34d399;">🤖 BẢNG ĐIỀU KHIỂN AI AGENT THẬT — TỰ CODE WEB APP &amp; TRANG AFFILIATE ĐA KÊNH</div>
-                  <div style="font-size:11px; color:#94a3b8;">Mỗi lần chạy, AI Agent gọi mô hình <code>gpt-oss-20b</code>, thực thi Tool Call ghi file HTML5 thật lên máy chủ (<code>/ai-apps/*</code> &amp; <code>/ai-aff/*</code>) và nhúng sẵn Quảng cáo + Affiliate!</div>
-                </div>
-                <button type="button" class="btn btn-sm" onclick="document.getElementById('liveLlmTokenTesterModal').style.display='none'">✕ Đóng</button>
-              </div>
-              <div id="liveLlmModalSummaryBar" style="padding:8px 12px; border-radius:8px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.4); font-size:12px; margin-bottom:12px;">
-                Đang đồng bộ sổ cái Token &amp; danh sách Web App từ máy chủ FastAPI...
-              </div>
-              <div style="display:grid; grid-template-columns:1fr 2fr; gap:8px; margin-bottom:8px;">
-                <select id="modalLlmAgentSelect" class="form-input" style="font-size:12px; background:#020617; color:#f8fafc;">
-                  <option value="PRODUCT_BUILDER">👨‍💻 Quốc Bảo — Kỹ Sư Trưởng Full-Stack (Code Web App Mới)</option>
-                  <option value="MARKETPLACE_MANAGER">🛍️ Đức Thịnh — Quản Lý Affiliate Đa Kênh (Tạo Trang Affiliate Mới)</option>
-                  <option value="GROWTH_MARKETER">📈 Hoàng Nam — Chuyên Gia SEO Kỹ Thuật (Tạo Trang SEO Affiliate)</option>
-                  <option value="STRATEGY_DIRECTOR">👩‍💼 Minh Anh — Giám Đốc Chiến Lược AI</option>
-                  <option value="PRICING_ARCHITECT">📊 Khánh Linh — Kiến Trúc Sư Định Giá &amp; Tokenomics</option>
-                </select>
-                <input id="modalLlmPromptInput" class="form-input" style="font-size:12px; background:#020617; color:#fff;" placeholder="Nhập yêu cầu để AI Agent code Web App hoặc tạo Trang Affiliate Đa Kênh..." />
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-                <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button type="button" class="btn btn-sm" style="font-size:10.5px;" onclick="document.getElementById('modalLlmAgentSelect').value='PRODUCT_BUILDER'; document.getElementById('modalLlmPromptInput').value='Viết code Web App tính toán lợi nhuận Staking Crypto & ước tính doanh thu Quảng cáo CPM.';">🛠️ Mẫu: Code Web App Mới</button>
-                  <button type="button" class="btn btn-sm" style="font-size:10.5px;" onclick="document.getElementById('modalLlmAgentSelect').value='MARKETPLACE_MANAGER'; document.getElementById('modalLlmPromptInput').value='Tạo trang đích Affiliate Đa Kênh tổng hợp ưu đãi sàn Binance (-20% phí), Cloud VPS Vultr ($300) và ShrinkMe ($22/1k view).';">🔥 Mẫu: Tạo Trang Affiliate Đa Kênh</button>
-                </div>
-                <button type="button" id="modalLlmSendBtn" class="btn btn-primary" style="padding:7px 16px; font-weight:900; background:linear-gradient(135deg,#10b981,#0284c7);" onclick="window.runModalLiveLlmTest()">🚀 Giao Việc Cho AI Agent Ngay</button>
-              </div>
-              <div id="modalLlmCurrentOutputBox" style="display:none; margin-bottom:12px; padding:10px 12px; border-radius:8px; background:rgba(16,185,129,0.1); border:1px solid #10b981;"></div>
-              <div style="font-size:12px; font-weight:800; color:#38bdf8; margin-bottom:6px;">📜 Nhật Ký Thực Thi Tool &amp; Sản Phẩm Do AI Agent Tạo Ra Trên Máy Chủ:</div>
-              <div id="liveLlmModalLedgerList" style="max-height:320px; overflow-y:auto;"></div>
-            </div>
-          `;
+          modal.style.cssText = 'position:fixed;inset:0;background:rgba(2,6,23,.88);z-index:100099;display:flex;align-items:center;justify-content:center;padding:14px';
+          modal.innerHTML = '<section style="background:#0f172a;border:1px solid #38bdf8;border-radius:14px;max-width:860px;width:100%;max-height:90vh;overflow:auto;padding:18px;color:#f8fafc">' +
+            '<header style="display:flex;justify-content:space-between;gap:12px"><div><strong>Sổ usage model đã ghi nhận</strong>' +
+            '<div>Chỉ hiển thị lời gọi Gateway thực tế. Không có giá token hoặc sản phẩm được suy diễn.</div></div>' +
+            '<button type="button" onclick="document.getElementById(\'liveLlmTokenTesterModal\').style.display=\'none\'">Đóng</button></header>' +
+            '<div id="liveLlmModalSummaryBar" style="margin:12px 0"></div><div id="liveLlmModalLedgerList"></div></section>';
           document.body.appendChild(modal);
         }
         modal.style.display = 'flex';
         window.renderRealLlmLedgerToUI(window.LIVE_LLM_TOKEN_LEDGER);
-        window.syncRealLlmTokenLedgerFromBackend();
       };
-
       window.runModalLiveLlmTest = async function() {
-        const roleEl = document.getElementById('modalLlmAgentSelect');
-        const inpEl = document.getElementById('modalLlmPromptInput');
-        const outBox = document.getElementById('modalLlmCurrentOutputBox');
-        const btn = document.getElementById('modalLlmSendBtn');
-        const q = (inpEl && inpEl.value.trim()) || '';
-        if (!q) return;
-        if (btn) btn.disabled = true;
-        if (outBox) {
-          outBox.style.display = 'block';
-          outBox.innerHTML = `<div style="color:#fde047; font-weight:800;">⏳ AI Agent đang gọi mô hình LLM <code>gpt-oss-20b</code> và thực thi Tool xuất bản file HTML5 thật lên máy chủ...</div>`;
+        if (typeof showToast === 'function') {
+          showToast('Bản dựng sản phẩm tự động chưa được kết nối. Không có lời gọi LLM hoặc artifact giả nào được tạo.', true);
         }
-        try {
-          const res = await window.executeRealInteractiveLlmPrompt('Khách Giao Việc Trực Tiếp', roleEl ? roleEl.value : 'PRODUCT_BUILDER', q);
-          const rc = res.llm_receipt || {};
-          const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const artLink = rc.artifact_url ? (LIVE_BACKEND_URL + rc.artifact_url) : '';
-          if (outBox) {
-            outBox.innerHTML = `
-              <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
-                <strong style="color:#34d399;">✅ Kết Quả Thực Thi Từ ${esc(res.agent_human_name)}:</strong>
-                <span style="font-size:11px; color:#fde047; font-weight:900;">⚡ Đã xử lý: ${rc.prompt_tokens}p + ${rc.completion_tokens}c = ${rc.total_tokens} tokens (${rc.latency_ms}ms)</span>
-              </div>
-              ${artLink ? `<div style="margin-bottom:8px;"><a href="${esc(artLink)}" target="_blank" rel="noopener" style="display:inline-block; padding:6px 14px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#020617; font-weight:900; font-size:12px; text-decoration:none;">🚀 Bấm Để Mở Sản Phẩm AI Vừa Tạo: ${esc(rc.artifact_url)} ↗</a></div>` : ''}
-              ${res.inner_thought ? `<div style="font-size:11px; color:#cbd5e1; margin-bottom:6px;">🧠 <strong>Reasoning:</strong> <em>${esc(res.inner_thought)}</em></div>` : ''}
-              <div style="white-space:pre-wrap; font-family:monospace; font-size:12px; background:#020617; padding:10px; border-radius:6px; border:1px solid rgba(16,185,129,0.4); color:#ecfdf5;">${esc(res.reply_message)}</div>
-            `;
-          }
-          if (inpEl) inpEl.value = '';
-        } catch (e) {
-          if (outBox) {
-            outBox.innerHTML = `<span style="color:#f87171;">⚠️ Cổng LLM giới hạn 1 lượt gọi mỗi 30 giây trên mỗi IP. Vui lòng thử lại sau 15 giây!</span>`;
-          }
-        } finally {
-          if (btn) btn.disabled = false;
-        }
+        return { status: 'unavailable', reason_code: 'artifact_builder_not_connected' };
       };
 
-      
+      window.triggerInstantRealAgentBuild = async function() {
+        return window.runModalLiveLlmTest();
+      };
       window.initGeoIpMonetagForeignOnlyController = async function() {
         let visitorCountry = 'VN';
         let monetagZone = '';

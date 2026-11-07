@@ -19,6 +19,9 @@ class BudgetAuditor:
     """
 
     VERIFIED_ZERO_COST_ACTIONS = {
+        "local.llm_inference": {
+            "core.llm.LLMGateway.run",
+        },
         "local.text_generation": {
             "modules.proposal_crafter.ProposalCrafter.craft_proposal",
         },
@@ -79,3 +82,35 @@ class BudgetAuditor:
         if provider != POLICY.VERIFIED_LOCAL_PROVIDER:
             raise BudgetViolationError("[CIRCUIT BREAKER] Provider is not verified as zero-cost.")
         return provider
+
+    @classmethod
+    def audit_llm_inference(
+        cls,
+        *,
+        provider_name: str,
+        operation,
+        zero_billing_verified: bool = False,
+        request_quota: int | None = None,
+    ) -> Tuple[bool, str]:
+        """Allow preinstalled local inference or a strictly attested no-bill endpoint.
+
+        An owner configuration attestation is necessary but is not independent
+        verification of a provider's terms. The external call is still refused
+        unless its quota and no-payment-method assertions are configured.
+        """
+        if POLICY.kill_switch_enabled():
+            raise BudgetViolationError("[CIRCUIT BREAKER] Budget kill switch is enabled; inference blocked.")
+        identity = f"{getattr(operation, '__module__', '')}.{getattr(operation, '__qualname__', '')}"
+        if identity != "core.llm.LLMGateway.run":
+            raise BudgetViolationError("[CIRCUIT BREAKER] LLM call is not registered.")
+        if provider_name in {"ollama_local", "llamacpp_local"}:
+            return True, "PASSED: already-installed local inference; no provider billing path."
+        if provider_name == "degraded_template":
+            return True, "DEGRADED_MODE: deterministic template; no model inference."
+        if provider_name == "openai_compatible":
+            if not zero_billing_verified:
+                raise BudgetViolationError("[CIRCUIT BREAKER] Remote billing terms and payment exposure are unverified.")
+            if not isinstance(request_quota, int) or isinstance(request_quota, bool) or not 1 <= request_quota <= 1000:
+                raise BudgetViolationError("[CIRCUIT BREAKER] Explicit bounded remote request quota is required.")
+            return True, "PASSED: owner-attested zero-billing endpoint with bounded quota; terms are not independently verified."
+        raise BudgetViolationError("[CIRCUIT BREAKER] Unknown or unverified model provider.")

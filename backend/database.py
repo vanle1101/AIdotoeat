@@ -12,15 +12,15 @@ from datetime import datetime, timezone
 
 from config import DB_PATH
 
-def get_connection() -> sqlite3.Connection:
-    conn = sqlite3.connect(str(DB_PATH), timeout=15)
+def get_connection(path: Optional[Path | str] = None) -> sqlite3.Connection:
+    conn = sqlite3.connect(str(Path(path) if path is not None else DB_PATH), timeout=15)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL;")
     conn.execute("PRAGMA synchronous=NORMAL;")
     return conn
 
-def init_db():
-    conn = get_connection()
+def init_db(path: Optional[Path | str] = None):
+    conn = get_connection(path)
     c = conn.cursor()
 
     # System State & KPIs

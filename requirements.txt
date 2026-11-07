@@ -1,6 +1,7 @@
 # Direct runtime dependencies and TestClient support, pinned to the versions
 # present in the existing Python 3.12 environment used for Phase 00.
 fastapi==0.136.1
+pydantic==2.13.4
 uvicorn==0.47.0
 segno==1.6.6
 python-dotenv==1.2.1

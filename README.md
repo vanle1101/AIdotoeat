@@ -24,6 +24,8 @@ Serve `frontend/` through a local static server or a reverse proxy that forwards
 
 The `run.py` console utilities use the same `.env` file. The global budget and engine kill switches default to on. The local scheduler is disabled by default; set `AUTOPROFIT_ENGINE_WORKER=true` to opt in, and only disable `AUTOPROFIT_ENGINE_KILL_SWITCH` when deliberately processing its local-only queue. External integrations stay dry-run or blocked until exact policy, permission and a one-use owner approval are all present.
 
+The LLM runtime is local-first. Check providers with `python -m core.llm doctor`; benchmark with `python -m core.llm benchmark`. Automatic discovery uses only running Ollama/compatible local servers and installed models, and never downloads weights. Inference stays blocked while `AUTOPROFIT_BUDGET_KILL_SWITCH=true`. Remote OpenAI-compatible calls require a dedicated `AUTOPROFIT_LLM_API_KEY`, HTTPS endpoint, owner-reviewed zero-billing terms, explicit bounded daily quota, and an explicit no-payment-method-exposed setting. The code cannot independently verify billing terms. ChatGPT Plus access is not an API credential. See [PHASE_02_LLM.md](PHASE_02_LLM.md) for provider configuration, usage provenance, tests, and current runtime limitations.
+
 ## Data and safety
 
 - Backend SQLite data defaults to `backend/data/company.db`; core task data defaults to `data/company.db`.
