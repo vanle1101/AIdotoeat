@@ -12,6 +12,7 @@ import json
 import re
 import sqlite3
 import uuid
+from contextlib import asynccontextmanager
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
@@ -42,6 +43,23 @@ from dashboard_data import (
     list_activity,
     task_event_by_id,
 )
+from business_engine import EngineRuntime, ensure_schema, runtime_enabled
+
+_engine_runtime: Optional[EngineRuntime] = None
+
+
+@asynccontextmanager
+async def app_lifespan(_app: FastAPI):
+    global _engine_runtime
+    if runtime_enabled():
+        _engine_runtime = EngineRuntime()
+        _engine_runtime.start()
+    try:
+        yield
+    finally:
+        if _engine_runtime:
+            _engine_runtime.stop()
+            _engine_runtime = None
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -52,18 +70,22 @@ except Exception:
     list_all_roles = None
 
 init_db()
+ensure_schema()
 build_all_tools()
 
 app = FastAPI(
     title="AUTOProfit AI Enterprise Engine",
     version="4.5.0",
-    description="Autonomous AI Enterprise Workforce & Real LLM Token Ledger"
+    description="Local-first durable business engine with owner-controlled approvals",
+    lifespan=app_lifespan,
 )
 
 # Register the complete dashboard workflows before the static frontend mount.
 # This router supplies persistence and validation for the controls in the UI.
 from workflow_api import router as workflow_router, _audit as audit_workflow_event, _verify_bsc_receipt
 app.include_router(workflow_router)
+from business_api import router as business_engine_router
+app.include_router(business_engine_router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 

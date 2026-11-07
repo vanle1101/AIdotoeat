@@ -16,6 +16,7 @@ LOCAL_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 VERIFIED_PAYMENT_STATUSES = {
     "CONFIRMED_BY_OWNER", "CONFIRMED", "SETTLED", "PAID", "RECEIVED_BY_OWNER"
 }
+ENGINE_EVENT_OFFSET = 1_000_000_000
 
 
 def utc_now() -> datetime:
@@ -40,7 +41,7 @@ def _parse_datetime(value: Any) -> Optional[datetime]:
 
 def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
     return conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)
+        "SELECT 1 FROM sqlite_master WHERE type IN ('table','view') AND name=?", (name,)
     ).fetchone() is not None
 
 
@@ -54,6 +55,24 @@ def _get_core_connection() -> Optional[sqlite3.Connection]:
         return conn
     except sqlite3.Error:
         return None
+
+
+def _imported_core_ids(source_table: str) -> set[str]:
+    """Return source row IDs already represented by canonical imported rows."""
+    try:
+        conn = get_backend_connection()
+        try:
+            if not _table_exists(conn, "legacy_imports"):
+                return set()
+            source_id = str(CORE_DB_PATH.resolve())
+            return {str(row[0]) for row in conn.execute(
+                "SELECT source_pk FROM legacy_imports WHERE source_db=? AND source_table=?",
+                (source_id, source_table),
+            )}
+        finally:
+            conn.close()
+    except (sqlite3.Error, OSError):
+        return set()
 
 
 def _analytics_start(conn: sqlite3.Connection) -> Optional[datetime]:
@@ -272,43 +291,86 @@ def dashboard_summary(window: str = "today") -> dict[str, Any]:
 
 
 def list_activity(limit: int = 25, before_id: Optional[int] = None) -> dict[str, Any]:
-    conn = _get_core_connection()
-    if conn is None:
-        return {"items": [], "next_before_id": None, "status": "not_connected"}
+    safe_limit = max(1, min(limit, 100))
+    engine_items: list[dict[str, Any]] = []
     try:
-        if not _table_exists(conn, "task_events"):
-            return {"items": [], "next_before_id": None, "status": "not_connected"}
-        params: list[Any] = []
-        before_clause = ""
-        if before_id is not None:
-            before_clause = " AND e.event_id < ?"
-            params.append(before_id)
-        params.append(max(1, min(limit, 100)))
-        rows = conn.execute(
-            f"""SELECT e.event_id, e.timestamp, e.agent_id, e.task_id, e.run_id,
-                       e.event_type, e.status, e.title, e.description,
-                       e.duration_ms, t.started_at, t.finished_at
-                FROM task_events e
-                LEFT JOIN tasks t ON CAST(t.id AS TEXT)=e.task_id
-                WHERE e.event_id IN (
-                    SELECT MAX(event_id) FROM task_events GROUP BY task_id
-                ){before_clause}
-                ORDER BY e.event_id DESC LIMIT ?""",
-            tuple(params),
-        ).fetchall()
-        items = [dict(row) for row in rows]
-        return {
-            "items": items,
-            "next_before_id": items[-1]["event_id"] if len(items) == max(1, min(limit, 100)) else None,
-            "status": "observed" if items else "no_data",
-        }
-    except sqlite3.Error:
-        return {"items": [], "next_before_id": None, "status": "error"}
-    finally:
-        conn.close()
+        from business_engine import list_task_events
+        engine_events = list_task_events(0, 500)
+        latest_by_task: dict[str, dict[str, Any]] = {}
+        for row in engine_events:
+            latest_by_task[row["task_id"]] = row
+        engine_items = [{"event_id": ENGINE_EVENT_OFFSET + int(row["event_id"]), "timestamp": row["timestamp"],
+                         "agent_id": None, "task_id": row["task_id"], "run_id": row["run_id"],
+                         "event_type": row["event_type"], "status": row["status"], "title": row["title"],
+                         "description": None, "duration_ms": None, "trace_id": row.get("trace_id"),
+                         "event_source": "business_engine"}
+                        for row in latest_by_task.values()
+                        if before_id is None or before_id > ENGINE_EVENT_OFFSET
+                        and ENGINE_EVENT_OFFSET + int(row["event_id"]) < before_id]
+    except (sqlite3.Error, ImportError):
+        engine_items = []
+    conn = _get_core_connection()
+    legacy_items: list[dict[str, Any]] = []
+    imported_ids = _imported_core_ids("task_events")
+    if conn is None:
+        legacy_status = "not_connected"
+    else:
+        try:
+            if not _table_exists(conn, "task_events"):
+                legacy_status = "not_connected"
+            else:
+                params: list[Any] = []
+                before_clause = ""
+                if before_id is not None and before_id < ENGINE_EVENT_OFFSET:
+                    before_clause = " AND e.event_id < ?"
+                    params.append(before_id)
+                params.append(500)
+                rows = conn.execute(
+                    f"""SELECT e.event_id, e.timestamp, e.agent_id, e.task_id, e.run_id,
+                               e.event_type, e.status, e.title, e.description,
+                               e.duration_ms, t.started_at, t.finished_at
+                        FROM task_events e
+                        LEFT JOIN tasks t ON CAST(t.id AS TEXT)=e.task_id
+                        WHERE e.event_id IN (SELECT MAX(event_id) FROM task_events GROUP BY task_id)
+                        {before_clause} ORDER BY e.event_id DESC LIMIT ?""",
+                    tuple(params),
+                ).fetchall()
+                legacy_items = [dict(row, event_source="legacy_core") for row in rows
+                                if str(row["event_id"]) not in imported_ids]
+                legacy_status = "observed" if legacy_items else "no_data"
+        except sqlite3.Error:
+            legacy_status = "error"
+        finally:
+            conn.close()
+    items = sorted(engine_items + legacy_items, key=lambda item: item["event_id"], reverse=True)[:safe_limit]
+    connected = legacy_status != "not_connected" or engine_items
+    return {"items": items, "next_before_id": items[-1]["event_id"] if len(items) == safe_limit else None,
+            "status": "observed" if items else "no_data" if connected else "not_connected"}
 
 
 def task_event_by_id(event_id: int, include_sensitive: bool = False) -> Optional[dict[str, Any]]:
+    if event_id >= ENGINE_EVENT_OFFSET:
+        canonical_id = event_id - ENGINE_EVENT_OFFSET
+        try:
+            from business_engine import connect as engine_connect
+            conn = engine_connect()
+            try:
+                row = conn.execute("SELECT * FROM task_events WHERE event_id=?", (canonical_id,)).fetchone()
+                if row:
+                    event = {key: row[key] for key in row.keys()}
+                    event["event_id"] = event_id
+                    event["event_source"] = "business_engine"
+                    if include_sensitive:
+                        event["metadata"] = json.loads(event.pop("metadata_json", "{}") or "{}")
+                        event["artifact_refs"] = json.loads(event.pop("artifact_refs_json", "[]") or "[]")
+                    else:
+                        for key in ("metadata_json", "artifact_refs_json", "result", "error_details"):
+                            event.pop(key, None)
+                    return event
+            finally:
+                conn.close()
+        except (sqlite3.Error, ImportError):
+            return None
     conn = _get_core_connection()
     if conn is None:
         return None
@@ -339,12 +401,31 @@ def task_event_by_id(event_id: int, include_sensitive: bool = False) -> Optional
 
 
 def list_core_tasks(limit: int = 100) -> list[dict[str, Any]]:
+    canonical_items: list[dict[str, Any]] = []
+    imported_task_ids = _imported_core_ids("tasks")
+    try:
+        from business_engine import list_tasks
+        rows = list_tasks(limit=max(1, min(limit, 500)))
+        for row in rows:
+            if not row.get("idempotency_key"):
+                continue
+            canonical_items.append({"task_id": f"TASK-ENGINE-{row['id']}", "id": f"TASK-ENGINE-{row['id']}",
+                          "title": row["title"], "task_name": row["title"],
+                          "role": row["assigned_role_id"], "status": row["state"],
+                          "created_at": row["created_at"], "updated_at": row["updated_at"],
+                          "started_at": row["started_at"], "finished_at": row["finished_at"],
+                          "progress_pct": 100 if row["state"] == "DONE" else 0 if row["state"] in {"CREATED", "QUEUED"} else None,
+                          "run_id": row["run_id"], "latest_event_id": None, "result_preview": None,
+                          "state_version": row["state_version"], "trace_id": row["trace_id"],
+                          "task_source": "business_engine"})
+    except (sqlite3.Error, ImportError):
+        pass
     conn = _get_core_connection()
     if conn is None:
-        return []
+        return canonical_items[:max(1, min(limit, 500))]
     try:
         if not _table_exists(conn, "tasks"):
-            return []
+            return canonical_items[:max(1, min(limit, 500))]
         rows = conn.execute(
             """SELECT id, title, assigned_role_id, status, cost_vnd, created_at,
                       updated_at, started_at, finished_at, progress_pct, run_id,
@@ -355,36 +436,54 @@ def list_core_tasks(limit: int = 100) -> list[dict[str, Any]]:
                ORDER BY id DESC LIMIT ?""",
             (max(1, min(limit, 500)),),
         ).fetchall()
-        items = []
+        legacy_items = []
         for row in rows:
+            if str(row["id"]) in imported_task_ids:
+                continue
             item = dict(row)
             item["task_name"] = item.pop("title")
             item["role"] = item.pop("assigned_role_id")
-            item["task_id"] = f"TASK-{item['id']}"
+            item["task_id"] = f"TASK-LEGACY-{item['id']}"
             item["id"] = item["task_id"]
+            item["task_source"] = "legacy_core"
             item["progress_pct"] = item["progress_pct"] if item["progress_pct"] is not None else (100 if item["status"] == "DONE" else None)
             item["result_preview"] = None
-            items.append(item)
-        return items
+            legacy_items.append(item)
+        combined = sorted(canonical_items + legacy_items, key=lambda item: str(item.get("created_at") or ""), reverse=True)
+        return combined[:max(1, min(limit, 500))]
     except sqlite3.Error:
-        return []
+        return canonical_items[:max(1, min(limit, 500))]
     finally:
         conn.close()
 
 
 def events_after(event_id: int, limit: int = 100) -> list[dict[str, Any]]:
+    canonical_items: list[dict[str, Any]] = []
+    try:
+        from business_engine import list_task_events
+        canonical_cursor = max(0, event_id - ENGINE_EVENT_OFFSET) if event_id >= ENGINE_EVENT_OFFSET else 0
+        canonical_items = [{**item, "event_id": ENGINE_EVENT_OFFSET + int(item["event_id"]),
+                            "event_source": "business_engine"}
+                           for item in list_task_events(canonical_cursor, max(1, min(limit, 500)))]
+    except (sqlite3.Error, ImportError):
+        canonical_items = []
     conn = _get_core_connection()
     if conn is None:
-        return []
+        return sorted(canonical_items, key=lambda item: item["event_id"])[:max(1, min(limit, 500))]
     try:
         if not _table_exists(conn, "task_events"):
-            return []
-        return [dict(row) for row in conn.execute(
-            """SELECT event_id, timestamp, agent_id, task_id, run_id, event_type,
-                      status, title, description, duration_ms
-               FROM task_events WHERE event_id > ? ORDER BY event_id ASC LIMIT ?""",
-            (max(0, event_id), max(1, min(limit, 500))),
-        ).fetchall()]
+            return sorted(canonical_items, key=lambda item: item["event_id"])[:max(1, min(limit, 500))]
+        legacy_items = []
+        if event_id < ENGINE_EVENT_OFFSET:
+            imported_ids = _imported_core_ids("task_events")
+            legacy_items = [dict(row, event_source="legacy_core") for row in conn.execute(
+                """SELECT event_id, timestamp, agent_id, task_id, run_id, event_type,
+                          status, title, description, duration_ms
+                   FROM task_events WHERE event_id > ? ORDER BY event_id ASC LIMIT ?""",
+                (max(0, event_id), max(1, min(limit, 500))),
+            ).fetchall() if str(row["event_id"]) not in imported_ids]
+        combined = sorted(canonical_items + legacy_items, key=lambda item: item["event_id"])
+        return combined[:max(1, min(limit, 500))]
     except sqlite3.Error:
         return []
     finally:
@@ -392,13 +491,23 @@ def events_after(event_id: int, limit: int = 100) -> list[dict[str, Any]]:
 
 
 def current_max_event_id() -> int:
+    canonical_max = 0
+    try:
+        conn = get_backend_connection()
+        try:
+            canonical_max = int(conn.execute("SELECT COALESCE(MAX(event_id),0) FROM task_events").fetchone()[0])
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        pass
     conn = _get_core_connection()
     if conn is None:
-        return 0
+        return ENGINE_EVENT_OFFSET + canonical_max if canonical_max else 0
     try:
         if not _table_exists(conn, "task_events"):
-            return 0
+            return ENGINE_EVENT_OFFSET + canonical_max if canonical_max else 0
         row = conn.execute("SELECT COALESCE(MAX(event_id),0) FROM task_events").fetchone()
-        return int(row[0])
+        legacy_max = int(row[0])
+        return ENGINE_EVENT_OFFSET + canonical_max if canonical_max else legacy_max
     finally:
         conn.close()

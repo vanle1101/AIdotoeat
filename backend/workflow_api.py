@@ -6,6 +6,7 @@ record is never counted as revenue until an owner verifies a payment.
 from __future__ import annotations
 
 import hmac
+import hashlib
 import ipaddress
 import json
 import os
@@ -83,19 +84,49 @@ def _set_setting(key: str, value: Any) -> None:
         conn.close()
 
 
-def _record(kind: str, payload: Dict[str, Any], status: str = "PENDING_REVIEW", record_id: Optional[str] = None) -> Dict[str, Any]:
+def _record(kind: str, payload: Dict[str, Any], status: str = "PENDING_REVIEW", record_id: Optional[str] = None,
+            *, idempotency_key: Optional[str] = None, idempotency_payload: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     record_id = record_id or str(uuid.uuid4())
     now = _now()
     payload = dict(payload)
     payload["id"] = record_id
     payload["status"] = status
+    idempotency_hash = hashlib.sha256(json.dumps(idempotency_payload if idempotency_payload is not None else payload,
+        ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest() if idempotency_key else None
     conn = get_connection()
     try:
+        conn.execute("BEGIN IMMEDIATE")
+        if idempotency_key:
+            previous = conn.execute("SELECT * FROM workflow_records WHERE idempotency_key=?", (idempotency_key,)).fetchone()
+            if previous:
+                if previous["kind"] != kind or previous["idempotency_hash"] != idempotency_hash:
+                    raise ValueError("Idempotency-Key was already used for a different request.")
+                existing_payload = _decode(previous["payload_json"], {}) or {}
+                conn.commit()
+                return {**existing_payload, "id": previous["id"], "status": previous["status"],
+                        "created_at": previous["created_at"], "updated_at": previous["updated_at"]}
+        if kind == "order":
+            customer_id = str(payload.get("customer_id", "")).strip()[:120]
+            if customer_id:
+                email = customer_id.lower() if re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", customer_id) else None
+                conn.execute(
+                    "INSERT OR IGNORE INTO customers(id,email,display_name,status,source,created_at,updated_at) VALUES(?,?,NULL,'ACTIVE','order',?,?)",
+                    (customer_id, email, now, now),
+                )
         conn.execute(
-            "INSERT INTO workflow_records(id, kind, status, payload_json, created_at, updated_at) VALUES(?, ?, ?, ?, ?, ?)",
-            (record_id, kind, status, json.dumps(payload, ensure_ascii=False), now, now),
+            "INSERT INTO workflow_records(id, kind, status, payload_json, created_at, updated_at, idempotency_key, idempotency_hash) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+            (record_id, kind, status, json.dumps(payload, ensure_ascii=False), now, now, idempotency_key, idempotency_hash),
         )
+        if kind == "order":
+            conn.execute(
+                "INSERT OR IGNORE INTO workflow_events(idempotency_key,action,record_kind,record_id,actor,details_json,created_at) VALUES(?, 'order_created','order',?,'owner',?,?)",
+                (f"order:{record_id}:created", record_id,
+                 json.dumps({"amount_usd": payload.get("net_amount_usd")}, ensure_ascii=False), now),
+            )
         conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
     finally:
         conn.close()
     return {**payload, "created_at": now, "updated_at": now}
@@ -928,6 +959,9 @@ def list_orders(request: Request):
 @router.post("/api/orders", status_code=201)
 def create_order(request: Request, payload: Dict[str, Any] = Body(...)):
     _require_admin(request)
+    idempotency_key = request.headers.get("Idempotency-Key", "").strip() or None
+    if idempotency_key and not re.fullmatch(r"[A-Za-z0-9._:-]{8,180}", idempotency_key):
+        raise HTTPException(status_code=422, detail="Idempotency-Key must contain 8-180 safe characters.")
     customer_id = str(payload.get("customer_id", "")).strip()[:80]
     product = _find_product(str(payload.get("product_id", "")))
     if not customer_id or not product:
@@ -951,13 +985,20 @@ def create_order(request: Request, payload: Dict[str, Any] = Body(...)):
         raise HTTPException(status_code=422, detail="Tổng đơn hàng ngoài giới hạn giá.")
     order_id = str(uuid.uuid4())
     number = "AP-" + datetime.now(timezone.utc).strftime("%Y%m%d") + "-" + order_id[:6].upper()
-    record = _record("order", {"order_number": number, "customer_id": customer_id, "product_id": product["id"],
-        "product_name": product["name"], "payment_provider": str(payload.get("payment_provider", "BANK_TRANSFER"))[:40],
+    payment_provider = str(payload.get("payment_provider", "BANK_TRANSFER"))[:40]
+    fingerprint = {"customer_id": customer_id, "product_id": product["id"], "payment_provider": payment_provider,
+        "discount_usd": round(discount, 2), "quantity_units": units, "quote_id": quote_id or None,
+        "net_amount_usd": amount, "custom_proposal": str(payload.get("custom_proposal", ""))[:2000]}
+    try:
+        record = _record("order", {"order_number": number, "customer_id": customer_id, "product_id": product["id"],
+        "product_name": product["name"], "payment_provider": payment_provider,
         "discount_usd": discount, "quantity_units": units, "quote_id": quote_id or None,
         "proposal_text": str(payload.get("custom_proposal", ""))[:2000], "net_amount_usd": amount,
-        "net_amount_vnd": round(amount * 25500), "payment_reference": None}, "PENDING_PAYMENT", order_id)
-    _audit("order_created", "order", order_id, "owner", {"amount_usd": amount})
-    return {**record, "order_id": order_id}
+        "net_amount_vnd": round(amount * 25500), "payment_reference": None}, "PENDING_PAYMENT", order_id,
+        idempotency_key=idempotency_key, idempotency_payload=fingerprint)
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    return {**record, "order_id": record.get("id", order_id)}
 
 
 @router.post("/api/payments/submit-mbbank-proof", status_code=202)
@@ -1159,9 +1200,10 @@ def deliver_order(order_id: str, request: Request):
     product = _find_product(order["product_id"])
     if not product:
         raise HTTPException(status_code=404, detail="Tệp bàn giao không còn trong catalog.")
-    if order["status"] != "FULFILLED":
-        _update_record("order", order_id, "FULFILLED", {"delivered_at": _now()})
-        _audit("order_delivery_unlocked", "order", order_id, "owner")
+    from business_engine import fulfill_verified_order
+    delivery = fulfill_verified_order(order_id, product["id"])
+    if delivery.get("id") and order["status"] != "FULFILLED":
+        _audit("order_delivery_unlocked", "order", order_id, "owner", {"delivery_id": delivery["id"]})
     return {"order_number": order["order_number"], "status": "FULFILLED",
             "product": {"name": product["name"], "download_url": product["download_url"], "executable_python_code": None},
             "support_and_refund_policy": "Tải tệp HTML của sản phẩm sau khi thanh toán đã được xác minh.",
@@ -1192,6 +1234,17 @@ def approve_task(task_id: str, request: Request):
 
 
 def _set_system_status(status: str, reason: Optional[str] = None) -> Dict[str, Any]:
+    # Keep legacy dashboard controls attached to the durable queue control.
+    # The engine still applies its own per-task policy and lease checks.
+    from business_engine import set_engine_control
+    if status == "PAUSED":
+        set_engine_control("paused", True)
+    elif status == "EMERGENCY_STOP":
+        set_engine_control("shutdown", True)
+    elif status in {"IDLE", "RUNNING"}:
+        set_engine_control("paused", False)
+        from business_engine import ensure_runtime_started
+        ensure_runtime_started()
     state = _setting("system", {"system_status": "IDLE", "operating_mode": "GUARDED_AUTONOMY"}) or {}
     state["system_status"] = status
     state["emergency_reason"] = reason
