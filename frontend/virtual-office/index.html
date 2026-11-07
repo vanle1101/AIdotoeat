@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>AUTOProfit AI — Văn phòng 3D</title>
+  <style>
+    :root { color-scheme: dark; font: 12px/1.4 "Segoe UI", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #030a19; color: #dff6ff; }
+    #office { position: relative; width: 100%; height: 100%; min-width: 320px; min-height: 240px; overflow: hidden; background: radial-gradient(ellipse at 50% 70%, #0b2745 0, #030a19 74%); }
+    #apSceneCanvas { display: block; width: 100%; height: 100%; touch-action: none; outline: none; }
+    .office-toolbar { position: absolute; z-index: 3; top: 8px; left: 8px; right: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; padding: 6px 8px; border: 1px solid #12628d; border-radius: 9px; background: linear-gradient(110deg, #04162beF, #071b37d9); box-shadow: 0 4px 18px #0008; }
+    .office-brand { flex: 0 0 auto; color: #b8eeff; font-size: 10px; font-weight: 900; letter-spacing: .12em; white-space: nowrap; }
+    .office-controls { display: flex; gap: 4px; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+    .office-controls::-webkit-scrollbar { display: none; }
+    .office-controls button, .office-reset { flex: 0 0 auto; min-height: 28px; padding: 0 8px; border: 1px solid #17658c; border-radius: 7px; background: #071d39; color: #dff6ff; font: inherit; font-size: 10px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+    .office-controls button:hover, .office-controls button[aria-pressed="true"], .office-reset:hover { background: #123f66; border-color: #50d9ff; color: #fff; }
+    .office-reset { flex: 0 0 auto; }
+    .office-state { position: absolute; z-index: 2; right: 10px; bottom: 10px; max-width: min(64%, 420px); padding: 6px 9px; border: 1px solid #125a80; border-radius: 7px; background: #04162bdf; color: #9ccee5; font-size: 10px; }
+    .office-state[data-state="ready"] { border-color: #148c70; color: #74f0c0; }
+    .office-state[data-state="error"] { border-color: #9b4c68; color: #ffb7ce; }
+    .office-help { position: absolute; z-index: 2; left: 10px; bottom: 10px; color: #9ccee5; font-size: 10px; text-shadow: 0 1px 3px #000; pointer-events: none; }
+    .office-error { position: absolute; inset: 52px 12px 40px; z-index: 4; display: grid; place-items: center; padding: 20px; border: 1px solid #8a4668; border-radius: 10px; background: #170c1beF; color: #ffd7e4; text-align: center; }
+    @media (max-width: 720px) {
+      .office-toolbar { align-items: flex-start; flex-wrap: wrap; }
+      .office-controls { order: 3; width: 100%; }
+      .office-state { max-width: 70%; }
+    }
+  </style>
+</head>
+<body>
+  <main id="office" aria-label="Văn phòng AUTOProfit AI 3D">
+    <canvas id="apSceneCanvas" tabindex="0" aria-label="Mô hình căn cứ AI 3D. Kéo để xoay, cuộn để zoom, bấm công trình để mở khu vực."></canvas>
+    <header class="office-toolbar">
+      <span class="office-brand">AUTOPROFIT AI · COMMAND CENTER</span>
+      <nav class="office-controls" aria-label="Camera khu chức năng">
+        <button type="button" data-office-view="panorama" aria-pressed="true">Toàn cảnh</button>
+        <button type="button" data-office-view="command" aria-pressed="false">AI Core</button>
+        <button type="button" data-office-view="agents" aria-pressed="false">AI Agents</button>
+        <button type="button" data-office-view="ads" aria-pressed="false">Ad Network</button>
+        <button type="button" data-office-view="products" aria-pressed="false">Web Apps</button>
+        <button type="button" data-office-view="live" aria-pressed="false">Data Hub</button>
+        <button type="button" data-office-view="revenue" aria-pressed="false">Affiliate</button>
+      </nav>
+      <button class="office-reset" id="officeReset" type="button">Reset</button>
+    </header>
+    <div class="office-help">Kéo xoay · Cuộn zoom · Bấm workstation để chọn</div>
+    <div class="office-state" id="officeState" role="status" aria-live="polite">Đang khởi tạo scene 3D…</div>
+  </main>
+  <script src="../three.min.js"></script>
+  <script src="../reference-command-center.js?v=21&r=2"></script>
+  <script>
+    (function () {
+      const canvas = document.getElementById('apSceneCanvas');
+      const state = document.getElementById('officeState');
+      const office = document.getElementById('office');
+      const buttons = Array.from(document.querySelectorAll('[data-office-view]'));
+      const zoneNames = { command: 'AI Core', agents: 'AI Agents', ads: 'Ad Network', products: 'Web Apps', live: 'Data Hub', revenue: 'Affiliate', global: 'Global Traffic' };
+      let scene = null;
+      let sceneObserver = null;
+      let selectionSequence = 0;
+      let failed = false;
+
+      function setState(text, kind) {
+        if (!state) return;
+        state.textContent = text;
+        if (kind) state.dataset.state = kind;
+      }
+
+      async function loadEmployees() {
+        const response = await fetch('/api/employees', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      }
+
+      async function showSelection(zone, item) {
+        const request = ++selectionSequence;
+        const objectId = item?.objectId || `zone:${zone}`;
+        const name = item?.name || zoneNames[zone] || zone;
+        if (window.parent !== window) {
+          window.parent.postMessage({ type: 'autoprofit-command-center-selection', zone, item }, window.location.origin);
+        }
+        if (item?.objectType === 'workstation') {
+          setState(`${name} · ${objectId} · đang kiểm tra backend…`);
+          try {
+            const result = await loadEmployees();
+            if (request !== selectionSequence) return;
+            const assigned = (Array.isArray(result.items) ? result.items : []).find(agent => {
+              const task = agent.latest_task || {};
+              return [agent.workstation_id, agent.workstationId, agent.assignment?.workstation_id, task.workstation_id, task.metadata?.workstation_id].includes(objectId);
+            });
+            if (!assigned) {
+              setState(`${name} · ${objectId} · Chưa gán agent${result.status === 'observed' ? '' : ' · runtime task chưa kết nối'}`);
+              return;
+            }
+            const task = assigned.latest_task || {};
+            const taskStatus = assigned.status === 'RUNNING' ? 'Đang chạy' : assigned.status === 'STALE' ? 'Trạng thái cũ' : assigned.status || 'Chưa có trạng thái';
+            setState(`${name} · ${objectId} · ${assigned.name || assigned.id} · ${taskStatus}${task.title ? ` · ${task.title}` : ''}`);
+          } catch (_) {
+            if (request === selectionSequence) setState(`${name} · ${objectId} · Chưa gán agent · không tải được assignment từ backend`, 'error');
+          }
+          return;
+        }
+        if (zone === 'agents') {
+          setState(`${name} · ${objectId} · đang kiểm tra runtime task…`);
+          try {
+            const result = await loadEmployees();
+            if (request !== selectionSequence) return;
+            if (result.status !== 'observed') {
+              setState(`${name} · ${objectId} · runtime task chưa kết nối`);
+              return;
+            }
+            const running = (result.items || []).filter(agent => ['RUNNING', 'STALE'].includes(agent.status) && agent.latest_task);
+            setState(`${name} · ${objectId} · ${result.active_count ?? running.length} agent hoạt động · ${running.length ? running[0].latest_task.title || 'Có task runtime' : 'Không có task đang chạy'}`);
+          } catch (_) {
+            if (request === selectionSequence) setState(`${name} · ${objectId} · không tải được runtime task`, 'error');
+          }
+          return;
+        }
+        const detail = zone === 'ads' ? 'chưa kết nối campaign' : zone === 'global' ? 'chưa kết nối dữ liệu quốc gia' : 'dữ liệu khu vực lấy từ dashboard backend';
+        setState(`${name} · ${objectId} · ${detail}`);
+      }
+
+      function mountScene() {
+        if (scene || failed || canvas.clientWidth < 2 || canvas.clientHeight < 2) return !!scene;
+        try {
+          scene = window.AutoProfitCommandCenter?.create({
+            canvas,
+            onStatus(status) {
+              if (status === 'ready') {
+                const render = scene?.getDebugState?.().render;
+                setState(`WebGL 3D sẵn sàng · ${render?.calls ?? '—'} draw calls`, 'ready');
+              } else {
+                setState(status === 'webgl-unavailable' ? 'Thiết bị chưa bật WebGL.' : 'Scene 3D gặp lỗi khi khởi tạo.', 'error');
+              }
+            },
+            onZoneSelect: showSelection
+          });
+          window.__AUTOProfitCommandCenter = scene;
+          if (!scene) throw new Error('WebGL is unavailable');
+          sceneObserver?.disconnect();
+          sceneObserver = null;
+          return true;
+        } catch (_) {
+          failed = true;
+          setState('Không thể khởi tạo mô hình 3D. Hãy kiểm tra WebGL của trình duyệt.', 'error');
+          const message = document.createElement('div');
+          message.className = 'office-error';
+          message.textContent = 'Không thể khởi tạo mô hình 3D trên trình duyệt này. Hãy mở Command Center trong dashboard chính.';
+          office.appendChild(message);
+          return false;
+        }
+      }
+
+      if (!mountScene() && 'ResizeObserver' in window) {
+        setState('Đang chờ khu vực 3D được hiển thị…');
+        sceneObserver = new ResizeObserver(mountScene);
+        sceneObserver.observe(office);
+      }
+      buttons.forEach(button => button.addEventListener('click', () => {
+        buttons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        scene?.focus(button.dataset.officeView);
+      }));
+      document.getElementById('officeReset').addEventListener('click', () => {
+        buttons.forEach(item => item.setAttribute('aria-pressed', String(item.dataset.officeView === 'panorama')));
+        scene?.reset();
+      });
+      window.addEventListener('pagehide', () => { sceneObserver?.disconnect(); scene?.destroy(); }, { once: true });
+    })();
+  </script>
+</body>
+</html>

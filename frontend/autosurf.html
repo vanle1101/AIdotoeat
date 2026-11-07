@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trình xem thử công cụ — AUTOProfit AI</title>
+  <meta name="description" content="Mở và xem thử lần lượt các công cụ web của AUTOProfit AI. Không tự tạo lượt xem hoặc doanh thu.">
+  <style>
+    :root{color-scheme:dark;--bg:#070c18;--panel:#101a2e;--line:#243754;--text:#eef5ff;--muted:#9eb0ca;--cyan:#38d8ff}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -25%,#15345a 0,transparent 54%),var(--bg);color:var(--text);font:14px/1.5 system-ui,Segoe UI,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px clamp(14px,3vw,36px);border-bottom:1px solid var(--line);background:#070d19e8}
+    .brand{font-weight:800;letter-spacing:.02em}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:500}
+    .tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}button,a.button{appearance:none;border:1px solid #28638a;border-radius:8px;background:#0e2540;color:var(--text);font:inherit;font-weight:700;padding:8px 12px;min-height:38px;text-decoration:none;cursor:pointer}button:hover,a.button:hover{border-color:var(--cyan);background:#12375a}button:focus-visible,a.button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+    main{width:min(1440px,100%);margin:0 auto;padding:16px;flex:1;display:flex;flex-direction:column;gap:12px}.status{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px}.status strong{color:var(--cyan)}.status span{color:var(--muted)}.frame{position:relative;flex:1;min-height:500px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#050810}.frame iframe{display:block;width:100%;height:100%;min-height:500px;border:0;background:#050810}footer{text-align:center;color:#8192ac;padding:0 16px 14px;font-size:12px}
+    @media(max-width:700px){header{align-items:flex-start;flex-direction:column}.tools{justify-content:flex-start}.status{align-items:flex-start;flex-direction:column}.frame, .frame iframe{min-height:65vh}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">AUTOProfit AI <small>Trình xem thử công cụ — điều hướng thủ công</small></div>
+    <nav class="tools" aria-label="Điều khiển trình xem thử">
+      <button id="previousTool" type="button">← Trước</button>
+      <button id="nextTool" type="button">Tiếp →</button>
+      <a id="openTool" class="button" href="apps/json-schema-seo-studio.html" target="_blank" rel="noopener">Mở công cụ ↗</a>
+    </nav>
+  </header>
+  <main>
+    <div class="status" role="status" aria-live="polite"><strong id="toolPosition">Công cụ 1 / 12</strong><span id="toolStatus">Chọn Trước/Tiếp để đổi công cụ. Trang này không tự xoay, không tạo view hay ghi nhận doanh thu.</span></div>
+    <div class="frame"><iframe id="toolFrame" title="Xem thử công cụ AUTOProfit AI" src="apps/json-schema-seo-studio.html"></iframe></div>
+  </main>
+  <footer>Việc mở trang trong iframe không đồng nghĩa với lượt xem kiếm tiền.</footer>
+  <script>
+    (() => {
+      const apps = [
+        'apps/json-schema-seo-studio.html', 'apps/seo-opengraph-meta-generator.html',
+        'apps/vietqr-crypto-payment-generator.html', 'apps/openai-tiktoken-cost-estimator.html',
+        'apps/crypto-arbitrage-spread-scanner.html', 'apps/defi-staking-yield-compounder.html',
+        'apps/password-hash-security-auditor.html', 'apps/papaparse-csv-to-json-cleaner.html',
+        'apps/css-glassmorphism-card-builder.html', 'apps/web3-airdrop-testnet-quest-tracker.html',
+        'apps/ai-prompt-markdown-converter.html', 'apps/saas-roi-pomodoro-calculator.html'
+      ];
+      let index = 0;
+      const frame = document.getElementById('toolFrame');
+      const position = document.getElementById('toolPosition');
+      const status = document.getElementById('toolStatus');
+      const open = document.getElementById('openTool');
+      function showTool(nextIndex) {
+        index = (nextIndex + apps.length) % apps.length;
+        const path = apps[index];
+        frame.src = path;
+        open.href = path;
+        position.textContent = `Công cụ ${index + 1} / ${apps.length}`;
+        status.textContent = `Đang mở ${path.split('/').pop()}. Bấm Mở công cụ để mở trang độc lập.`;
+      }
+      document.getElementById('previousTool').addEventListener('click', () => showTool(index - 1));
+      document.getElementById('nextTool').addEventListener('click', () => showTool(index + 1));
+      frame.addEventListener('load', () => { status.textContent = `Đã tải ${apps[index].split('/').pop()}. Không ghi nhận view hoặc doanh thu.`; });
+    })();
+  </script>
+</body>
+</html>

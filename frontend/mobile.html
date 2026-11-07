@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071221">
+  <title>AUTOProfit AI — Mobile</title>
+  <style>
+    :root{color-scheme:dark;--bg:#071221;--panel:#0d1d32;--line:#1e3855;--text:#edf6ff;--muted:#9bb1c9;--cyan:#42dcff;--green:#64e6bd}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -18%,#123a58 0,transparent 53%),var(--bg);color:var(--text);font:15px/1.5 system-ui,Segoe UI,sans-serif}
+    a{color:inherit;text-decoration:none}a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.shell{width:min(680px,100%);margin:auto;padding:16px 16px calc(30px + env(safe-area-inset-bottom))}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0 18px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;font-weight:850}.brand img{width:36px;height:36px}.brand small{display:block;color:var(--muted);font-size:11px;font-weight:550}.desktop{border:1px solid #2e668a;border-radius:9px;padding:8px 10px;background:#102943;font-size:12px;font-weight:750}
+    main{padding-top:24px}.eyebrow{color:var(--cyan);font-size:11px;font-weight:850;letter-spacing:.12em}.title{margin:5px 0 4px;font-size:26px;line-height:1.15}.intro{margin:0;color:var(--muted);font-size:13px}
+    .status{display:flex;align-items:center;gap:8px;margin-top:18px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#0b1a2d;color:#c5d9eb;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:#f4bd57;box-shadow:0 0 10px currentColor}.status[data-state="online"] .dot{background:var(--green)}.status[data-state="offline"] .dot{background:#ff7b8b}
+    .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0 24px}.metric{padding:12px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(145deg,#10223a,#0a1728)}.metric span{display:block;color:var(--muted);font-size:10px;font-weight:750;letter-spacing:.04em}.metric strong{display:block;margin-top:5px;font-size:18px;overflow-wrap:anywhere}
+    h2{margin:22px 0 10px;font-size:15px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tile{min-height:78px;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:12px;border:1px solid #234867;border-radius:11px;background:linear-gradient(145deg,#102944,#0a192c);transition:border-color .15s,background .15s}.tile:hover{border-color:var(--cyan);background:#123655}.tile strong{font-size:13px}.tile small{color:var(--muted);font-size:10px;line-height:1.35}.tile-wide{grid-column:1/-1;min-height:64px;border-color:#23644f;background:linear-gradient(115deg,#0c302b,#0a1c2a)}footer{margin-top:24px;color:#8299b3;text-align:center;font-size:10px}
+    @media(min-width:560px){.shell{padding-top:24px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tile-wide{grid-column:auto}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a class="brand" href="/?view=overview&workspace=TAB_3D_ACTIVE&mode=mobile"><img src="/logo.svg" alt=""><span>AUTOProfit AI<small>Trung tâm điều hành trên mobile</small></span></a>
+      <a class="desktop" href="/?view=overview&workspace=TAB_3D_ACTIVE&mode=desktop">Bản máy tính</a>
+    </header>
+    <main>
+      <div class="eyebrow">MOBILE WORKSPACE</div>
+      <h1 class="title">Đi nhanh đến khu vực làm việc</h1>
+      <p class="intro">Mở module cần dùng ở chế độ mobile. Số liệu bên dưới lấy từ API; nếu chưa kết nối, trang sẽ báo rõ.</p>
+      <div class="status" id="connectionStatus" data-state="loading" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span>Đang kiểm tra kết nối…</span></div>
+      <section class="metrics" aria-label="Tóm tắt dữ liệu">
+        <div class="metric"><span>DOANH THU ĐÃ XÁC NHẬN</span><strong id="revenueMetric">—</strong></div>
+        <div class="metric"><span>AGENT ĐANG CHẠY</span><strong id="agentsMetric">—</strong></div>
+      </section>
+      <h2>Khu vực chính</h2>
+      <nav class="grid" aria-label="Mở module">
+        <a class="tile" href="/?view=overview&workspace=TAB_3D_ACTIVE&mode=mobile"><strong>Tổng quan 3D</strong><small>Command Center và dữ liệu trực tiếp</small></a>
+        <a class="tile" href="/?view=agents&mode=mobile"><strong>Nhân sự AI</strong><small>Vai trò, trạng thái và nhật ký task</small></a>
+        <a class="tile" href="/?view=products&mode=mobile"><strong>Sản phẩm</strong><small>Web app và danh mục công cụ</small></a>
+        <a class="tile" href="/?view=marketing&mode=mobile"><strong>Tiếp thị &amp; SEO</strong><small>Nội dung và các công cụ marketing</small></a>
+        <a class="tile" href="/?view=analytics&mode=mobile"><strong>Phân tích</strong><small>Traffic và báo cáo</small></a>
+        <a class="tile" href="/?view=orders&mode=mobile"><strong>Đơn hàng</strong><small>Giao dịch và đối soát</small></a>
+        <a class="tile" href="/youtube-booster.html"><strong>Công cụ link YouTube</strong><small>Kiểm tra, sao chép và gắn UTM</small></a>
+        <a class="tile tile-wide" href="/autosurf.html"><strong>Mở danh sách Web App</strong><small>Duyệt 10 công cụ con; chuyển trang bằng nút Trước / Tiếp</small></a>
+      </nav>
+    </main>
+    <footer>Trang này không tự tạo lượt xem, giao dịch hay số liệu doanh thu.</footer>
+  </div>
+  <script>
+    (() => {
+      const status = document.getElementById('connectionStatus');
+      const money = value => value == null ? 'Chưa có dữ liệu' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(Number(value));
+      fetch('/api/dashboard/summary?window=today', { cache: 'no-store', credentials: 'same-origin' })
+        .then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
+        .then(data => {
+          const revenue = data.metrics?.revenue_usd;
+          const agents = data.metrics?.active_agents;
+          document.getElementById('revenueMetric').textContent = revenue?.status === 'observed' || revenue?.status === 'ok' ? money(revenue.value_usd) : 'Chưa có dữ liệu';
+          document.getElementById('agentsMetric').textContent = agents?.value == null ? 'Chưa có dữ liệu' : new Intl.NumberFormat('vi-VN').format(agents.value);
+          status.dataset.state = 'online';
+          status.lastElementChild.textContent = 'Đã kết nối API';
+        })
+        .catch(() => {
+          status.dataset.state = 'offline';
+          status.lastElementChild.textContent = 'Chưa kết nối API';
+          document.getElementById('revenueMetric').textContent = 'Chưa có dữ liệu';
+          document.getElementById('agentsMetric').textContent = 'Chưa có dữ liệu';
+        });
+    })();
+  </script>
+</body>
+</html>

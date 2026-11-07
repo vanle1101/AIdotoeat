@@ -1,0 +1,357 @@
+/* Neon command center styling for the six business views.
+   All rules stay inside these view sections; existing actions and data remain intact. */
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) {
+  --business-cyan: #19d9ff;
+  --business-blue: #2685ff;
+  --business-purple: #9855ff;
+  --business-green: #00e3ad;
+  --business-ink: #d9edff;
+  --business-muted: #9ebbd6;
+  --business-border: #0a6096;
+  gap: 12px !important;
+  min-width: 0;
+  padding: 7px 3px 20px !important;
+  color: var(--business-ink);
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) > .grid-2,
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) > .grid-3 {
+  gap: 12px !important;
+  min-width: 0;
+  align-items: stretch;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .grid-2,
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .grid-3 {
+  min-width: 0;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .card {
+  min-width: 0;
+  padding: 18px !important;
+  border: 1px solid var(--business-border) !important;
+  border-radius: 12px !important;
+  background:
+    radial-gradient(circle at 97% 0%, #19366b49 0%, transparent 35%),
+    linear-gradient(145deg, #071d3d 0%, #04152e 58%, #071931 100%) !important;
+  box-shadow: inset 0 1px 0 #52ceff24, 0 8px 20px #01081c70 !important;
+  color: var(--business-ink);
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .card.accent-purple {
+  border-color: #6843af !important;
+  background:
+    radial-gradient(circle at 5% 0%, #6735b447 0%, transparent 38%),
+    linear-gradient(150deg, #101942, #07152e 58%, #071a39) !important;
+  box-shadow: inset 0 1px 0 #a97aff34, 0 8px 22px #170a3970, 0 0 13px #763cee24 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .card.accent-cyan {
+  border-color: #0786b8 !important;
+  background:
+    radial-gradient(circle at 5% 0%, #086b9e49 0%, transparent 38%),
+    linear-gradient(150deg, #08213e, #04152e 59%, #071b38) !important;
+  box-shadow: inset 0 1px 0 #5aeeff30, 0 8px 22px #02142f7a, 0 0 13px #00baff20 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .card:hover {
+  border-color: #1b9ed0 !important;
+  box-shadow: inset 0 1px 0 #59e6ff34, 0 10px 24px #03163598, 0 0 16px #00bfff2b !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .section-header {
+  gap: 15px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1a5a884d;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .section-header > div:first-child {
+  min-width: 0;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .section-title {
+  color: #f0f8ff !important;
+  font-size: clamp(15px, 1.15vw, 19px) !important;
+  line-height: 1.35;
+  font-weight: 850 !important;
+  text-shadow: 0 0 14px #28bfff38;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .accent-purple .section-title {
+  color: #e9d7ff !important;
+  text-shadow: 0 0 13px #9f6dff4d;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .section-desc {
+  color: var(--business-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.55;
+  max-width: 105ch;
+  margin-top: 5px;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .kpi-card {
+  background: linear-gradient(155deg, #0b274a, #071731) !important;
+  border: 1px solid #0c679c !important;
+  box-shadow: inset 0 1px #50cbff2d, 0 7px 19px #0008;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .kpi-label,
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .form-label {
+  color: #add0e9 !important;
+  font-weight: 750 !important;
+  letter-spacing: .01em;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .kpi-value {
+  color: #4de3ff !important;
+  text-shadow: 0 0 12px #00cfff4a;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .kpi-sub {
+  color: #96b7d2 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: 1px solid #136da5 !important;
+  border-radius: 9px !important;
+  background: linear-gradient(145deg, #092b55, #071b3a) !important;
+  color: #dbf5ff !important;
+  font-weight: 750 !important;
+  box-shadow: inset 0 1px #52d6ff21, 0 2px 8px #0006;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #0d477c, #0a2b5a) !important;
+  border-color: #2bcaff !important;
+  box-shadow: 0 0 12px #00bdff4a;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn-primary {
+  border-color: #5fb5ff !important;
+  background: linear-gradient(120deg, #1269fa, #5a20af) !important;
+  color: #fff !important;
+  box-shadow: inset 0 1px #ffffff3d, 0 0 12px #4187ff4c;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn-primary:hover:not(:disabled) {
+  border-color: #b780ff !important;
+  background: linear-gradient(120deg, #257dfd, #7234d5) !important;
+  box-shadow: 0 0 16px #9855ff70;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn-cyan {
+  border-color: #46daff !important;
+  background: linear-gradient(120deg, #057fae, #1462c5) !important;
+  color: #fff !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn-success {
+  border-color: #08ad85 !important;
+  background: linear-gradient(120deg, #064d46, #075647) !important;
+  color: #78ffcf !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .btn-danger {
+  border-color: #b75067 !important;
+  background: linear-gradient(120deg, #55223e, #3c1734) !important;
+  color: #ffb9c6 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) :is(.form-input, .form-select, .form-textarea, input:not([type='checkbox']):not([type='radio']), select, textarea) {
+  border-color: #155b8a !important;
+  border-radius: 8px !important;
+  background: #04152e !important;
+  color: #e2f4ff !important;
+  box-shadow: inset 0 1px 7px #0005;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) :is(input, textarea)::placeholder {
+  color: #739bbb !important;
+  opacity: 1;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) :is(input, select, textarea, button, a):focus-visible {
+  outline: 2px solid #61e8ff !important;
+  outline-offset: 2px;
+  border-color: #42d8ff !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .table-wrap {
+  max-width: 100%;
+  border: 1px solid #0d689c !important;
+  border-radius: 10px !important;
+  background: #03152d !important;
+  box-shadow: inset 0 1px #37d5ff1d;
+  scrollbar-color: #116da3 #061a33;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) table {
+  color: #dcefff;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #08264a !important;
+  color: #8ce9ff !important;
+  border-bottom: 1px solid #1576ac !important;
+  font-weight: 850 !important;
+  letter-spacing: .035em;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) td {
+  color: #d1e7fb !important;
+  border-bottom: 1px solid #1c4d7a68 !important;
+  background: transparent;
+  line-height: 1.45;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) tbody tr:nth-child(even) td {
+  background: #0a244133;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) tbody tr:hover td {
+  background: #0b467063 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .chip {
+  border-color: #157bab !important;
+  background: #0b2b52 !important;
+  color: #a8e8ff !important;
+  font-weight: 750;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .chip.purple {
+  border-color: #8f56d4 !important;
+  background: #321660 !important;
+  color: #e7d0ff !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .chip.success {
+  border-color: #098b79 !important;
+  background: #063b3a !important;
+  color: #68f9c9 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .chip.warn {
+  border-color: #977131 !important;
+  background: #352a21 !important;
+  color: #ffe290 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .empty-state {
+  border-color: #155b8d !important;
+  background: #071e3d !important;
+  color: #9ac7e4 !important;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) :is(a, a:visited) {
+  color: #55dfff;
+}
+
+:is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) a:hover {
+  color: #b9f6ff;
+  text-shadow: 0 0 10px #12cbff78;
+}
+
+#view-agents #agentsRegistryGrid {
+  gap: 10px !important;
+}
+
+#view-agents #agentsRegistryGrid > div:first-child {
+  background: linear-gradient(110deg, #064338c9, #081e3c 75%) !important;
+  border: 1px solid #0a8f88 !important;
+  box-shadow: 0 0 13px #00c59d25;
+}
+
+#view-agents #agentsRegistryGrid > .card {
+  padding: 15px !important;
+  cursor: pointer;
+}
+
+#view-agents #agentsRegistryGrid > .card:hover {
+  transform: translateY(-2px);
+  border-color: #37cfff !important;
+  box-shadow: 0 8px 22px #0008, 0 0 15px #12cfff42 !important;
+}
+
+#view-agents #agentsRegistryGrid > .card strong {
+  line-height: 1.4;
+}
+
+#view-agents #agentsRegistryGrid > .card p {
+  color: #a9cbe4 !important;
+}
+
+#view-products #dynamicPricingEngineSection {
+  gap: 12px !important;
+}
+
+#view-products .form-textarea,
+#view-opportunities .form-textarea {
+  min-height: 95px;
+}
+
+#view-orders .card:has(#verifyOrderSelect) {
+  border-color: #0d8eaa !important;
+}
+
+#view-marketing .table-wrap,
+#view-leads .table-wrap {
+  min-height: 150px;
+}
+
+@media (max-width: 1180px) {
+  #view-agents #agentsRegistryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) :is(.grid-2, .grid-3) {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) {
+    padding: 5px 0 80px !important;
+    gap: 10px !important;
+  }
+
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .grid-2,
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .grid-3,
+  #view-agents #agentsRegistryGrid,
+  #view-products #dynamicPricingEngineSection {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .card {
+    padding: 14px !important;
+  }
+
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .section-title {
+    font-size: 15px !important;
+  }
+
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) .section-header > div:last-child:has(> .btn) {
+    width: 100%;
+  }
+
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) th,
+  :is(#view-agents, #view-opportunities, #view-leads, #view-products, #view-orders, #view-marketing) td {
+    padding: 10px 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #view-agents #agentsRegistryGrid > .card:hover {
+    transform: none;
+  }
+}

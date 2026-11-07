@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown to HTML & Prompt Studio — AUTOProfit AI Web Factory</title>
+  <meta name="description" content="Convert Markdown into safe standalone HTML and format reusable prompt notes locally in your browser.">
+  <script defer src="/site-telemetry.js?v=1"></script>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #111827;
+      --border: #1f293d;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .tag {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .ad-banner {
+      background: #0f172a;
+      border: 1px dashed #334155;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      margin-bottom: 16px;
+      overflow: hidden;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .app-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+    }
+    h1 { font-size: 22px; margin-bottom: 8px; color: #fff; }
+    p.desc { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+    .workspace {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    textarea, input {
+      width: 100%;
+      background: #0b1120;
+      border: 1px solid #243048;
+      border-radius: 8px;
+      color: #fff;
+      padding: 12px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      resize: vertical;
+    }
+    textarea:focus, input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button, .btn {
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+    }
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .btn-buy {
+      background: #10b981;
+      color: #fff;
+    }
+    .btn-buy:hover { background: #059669; }
+    .result-box {
+      background: #080d1a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 14px;
+      color: #38bdf8;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      min-height: 80px;
+    }
+    .monetization-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 20px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+    }
+    .checkout-field {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 9px 10px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      background: #0b1120;
+      color: #f8fafc;
+      font: inherit;
+      text-align: left;
+    }
+    footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 30px;
+      padding: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <span>⚡ AUTOProfit AI Web Factory</span>
+      </div>
+      <div class="tag">Developer & AI Writing Tools</div>
+    </header>
+
+    <!-- Top A-Ads Slot -->
+    <div class="ad-banner">
+      <iframe data-aa='2460284' src='//acceptable.a-ads.com/2460284/?size=Adaptive' 
+              style='border:0; padding:0; width:100%; height:70px; overflow:hidden;'></iframe>
+    </div>
+
+    <main class="app-card">
+      <h1>Markdown to HTML & Prompt Studio</h1>
+      <p class="desc">Convert Markdown into safe standalone HTML and format reusable prompt notes locally in your browser.</p>
+
+      <div class="workspace">
+        <label style="font-size: 12px; color: #94a3b8; font-weight:600;">DỮ LIỆU ĐẦU VÀO:</label>
+        <textarea id="inputData" rows="6" placeholder="Dán văn bản, đoạn mã hoặc tham số cần xử lý tại đây..."></textarea>
+        
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" onclick="processTask()">🚀 Thực Thi Xử Lý</button>
+          <button type="button" class="btn btn-outline" onclick="copyResult()">📋 Copy Kết Quả</button>
+          <button type="button" class="btn btn-outline" onclick="clearData()">✕ Xóa</button>
+        </div>
+        <div id="actionStatus" role="status" aria-live="polite" style="display:none; font-size:12px; margin-top:8px;"></div>
+
+        <label style="font-size: 12px; color: #94a3b8; font-weight:600; margin-top: 10px;">KẾT QUẢ TỨC THÌ:</label>
+        <div id="outputResult" class="result-box">// Kết quả đã xử lý sẽ xuất hiện tại đây...</div>
+      </div>
+
+      <div class="monetization-bar">
+        <div>
+          <div style="font-weight: 700; color: #10b981; font-size: 14px;">Tải Mã Nguồn Độc Lập (.html)</div>
+          <div style="font-size: 12px; color: #94a3b8;">Sở hữu toàn bộ mã nguồn sạch không quảng cáo: $2.49 USD (~60,000đ)</div>
+        </div>
+        <button type="button" class="btn btn-buy" onclick="openCheckout()">🛒 Mua Mã Nguồn</button>
+      </div>
+    </main>
+
+    <!-- Bottom A-Ads Slot -->
+    <div class="ad-banner">
+      <iframe data-aa='2460312' src='//acceptable.a-ads.com/2460312/?size=Adaptive' 
+              style='border:0; padding:0; width:100%; height:70px; overflow:hidden;'></iframe>
+    </div>
+
+    <footer>
+      Hệ thống Web App thương mại tự động hóa bởi AUTOProfit AI Enterprise &copy; 2026.
+    </footer>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="modal" role="presentation" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <h3 id="checkoutTitle" style="margin-bottom: 8px;">Thanh Toán Bản Quyền Mã Nguồn</h3>
+      <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">Sản phẩm: Markdown to HTML & Prompt Studio</p>
+      
+      <div style="background: #1e293b; padding: 14px; border-radius: 10px; margin-bottom: 14px;">
+        <img src="https://img.vietqr.io/image/MB-0702543889-compact2.png?amount=60000&addInfo=MUA%20CODE%20ai-prompt-markdown-converter&accountName=LE%20HONG%20VAN" 
+             alt="VietQR" style="max-width: 190px; border-radius: 8px; margin-bottom: 8px;">
+        <div style="font-size: 13px; color: #f8fafc; font-weight:700;">MB: 0702543889</div>
+        <div style="font-size: 12px; color: #94a3b8;">Chủ TK: <strong>LE HONG VAN</strong></div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Dự phòng: ACB - 36691617 (LE HONG VAN)</div>
+        <div style="font-size: 13px; color: #38bdf8; font-weight:700; margin-top: 6px;">Số tiền: 60,000 VND</div>
+      </div>
+
+      <div style="font-size: 12px; color: #94a3b8; margin-bottom: 16px;">Hoặc Binance Pay ID: <br><strong style="color:#10b981; font-size: 14px;">1225675522</strong></div>
+      <p style="font-size:12px; color:#fbbf24; margin-bottom:8px;">Báo cáo sẽ được lưu để đối soát thủ công. Hệ thống không tự xác minh giao dịch hoặc cấp mã nguồn.</p>
+      <label for="paymentMethod" style="display:block; text-align:left; font-size:12px; color:#cbd5e1;">Phương thức thanh toán</label>
+      <select id="paymentMethod" class="checkout-field">
+        <option value="BANK_TRANSFER">Chuyển khoản ngân hàng / VietQR</option>
+        <option value="BINANCE_PAY">Binance Pay</option>
+      </select>
+      <label for="paymentReference" style="display:block; text-align:left; font-size:12px; color:#cbd5e1;">Mã giao dịch hoặc ghi chú (không bắt buộc)</label>
+      <input id="paymentReference" class="checkout-field" type="text" maxlength="120" autocomplete="off" placeholder="Nhập mã giao dịch để chủ cửa hàng đối soát nhanh hơn">
+
+      <div style="display: flex; gap: 8px; justify-content: center;">
+        <button type="button" class="btn btn-outline" onclick="copyPaymentReference()">📋 Sao chép nội dung chuyển khoản</button>
+        <button type="button" id="reportPaymentButton" class="btn btn-primary" onclick="reportPaymentStatus()">Tôi đã chuyển khoản</button>
+        <button type="button" class="btn btn-outline" onclick="closeCheckout()">Đóng</button>
+      </div>
+      <div id="paymentStatus" role="status" aria-live="polite" style="display:none; font-size:12px; margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <script>
+    const TOOL_SLUG = "ai-prompt-markdown-converter";
+
+    function setActionStatus(message, isError = false, targetId = 'actionStatus') {
+      const status = document.getElementById(targetId);
+      if (!status) return;
+      status.textContent = message;
+      status.style.color = isError ? '#fca5a5' : '#86efac';
+      status.style.display = 'block';
+    }
+
+    function parseObject(text, label = 'JSON') {
+      let value;
+      try { value = JSON.parse(text); }
+      catch (error) { throw new Error(`${label} không hợp lệ: ${error.message}`); }
+      if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        throw new Error('Dữ liệu phải là một object JSON.');
+      }
+      return value;
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [], cell = '', quoted = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (quoted && ch === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+        else if (ch === '"') quoted = !quoted;
+        else if (ch === ',' && !quoted) { row.push(cell); cell = ''; }
+        else if ((ch === '\n' || ch === '\r') && !quoted) {
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+          row.push(cell); cell = '';
+          if (row.some(value => value.trim() !== '')) rows.push(row);
+          row = [];
+        } else cell += ch;
+      }
+      row.push(cell);
+      if (row.some(value => value.trim() !== '')) rows.push(row);
+      if (quoted) throw new Error('CSV có dấu ngoặc kép chưa đóng.');
+      if (rows.length < 2) throw new Error('CSV cần có hàng tiêu đề và ít nhất một hàng dữ liệu.');
+      const headers = rows.shift().map((value, index) => value.trim() || `column_${index + 1}`);
+      const uniqueHeaders = headers.map((name, index) => {
+        const occurrences = headers.slice(0, index).filter(item => item === name).length;
+        return occurrences ? `${name}_${occurrences + 1}` : name;
+      });
+      return rows.map(values => Object.fromEntries(uniqueHeaders.map((name, index) => [name, values[index] ?? ''])));
+    }
+
+    function parseKeyValueInput(text) {
+      if (text.trim().startsWith('{')) return parseObject(text);
+      return Object.fromEntries(text.split(/\r?\n/).map(line => {
+        const i = line.search(/[:=]/);
+        return i < 0 ? [line.trim(), ''] : [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+      }).filter(([key]) => key));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    async function runToolProcessor(slug, raw) {
+      if (slug === 'json-schema-seo-studio') {
+        let data;
+        try { data = JSON.parse(raw); }
+        catch (error) { throw new Error(`JSON không hợp lệ: ${error.message}`); }
+        return `JSON hợp lệ\n\nĐịnh dạng dễ đọc:\n${JSON.stringify(data, null, 2)}\n\nBản minify:\n${JSON.stringify(data)}`;
+      }
+      if (slug === 'seo-opengraph-meta-generator') {
+        const data = parseKeyValueInput(raw);
+        const title = data.title || 'Tiêu đề trang';
+        const description = data.description || 'Mô tả ngắn cho trang web';
+        const url = data.url || '';
+        const image = data.image || '';
+        return `<!-- Open Graph -->\n<meta property="og:title" content="${escapeHtml(title)}">\n<meta property="og:description" content="${escapeHtml(description)}">\n<meta property="og:url" content="${escapeHtml(url)}">\n<meta property="og:image" content="${escapeHtml(image)}">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${escapeHtml(title)}">\n<meta name="twitter:description" content="${escapeHtml(description)}">`;
+      }
+      if (slug === 'vietqr-crypto-payment-generator') {
+        const data = parseKeyValueInput(raw);
+        const bank = String(data.bank || data.bank_id || '').trim();
+        const account = String(data.account || data.account_number || '').replace(/\s+/g, '');
+        const amount = Math.floor(Number(data.amount));
+        if (!/^[A-Za-z0-9]{2,12}$/.test(bank) || !/^\d{6,20}$/.test(account) || !Number.isFinite(amount) || amount <= 0) {
+          throw new Error('Nhập bank, account và amount hợp lệ. Ví dụ: {"bank":"MB","account":"0123456789","amount":50000,"name":"NGUYEN VAN A","memo":"ORDER-01"}.');
+        }
+        const name = String(data.name || '').trim();
+        const memo = String(data.memo || '').trim();
+        const qr = new URL(`https://img.vietqr.io/image/${bank}-${account}-compact2.png`);
+        qr.searchParams.set('amount', String(amount));
+        if (name) qr.searchParams.set('accountName', name);
+        if (memo) qr.searchParams.set('addInfo', memo);
+        return `VietQR URL:\n${qr.toString()}\n\nSố tiền: ${amount.toLocaleString('vi-VN')} VND\nNội dung: ${memo || '(chưa đặt)'}`;
+      }
+      if (slug === 'openai-tiktoken-cost-estimator') {
+        const data = raw.trim().startsWith('{') ? parseObject(raw) : { text: raw };
+        const model = String(data.model || 'gpt-4o').toLowerCase();
+        const rates = {
+          'gpt-4o': [2.5, 10],
+          'claude-3.5-sonnet': [3, 15],
+          'gemini-2.0-flash': [0.1, 0.4]
+        };
+        const rate = rates[model] || rates['gpt-4o'];
+        const inputTokens = Math.max(0, Number(data.input_tokens ?? Math.ceil(String(data.text || '').length / 4)) || 0);
+        const outputTokens = Math.max(0, Number(data.output_tokens || 0) || 0);
+        const cost = inputTokens * rate[0] / 1_000_000 + outputTokens * rate[1] / 1_000_000;
+        return `ƯỚC TÍNH CHI PHÍ (tham khảo; cần đối chiếu bảng giá nhà cung cấp)\nModel: ${model}\nInput: ${inputTokens.toLocaleString('vi-VN')} tokens × $${rate[0]}/1M\nOutput: ${outputTokens.toLocaleString('vi-VN')} tokens × $${rate[1]}/1M\nTổng: $${cost.toFixed(6)} USD\n\nToken từ văn bản được ước lượng xấp xỉ 4 ký tự/token.`;
+      }
+      if (slug === 'crypto-arbitrage-spread-scanner') {
+        const data = parseObject(raw);
+        const buy = Number(data.buy_price), sell = Number(data.sell_price);
+        const quantity = Math.max(0, Number(data.quantity || 1));
+        const buyFee = Math.max(0, Number(data.buy_fee_pct || 0)) / 100;
+        const sellFee = Math.max(0, Number(data.sell_fee_pct || 0)) / 100;
+        const networkFee = Math.max(0, Number(data.network_fee_usd || 0));
+        if (![buy, sell, quantity, buyFee, sellFee, networkFee].every(Number.isFinite) || buy <= 0 || sell <= 0 || quantity <= 0) {
+          throw new Error('Cần buy_price, sell_price dương và quantity dương; phí là tùy chọn.');
+        }
+        const gross = (sell - buy) * quantity;
+        const costs = buy * quantity * buyFee + sell * quantity * sellFee + networkFee;
+        const net = gross - costs;
+        const roi = (net / (buy * quantity + buy * quantity * buyFee + networkFee)) * 100;
+        return `So sánh giá do bạn nhập (không phải dữ liệu sàn trực tiếp)\nGiá mua: $${buy}\nGiá bán: $${sell}\nKhối lượng: ${quantity}\nChênh lệch gộp: $${gross.toFixed(4)}\nPhí ước tính: $${costs.toFixed(4)}\nLãi/lỗ sau phí: $${net.toFixed(4)} (${roi.toFixed(3)}%)`;
+      }
+      if (slug === 'defi-staking-yield-compounder') {
+        const data = parseObject(raw);
+        const principal = Number(data.principal), apy = Number(data.apy_percent), days = Number(data.days);
+        const compounds = Math.max(1, Number(data.compounds_per_year || 365));
+        if (![principal, apy, days, compounds].every(Number.isFinite) || principal < 0 || apy < 0 || days < 0) throw new Error('Cần principal, apy_percent và days là số không âm.');
+        const earned = principal * Math.pow(1 + apy / 100 / compounds, compounds * days / 365) - principal;
+        return `Ước tính lãi kép\nGốc: ${principal.toFixed(2)}\nAPY: ${apy}%\nThời hạn: ${days} ngày\nLãi ước tính: ${earned.toFixed(2)}\nTổng cuối kỳ: ${(principal + earned).toFixed(2)}\n\nKhông bao gồm phí, biến động giá hoặc rủi ro giao thức.`;
+      }
+      if (slug === 'password-hash-security-auditor') {
+        if (!raw) throw new Error('Nhập mật khẩu để phân tích. Dữ liệu được xử lý trong trình duyệt và không gửi lên máy chủ.');
+        let pool = 0;
+        if (/[a-z]/.test(raw)) pool += 26;
+        if (/[A-Z]/.test(raw)) pool += 26;
+        if (/\d/.test(raw)) pool += 10;
+        if (/[^A-Za-z0-9]/.test(raw)) pool += 33;
+        const entropy = raw.length * Math.log2(Math.max(pool, 1));
+        let digest = 'SHA-256 unavailable in this browser';
+        if (globalThis.crypto?.subtle && globalThis.TextEncoder) {
+          const bytes = await globalThis.crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+          digest = Array.from(new Uint8Array(bytes), value => value.toString(16).padStart(2, '0')).join('');
+        }
+        return `Phân tích cục bộ — không hiển thị lại mật khẩu\nĐộ dài: ${raw.length} ký tự\nEntropy ước tính: ${entropy.toFixed(1)} bit\nSHA-256: ${digest}\n\nĐây là ước lượng lý thuyết; không dùng hash SHA-256 thuần để lưu mật khẩu người dùng.`;
+      }
+      if (slug === 'papaparse-csv-to-json-cleaner') {
+        return JSON.stringify(parseCsv(raw), null, 2);
+      }
+      if (slug === 'css-glassmorphism-card-builder') {
+        const data = raw.trim() ? parseObject(raw) : {};
+        const blur = Math.min(50, Math.max(0, Number(data.blur_px ?? 16)));
+        const opacity = Math.min(1, Math.max(0, Number(data.opacity ?? 0.18)));
+        const color = /^#[\da-f]{3}(?:[\da-f]{3})?$/i.test(String(data.color || '#ffffff')) ? String(data.color || '#ffffff') : '#ffffff';
+        const css = `.glass-card {\n  background: ${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')};\n  backdrop-filter: blur(${blur}px);\n  -webkit-backdrop-filter: blur(${blur}px);\n  border: 1px solid rgba(255, 255, 255, 0.24);\n  border-radius: 16px;\n  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);\n}`;
+        return `${css}\n\nPreview HTML:\n<div class="glass-card">Nội dung thẻ</div>`;
+      }
+      if (slug === 'web3-airdrop-testnet-quest-tracker') {
+        const tasks = raw.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+        if (!tasks.length) throw new Error('Nhập mỗi nhiệm vụ trên một dòng.');
+        return JSON.stringify(tasks.map((title, index) => ({ id: index + 1, title, completed: false })), null, 2);
+      }
+      if (slug === 'ai-prompt-markdown-converter') {
+        const source = raw.trim();
+        if (!source) throw new Error('Nhập nội dung Markdown hoặc prompt trước.');
+        const inline = value => escapeHtml(value)
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        const html = source.split(/\r?\n/).map(line => {
+          const heading = line.match(/^(#{1,6})\s+(.+)$/);
+          if (heading) return `<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`;
+          if (/^\s*[-*]\s+/.test(line)) return `<li>${inline(line.replace(/^\s*[-*]\s+/, ''))}</li>`;
+          return line.trim() ? `<p>${inline(line)}</p>` : '';
+        }).join('\n').replace(/(?:<li>[\s\S]*?<\/li>\n?)+/g, match => `<ul>\n${match}</ul>`);
+        return `<!doctype html>\n<html lang="vi">\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>Markdown Preview</title>\n<body>\n${html}\n</body>\n</html>`;
+      }
+      if (slug === 'saas-roi-pomodoro-calculator') {
+        const data = parseKeyValueInput(raw);
+        const number = (key, fallback) => {
+          const value = Number(data[key] ?? fallback);
+          if (!Number.isFinite(value) || value < 0) throw new Error(`${key} phải là số không âm.`);
+          return value;
+        };
+        const mrr = number('mrr_usd', 0);
+        const cac = number('cac_usd', 0);
+        const churn = Math.min(99, number('monthly_churn_pct', 0)) / 100;
+        const customers = number('customers', 0);
+        const ltv = churn > 0 ? mrr * (1 - churn) / churn : null;
+        const payback = mrr > 0 ? cac / mrr : null;
+        const ltvCac = ltv !== null && cac > 0 ? ltv / cac : null;
+        const work = Math.round(Math.max(5, Math.min(180, number('pomodoro_minutes', 25))));
+        const rest = Math.round(Math.max(1, Math.min(60, number('break_minutes', 5))));
+        return [
+          'SaaS ROI estimate (based on supplied values)',
+          `MRR: $${mrr.toFixed(2)} · Customers: ${customers}`,
+          `CAC: $${cac.toFixed(2)} · Monthly churn: ${(churn * 100).toFixed(1)}%`,
+          `Estimated CAC payback: ${payback === null ? 'enter a positive mrr_usd value' : `${payback.toFixed(1)} months`}`,
+          `Estimated LTV: ${ltv === null ? 'not available (monthly_churn_pct is 0)' : `$${ltv.toFixed(2)}`}`,
+          `Estimated LTV / CAC: ${ltvCac === null ? 'not available' : `${ltvCac.toFixed(2)}x`}`,
+          '',
+          `Pomodoro plan: ${work} minutes focus, ${rest} minutes break.`,
+          'Input format: mrr_usd=49, cac_usd=120, monthly_churn_pct=5, customers=12, pomodoro_minutes=25, break_minutes=5'
+        ].join('\n');
+      }
+      return JSON.stringify(JSON.parse(raw), null, 2);
+    }
+
+    async function processTask() {
+      const input = document.getElementById('inputData');
+      const out = document.getElementById('outputResult');
+      const value = input.value.trim();
+      if (!value && TOOL_SLUG !== 'css-glassmorphism-card-builder') {
+        out.textContent = '// Vui lòng nhập dữ liệu đầu vào.';
+        out.dataset.ready = 'false';
+        setActionStatus('Chưa có dữ liệu đầu vào.', true);
+        return;
+      }
+      try {
+        out.textContent = await runToolProcessor(TOOL_SLUG, value);
+        out.dataset.ready = 'true';
+        setActionStatus('Xử lý xong.');
+      } catch (error) {
+        out.textContent = `Lỗi: ${error.message}`;
+        out.dataset.ready = 'false';
+        setActionStatus(error.message, true);
+      }
+    }
+
+    async function copyText(value, statusId = 'actionStatus') {
+      try {
+        if (navigator.clipboard?.writeText && window.isSecureContext) {
+          await navigator.clipboard.writeText(value);
+          setActionStatus('Đã sao chép vào clipboard.', false, statusId);
+          return true;
+        }
+      } catch (_) {}
+      const field = document.createElement('textarea');
+      field.value = value;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch (_) {}
+      field.remove();
+      setActionStatus(copied ? 'Đã sao chép vào clipboard.' : 'Không thể sao chép tự động; hãy chọn và sao chép nội dung.', !copied, statusId);
+      return copied;
+    }
+
+    async function copyResult() {
+      const out = document.getElementById('outputResult');
+      if (out.dataset.ready !== 'true') {
+        setActionStatus('Chưa có kết quả để sao chép. Hãy chạy xử lý trước.', true);
+        return;
+      }
+      await copyText(out.textContent);
+    }
+
+    function clearData() {
+      document.getElementById('inputData').value = '';
+      const out = document.getElementById('outputResult');
+      out.textContent = '// Đã xóa dữ liệu.';
+      out.dataset.ready = 'false';
+      setActionStatus('Đã xóa dữ liệu.');
+    }
+
+    async function copyPaymentReference() {
+      await copyText(`MUA CODE ai-prompt-markdown-converter`, 'paymentStatus');
+    }
+
+    async function reportPaymentStatus() {
+      const button = document.getElementById('reportPaymentButton');
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      const reference = document.getElementById('paymentReference').value.trim();
+      button.disabled = true;
+      button.textContent = 'Đang gửi báo cáo…';
+      try {
+        const response = await fetch('/api/public/payment-reports', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_slug: TOOL_SLUG, payment_method: paymentMethod, reference })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.accepted) throw new Error(result.detail || 'Không thể gửi báo cáo lúc này.');
+        setActionStatus(`Đã gửi báo cáo ${result.report_id}. Trạng thái: chờ chủ cửa hàng đối soát; chưa xác nhận thanh toán và chưa cấp mã nguồn.`, false, 'paymentStatus');
+      } catch (error) {
+        setActionStatus(`${error.message || 'Không thể kết nối máy chủ.'} Báo cáo chưa được lưu; hãy thử lại hoặc liên hệ chủ cửa hàng.`, true, 'paymentStatus');
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Tôi đã chuyển khoản';
+      }
+    }
+
+    function openCheckout() {
+      const modal = document.getElementById('checkoutModal');
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+      setActionStatus('', false, 'paymentStatus');
+    }
+
+    function closeCheckout() {
+      const modal = document.getElementById('checkoutModal');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    document.getElementById('checkoutModal').addEventListener('click', event => {
+      if (event.target.id === 'checkoutModal') closeCheckout();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeCheckout();
+    });
+    
+  </script>
+</body>
+</html>
