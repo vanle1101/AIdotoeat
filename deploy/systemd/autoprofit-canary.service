@@ -19,6 +19,7 @@ Environment=AUTOPROFIT_ENGINE_WORKER=false
 Environment=AUTOPROFIT_ENGINE_KILL_SWITCH=true
 Environment=AUTOPROFIT_BUDGET_KILL_SWITCH=true
 Environment=AUTOPROFIT_TEST_MODE_ENABLED=false
+Environment=PYTHONPATH=/var/www/autoprofit-canary/current:/var/www/autoprofit-canary/current/backend
 Environment=PLAYWRIGHT_BROWSERS_PATH=/var/lib/autoprofit-canary/ms-playwright
 Environment=PYTHONDONTWRITEBYTECODE=1
 ExecStart=/var/www/autoprofit-canary/current/.venv/bin/uvicorn main:app --app-dir /var/www/autoprofit-canary/current/backend --host 127.0.0.1 --port 8451 --workers 1

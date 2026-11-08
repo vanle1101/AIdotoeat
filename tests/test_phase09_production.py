@@ -171,6 +171,7 @@ class Phase09ProductionTests(unittest.TestCase):
         self.assertIn("AUTOPROFIT_ENGINE_KILL_SWITCH=true", service)
         self.assertIn("AUTOPROFIT_BUDGET_KILL_SWITCH=true", service)
         self.assertIn("AUTOPROFIT_TEST_MODE_ENABLED=false", service)
+        self.assertIn("PYTHONPATH=/var/www/autoprofit-canary/current:/var/www/autoprofit-canary/current/backend", service)
         self.assertIn("StandardOutput=journal", service)
         self.assertIn("StartLimitBurst=3", service)
         self.assertNotIn("append:", service)
