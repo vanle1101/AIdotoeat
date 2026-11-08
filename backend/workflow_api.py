@@ -26,6 +26,7 @@ from fastapi.responses import FileResponse
 from apps_library import TOOL_DEFINITIONS
 from config import APPS_DIR, CONFIG
 from database import get_connection
+from core import market_research
 
 router = APIRouter()
 
@@ -189,6 +190,10 @@ def _audit(action: str, kind: Optional[str] = None, record_id: Optional[str] = N
 def _products() -> list[Dict[str, Any]]:
     result = []
     for tool in TOOL_DEFINITIONS:
+        # Product Studio demos are quote-after-scope offers, not fixed-price
+        # products in the legacy order and payment claim flow.
+        if tool.get("studio"):
+            continue
         override = _setting("product:" + tool["slug"], {}) or {}
         price = float(override.get("price_usd", tool["price_usd"]))
         result.append({
@@ -367,13 +372,9 @@ def update_product(product_id: str, request: Request, payload: Dict[str, Any] = 
 
 @router.get("/api/products/{slug}/download")
 def download_product(slug: str):
-    product = _find_product(slug)
-    if not product:
+    if not _find_product(slug):
         raise HTTPException(status_code=404, detail="Sản phẩm không tồn tại trong catalog.")
-    path = APPS_DIR / f"{product['slug']}.html"
-    if not path.is_file():
-        raise HTTPException(status_code=404, detail="Tệp HTML của sản phẩm chưa được tạo.")
-    return FileResponse(path, filename=f"{product['slug']}.html", media_type="text/html")
+    raise HTTPException(status_code=410, detail="Direct product downloads are disabled. Paid delivery requires an active expiring /api/cash delivery authorization.")
 
 
 @router.get("/api/marketing")
@@ -711,53 +712,51 @@ def donation_health():
 
 
 @router.post("/api/opportunities/analyze-freelance-job")
-def analyze_freelance_job(payload: Dict[str, Any] = Body(...)):
+def analyze_freelance_job(request: Request, payload: Dict[str, Any] = Body(...)):
+    _require_admin(request)
     title = str(payload.get("title", "")).strip()[:200]
     requirements = str(payload.get("requirements", "")).strip()[:4000]
     if not title or not requirements:
         raise HTTPException(status_code=422, detail="Cần tiêu đề và yêu cầu dự án.")
+    if market_research._looks_unsafe(title + " " + requirements):
+        raise HTTPException(status_code=422, detail="Nội dung bị chính sách nghiên cứu an toàn từ chối.")
+    if re.search(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", title + "\n" + requirements, re.I):
+        raise HTTPException(status_code=422, detail="Không lưu địa chỉ email cá nhân trong brief nghiên cứu.")
+    source_url = str(payload.get("source_url", "")).strip()[:500]
+    if source_url:
+        parsed_source = urlparse(source_url)
+        if (parsed_source.scheme != "https" or not parsed_source.hostname
+                or parsed_source.username or parsed_source.password):
+            raise HTTPException(status_code=422, detail="URL nguồn phải là HTTPS công khai.")
     budget = payload.get("published_budget_usd")
-    budget = float(budget) if budget not in (None, "") else None
-    signals = sum(1 for word in ("website", "seo", "html", "audit", "automation", "json", "python") if word in (title + " " + requirements).lower())
-    fit = min(95, 35 + signals * 8 + (10 if budget and budget >= 100 else 0))
-    reason = "Điểm phù hợp dựa trên từ khóa kỹ thuật và ngân sách được cung cấp; cần người xem xét nguồn và yêu cầu trước khi gửi." 
+    try:
+        budget = float(budget) if budget not in (None, "") else None
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=422, detail="Ngân sách phải là số hợp lệ.")
+    if budget is not None and (budget < 0 or budget > 1_000_000_000):
+        raise HTTPException(status_code=422, detail="Ngân sách nằm ngoài phạm vi hợp lệ.")
+    reason = "Đầu vào do người dùng cung cấp; chưa xác minh nguồn, ngân sách hoặc nhu cầu trả tiền. Không tính điểm phù hợp tự động."
     proposal = f"Chào bạn,\n\nMình đã xem yêu cầu “{title}”. AUTOProfit có thể hỗ trợ phân tích phạm vi, kiểm toán kỹ thuật và đề xuất hướng triển khai.\n\nPhạm vi cần xác nhận:\n{requirements[:700]}\n\nVui lòng xác nhận tiêu chí nghiệm thu và thời hạn để chốt báo giá.\n\nBản nháp này chưa được gửi tự động."
     record = _record("opportunity", {"name": title, "title": title,
-        "platform": str(payload.get("platform", "Manual"))[:80], "source_url": str(payload.get("source_url", ""))[:500],
-        "requirements": requirements, "published_budget_usd": budget, "fit_score": fit,
-        "total_score": fit, "selection_or_rejection_reason": reason,
-        "drafted_proposal": proposal, "source": "manual_user_input", "contacted": False}, "REVIEW_REQUIRED")
-    return {"id": record["id"], "fit_score": fit, "selection_or_rejection_reason": reason,
-            "drafted_proposal": proposal, "status": "REVIEW_REQUIRED", "saved": True}
+        "platform": str(payload.get("platform", "Manual"))[:80], "source_url": source_url,
+        "requirements": requirements, "user_reported_budget_usd": budget,
+        "fit_score": None, "total_score": None, "selection_or_rejection_reason": reason,
+        "willingness_to_pay_hypothesis": "HYPOTHESIS: user-entered budget is unverified and does not establish payment intent.",
+        "validation_status": "UNVALIDATED", "source": "owner_provided_brief",
+        "drafted_proposal": proposal, "contacted": False}, "UNVALIDATED")
+    return {"id": record["id"], "fit_score": None, "selection_or_rejection_reason": reason,
+            "drafted_proposal": proposal, "status": "UNVALIDATED", "saved": True}
 
 
 @router.post("/api/internet/live-scan")
-def live_internet_scan():
-    url = "https://hn.algolia.com/api/v1/search_by_date?tags=show_hn&hitsPerPage=10"
-    request = urllib.request.Request(url, headers={"User-Agent": "AUTOProfitDashboard/1.0"})
-    try:
-        with urllib.request.urlopen(request, timeout=7) as response:
-            data = json.loads(response.read(1_500_000).decode("utf-8"))
-    except (OSError, ValueError, urllib.error.URLError):
-        return {"status": "source_unavailable", "source": "Hacker News Algolia API", "items": [],
-                "audited_live_websites": [], "created_leads": [], "total_opportunities_in_db": len(_list_records("opportunity"))}
-    saved = []
-    for hit in data.get("hits", [])[:10]:
-        title = str(hit.get("title") or "").strip()
-        link = str(hit.get("url") or "").strip()
-        if not title or not link or not urlparse(link).scheme.startswith("http"):
-            continue
-        existing = next((item for item in _list_records("opportunity", 200) if item.get("source_url") == link), None)
-        if existing:
-            continue
-        saved.append(_record("opportunity", {"name": title, "title": title, "source_url": link,
-            "source": "Hacker News Show HN", "points": int(hit.get("points") or 0),
-            "created_at_source": hit.get("created_at"), "contacted": False,
-            "selection_or_rejection_reason": "Nguồn công khai; cần kiểm tra thủ công trước khi liên hệ."}, "REVIEW_REQUIRED"))
-    items = _list_records("opportunity")
-    return {"status": "observed", "source": "Hacker News Algolia API", "items": saved,
-            "audited_live_websites": [], "created_leads": [], "total_opportunities_in_db": len(items),
-            "message": "Đã thu thập bài Show HN công khai; chưa crawl website và chưa tạo lead khách hàng."}
+def live_internet_scan(request: Request):
+    _require_admin(request)
+    result = market_research.run_live_research()
+    result["audited_live_websites"] = []
+    result["created_leads"] = []
+    result["total_opportunities_in_db"] = len(_list_records("opportunity"))
+    result["source"] = "Official Hacker News Firebase API + Stack Exchange API"
+    return result
 
 
 def _audit_html(html: str) -> Dict[str, Any]:
@@ -814,7 +813,8 @@ def live_audit(payload: Dict[str, Any] = Body(...)):
 
 @router.get("/api/pricing/catalog")
 def pricing_catalog():
-    return {"items": _products(), "total": len(TOOL_DEFINITIONS), "status": "observed"}
+    items = _products()
+    return {"items": items, "total": len(items), "status": "observed"}
 
 
 @router.put("/api/pricing/catalog/{product_id}")
@@ -1003,6 +1003,7 @@ def create_order(request: Request, payload: Dict[str, Any] = Body(...)):
 
 @router.post("/api/payments/submit-mbbank-proof", status_code=202)
 def submit_bank_proof(request: Request, payload: Dict[str, Any] = Body(...)):
+    raise HTTPException(status_code=410, detail="Legacy order claims are retired. Submit through the buyer token order flow at /checkout.html.")
     order_id = str(payload.get("order_id", ""))
     reference = str(payload.get("bank_tx_ref", "")).strip()[:120]
     try:
@@ -1054,6 +1055,8 @@ def submit_bank_proof(request: Request, payload: Dict[str, Any] = Body(...)):
 @router.post("/api/payments/verify-mbbank-tx")
 def verify_bank_payment(request: Request, payload: Dict[str, Any] = Body(...)):
     _require_admin(request)
+    raise HTTPException(status_code=410, detail="Legacy payment verification is disabled. Verify a buyer-submitted cash claim against the receiving-account statement through /api/cash/admin/claims/{claim_id}/verify.")
+    raise HTTPException(status_code=410, detail="Legacy payment verification is disabled. Verify a buyer-submitted cash claim against the receiving-account statement through /api/cash/admin/claims/{claim_id}/verify.")
     order_id = str(payload.get("order_id", ""))
     order = _get_record("order", order_id)
     if not order:
@@ -1118,6 +1121,8 @@ def _verify_bsc_receipt(tx_hash: str, expected_usd: float) -> float:
 @router.post("/api/payments/verify-bsc-tx")
 def verify_bsc_order_payment(request: Request, payload: Dict[str, Any] = Body(...)):
     _require_admin(request)
+    raise HTTPException(status_code=410, detail="Legacy orders cannot create verified revenue or deliveries. Use the Phase 07 order-to-cash lifecycle.")
+    raise HTTPException(status_code=410, detail="Legacy orders cannot create verified revenue or deliveries. Use the Phase 07 order-to-cash lifecycle.")
     order_id = str(payload.get("order_id", ""))
     order = _get_record("order", order_id)
     if not order:
@@ -1134,6 +1139,8 @@ def verify_bsc_order_payment(request: Request, payload: Dict[str, Any] = Body(..
 
 @router.post("/api/public/orders/verify-bsc-tx")
 def verify_public_bsc_payment(payload: Dict[str, Any] = Body(...)):
+    raise HTTPException(status_code=410, detail="Direct transaction submission cannot create an order or prove payment. Use the owner-reviewed order-to-cash checkout.")
+    raise HTTPException(status_code=410, detail="Direct transaction submission cannot create an order or prove payment. Use the owner-reviewed order-to-cash checkout.")
     slug = str(payload.get("item_slug", payload.get("product_slug", "")))
     product = _find_product(slug)
     if not product:
@@ -1192,6 +1199,8 @@ def verify_public_bsc_payment(payload: Dict[str, Any] = Body(...)):
 @router.get("/api/orders/{order_id}/deliver")
 def deliver_order(order_id: str, request: Request):
     _require_admin(request)
+    raise HTTPException(status_code=410, detail="Legacy order delivery is disabled. Use a QA-checked package and active Phase 07 expiring delivery authorization.")
+    raise HTTPException(status_code=410, detail="Legacy order delivery is disabled. Use an active Phase 07 delivery authorization.")
     order = _get_record("order", order_id)
     if not order:
         raise HTTPException(status_code=404, detail="Không tìm thấy đơn hàng.")

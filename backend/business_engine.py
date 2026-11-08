@@ -128,6 +128,49 @@ def _add_missing_workflow_columns(conn: sqlite3.Connection) -> None:
     conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_workflow_records_idempotency ON workflow_records(idempotency_key) WHERE idempotency_key IS NOT NULL")
 
 
+def _add_market_research_columns(conn: sqlite3.Connection) -> None:
+    """Extend compatible evidence rows without replacing prior ledger data."""
+    known = {row[1] for row in conn.execute("PRAGMA table_info(evidence)")}
+    columns = {
+        "captured_at": "TEXT", "quote": "TEXT", "quote_attribution": "TEXT",
+        "pain_point": "TEXT", "buyer_persona": "TEXT",
+        "alternatives_json": "TEXT NOT NULL DEFAULT '[]'",
+        "skills_resources_json": "TEXT NOT NULL DEFAULT '[]'",
+        "willingness_to_pay_hypothesis": "TEXT", "legal_restrictions": "TEXT",
+        "competition": "TEXT", "confidence": "REAL",
+        "freshness_days": "INTEGER", "source_dedupe_key": "TEXT",
+        "opportunity_dedupe_key": "TEXT", "source_type": "TEXT",
+    }
+    for name, definition in columns.items():
+        if name not in known:
+            conn.execute(f"ALTER TABLE evidence ADD COLUMN {name} {definition}")
+    conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_evidence_source_dedupe ON evidence(source_dedupe_key) WHERE source_dedupe_key IS NOT NULL")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_evidence_opportunity_source ON evidence(opportunity_id, captured_at DESC)")
+
+
+def _add_gtm_columns(conn: sqlite3.Connection) -> None:
+    """Add opt-in and suppression controls to the existing CRM leads table."""
+    known = {row[1] for row in conn.execute("PRAGMA table_info(leads)")}
+    columns = {
+        "gtm_consent_status": "TEXT NOT NULL DEFAULT 'UNKNOWN'",
+        "gtm_consent_at": "TEXT",
+        "gtm_consent_version": "TEXT",
+        "gtm_contact_provenance": "TEXT NOT NULL DEFAULT 'legacy_unknown'",
+        "gtm_permission_evidence": "TEXT",
+        "gtm_campaign_id": "TEXT",
+        "gtm_suppressed": "INTEGER NOT NULL DEFAULT 0",
+        "gtm_suppressed_at": "TEXT",
+        "gtm_owner_approved_at": "TEXT",
+        "gtm_approved_proposal_hash": "TEXT",
+        "gtm_last_outreach_at": "TEXT",
+        "gtm_outreach_count": "INTEGER NOT NULL DEFAULT 0",
+    }
+    for name, definition in columns.items():
+        if name not in known:
+            conn.execute(f"ALTER TABLE leads ADD COLUMN {name} {definition}")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_leads_gtm_permission ON leads(gtm_consent_status,gtm_suppressed,gtm_campaign_id)")
+
+
 def ensure_schema(path: Optional[Path | str] = None) -> int:
     """Apply additive, transactional migrations against the canonical backend DB."""
     target = Path(path) if path is not None else Path(backend_database.DB_PATH)
@@ -144,6 +187,13 @@ def ensure_schema(path: Optional[Path | str] = None) -> int:
             (4, "004_invocation_payload_hash.sql", None),
             (5, "005_workflow_event_idempotency.sql", None),
             (6, "006_llm_runtime.sql", None),
+            (7, "007_agent_runtime.sql", None),
+            (8, "008_market_research.sql", _add_market_research_columns),
+            (9, "009_gtm_crm_analytics.sql", _add_gtm_columns),
+            (10, "010_order_to_cash.sql", None),
+            (11, "011_cash_reference_uniqueness.sql", None),
+            (12, "012_test_mode_orders.sql", None),
+            (13, "013_optimization_agent.sql", None),
         ]
         for version, filename, callback in migrations:
             if version in applied:
@@ -167,7 +217,7 @@ def ensure_schema(path: Optional[Path | str] = None) -> int:
             (iso(),),
         )
         conn.commit()
-        return 6
+        return 13
     finally:
         conn.close()
 
@@ -423,7 +473,7 @@ def recover_crashed_tasks(*, now: Optional[datetime] = None, path: Optional[Path
 
 
 def claim_task(worker_id: str, *, lease_seconds: int = 60, now: Optional[datetime] = None,
-               path: Optional[Path | str] = None) -> Optional[dict[str, Any]]:
+               path: Optional[Path | str] = None, run_id: Optional[str] = None) -> Optional[dict[str, Any]]:
     if not worker_id or len(worker_id) > 120 or not 1 <= lease_seconds <= 3600:
         raise ValueError("invalid worker lease")
     ensure_schema(path)
@@ -441,10 +491,11 @@ def claim_task(worker_id: str, *, lease_seconds: int = 60, now: Optional[datetim
         row = conn.execute(
             """SELECT t.* FROM tasks t WHERE t.state IN ('QUEUED','RETRY_PENDING')
                AND COALESCE(t.available_at,t.created_at)<=?
+               AND (? IS NULL OR t.run_id=?)
                AND (t.run_id IS NULL OR EXISTS(SELECT 1 FROM agent_runs r WHERE r.id=t.run_id AND r.status NOT IN ('PAUSED','CANCELLED','DONE','FAILED')))
                AND (t.run_id IS NULL OR NOT EXISTS(SELECT 1 FROM tasks prev WHERE prev.run_id=t.run_id AND prev.id<t.id AND prev.state!='DONE'))
                ORDER BY t.created_at,t.id LIMIT 1""",
-            (now_s,),
+            (now_s, run_id, run_id),
         ).fetchone()
         if not row:
             conn.commit()
@@ -663,6 +714,166 @@ def _start_workflow_tx(
     return dict(conn.execute("SELECT * FROM agent_runs WHERE id=?", (run_id,)).fetchone())
 
 
+def start_agent_workflow(*, idempotency_key: str, payload: Mapping[str, Any],
+                         steps: list[Mapping[str, str]], path: Optional[Path | str] = None) -> dict[str, Any]:
+    """Create an idempotent, sequential role workflow with real queued tasks."""
+    ensure_schema(path)
+    key = (idempotency_key or "").strip()
+    if not key or len(key) > 180 or not isinstance(payload, Mapping):
+        raise ValueError("agent workflow requires an idempotency key and object payload")
+    if not 1 <= len(steps) <= 20:
+        raise ValueError("agent workflow must contain 1-20 bounded steps")
+    normalized = []
+    for item in steps:
+        role_id = str(item.get("role_id", ""))
+        title = str(item.get("title", ""))
+        if not re.fullmatch(r"[A-Z][A-Z0-9_]{1,63}", role_id) or not title.strip() or len(title) > 180:
+            raise ValueError("agent workflow step is invalid")
+        normalized.append((role_id, title))
+    safe_payload = redact(payload)
+    conn = connect(path)
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        existing = conn.execute("SELECT * FROM agent_runs WHERE idempotency_key=?", (key,)).fetchone()
+        if existing:
+            existing_steps = conn.execute(
+                "SELECT assigned_role_id,title FROM tasks WHERE run_id=? ORDER BY id", (existing["id"],)
+            ).fetchall()
+            requested_steps = [(role_id, title) for role_id, title in normalized]
+            stored_steps = [(row["assigned_role_id"], row["title"]) for row in existing_steps]
+            if (existing["workflow"] != "agent_pipeline" or existing["payload_json"] != _json(safe_payload)
+                    or stored_steps != requested_steps):
+                raise ValueError("idempotency key was reused for a different agent workflow")
+            conn.commit()
+            return dict(existing)
+        now = iso()
+        run_id = str(uuid.uuid4())
+        trace_id = str(uuid.uuid4())
+        conn.execute(
+            "INSERT INTO agent_runs(id,workflow,status,idempotency_key,trace_id,payload_json,result_json,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)",
+            (run_id, "agent_pipeline", "QUEUED", key, trace_id, _json(safe_payload), "{}", now, now),
+        )
+        for index, (role_id, title) in enumerate(normalized):
+            task_key = f"{key}:agent:{index}:{role_id.lower()}"
+            task_payload = {"run_id": run_id, "role_id": role_id, "step_index": index, "depth": 0}
+            cursor = conn.execute(
+                """INSERT INTO tasks(title,category,assigned_role_id,status,cost_vnd,input_data,
+                    created_at,updated_at,run_id,task_type,state,state_version,idempotency_key,trace_id,
+                    attempts,max_attempts,available_at,timeout_seconds,payload_json)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (title, "AGENT", role_id, "QUEUED", 0.0, _json(task_payload), now, now, run_id,
+                 "agent.execute", "QUEUED", 1, task_key, trace_id, 0, 1, now, 30, _json(task_payload)),
+            )
+            task_id = int(cursor.lastrowid)
+            _insert_event(conn, task_id, "agent.task_created", "CREATED", title, trace_id=trace_id,
+                          details={"role_id": role_id, "step_index": index},
+                          idempotency_key=f"{task_key}:created")
+            _insert_event(conn, task_id, "agent.task_queued", "QUEUED", title, trace_id=trace_id,
+                          idempotency_key=f"{task_key}:queued")
+        conn.execute(
+            "INSERT INTO workflow_events(action,record_kind,record_id,actor,details_json,created_at) VALUES(?,?,?,?,?,?)",
+            ("agent_pipeline_created", "agent_run", run_id, "owner", _json({"step_count": len(normalized)}), now),
+        )
+        conn.commit()
+        return dict(conn.execute("SELECT * FROM agent_runs WHERE id=?", (run_id,)).fetchone())
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def save_agent_artifact(*, run_id: str, task_id: int, role_id: str, title: str,
+                        artifact_type: str, mime_type: str, content: str,
+                        source_ids: list[str], path: Optional[Path | str] = None) -> dict[str, Any]:
+    """Persist a bounded draft artifact and its content hash in the canonical ledger."""
+    if not content or len(content.encode("utf-8")) > 100_000 or len(title) > 180:
+        raise ValueError("agent artifact must be non-empty and at most 100 KB")
+    if not source_ids or len(source_ids) > 20:
+        raise ValueError("agent artifact requires 1-20 source references")
+    digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    artifact_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{run_id}:{task_id}:{digest}"))
+    conn = connect(path)
+    try:
+        now = iso()
+        conn.execute("BEGIN IMMEDIATE")
+        conn.execute(
+            """INSERT OR IGNORE INTO agent_artifacts
+               (id,run_id,task_id,role_id,title,artifact_type,mime_type,content,content_sha256,source_ids_json,status,created_at)
+               VALUES(?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (artifact_id, run_id, task_id, role_id, redact(title), artifact_type, mime_type,
+             content, digest, _json(sorted(set(source_ids))), "DRAFT", now),
+        )
+        row = conn.execute("SELECT id,run_id,task_id,role_id,title,artifact_type,mime_type,content_sha256,source_ids_json,status,created_at FROM agent_artifacts WHERE id=?", (artifact_id,)).fetchone()
+        conn.commit()
+        result = dict(row)
+        result["source_ids"] = _loads(result.pop("source_ids_json"), [])
+        return result
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def get_agent_artifact(artifact_id: str, *, path: Optional[Path | str] = None) -> Optional[dict[str, Any]]:
+    conn = connect(path)
+    try:
+        row = conn.execute("SELECT * FROM agent_artifacts WHERE id=?", (artifact_id,)).fetchone()
+        if not row:
+            return None
+        result = dict(row)
+        result["source_ids"] = _loads(result.pop("source_ids_json"), [])
+        return result
+    finally:
+        conn.close()
+
+
+def save_agent_memory(*, run_id: str, namespace: str, source_id: str, source_uri: str,
+                      source_sha256: str, fact: str, ttl_days: int = 30,
+                      path: Optional[Path | str] = None) -> str:
+    """Store a source-cited fact with bounded TTL; never store uncited memory."""
+    if not all((run_id, namespace, source_id, source_uri, source_sha256, fact.strip())):
+        raise ValueError("agent memory requires a fact and complete source citation")
+    if not 1 <= ttl_days <= 365 or len(fact) > 800:
+        raise ValueError("agent memory TTL or fact length is outside limits")
+    memory_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{run_id}:{namespace}:{source_id}:{hashlib.sha256(fact.encode()).hexdigest()}"))
+    now = utc_now()
+    conn = connect(path)
+    try:
+        conn.execute("INSERT OR IGNORE INTO agent_memory(id,run_id,namespace,source_id,source_uri,source_sha256,fact,created_at,expires_at) VALUES(?,?,?,?,?,?,?,?,?)",
+                     (memory_id, run_id, namespace, source_id, source_uri, source_sha256, redact(fact),
+                      iso(now), iso(now + timedelta(days=ttl_days))))
+        conn.commit()
+        return memory_id
+    finally:
+        conn.close()
+
+
+def list_agent_memory(namespace: str, *, now: Optional[datetime] = None,
+                      path: Optional[Path | str] = None) -> list[dict[str, Any]]:
+    current = iso(now or utc_now())
+    conn = connect(path)
+    try:
+        conn.execute("DELETE FROM agent_memory WHERE expires_at<=? OR deleted_at IS NOT NULL", (current,))
+        conn.commit()
+        rows = conn.execute("SELECT id,run_id,namespace,source_id,source_uri,source_sha256,fact,created_at,expires_at FROM agent_memory WHERE namespace=? AND deleted_at IS NULL AND expires_at>? ORDER BY created_at DESC LIMIT 200", (namespace, current)).fetchall()
+        return [dict(row) for row in rows]
+    finally:
+        conn.close()
+
+
+def delete_agent_memory(memory_id: str, *, now: Optional[datetime] = None,
+                        path: Optional[Path | str] = None) -> bool:
+    conn = connect(path)
+    try:
+        cursor = conn.execute("DELETE FROM agent_memory WHERE id=?", (memory_id,))
+        conn.commit()
+        return cursor.rowcount == 1
+    finally:
+        conn.close()
+
+
 def start_workflow(
     workflow: str = "daily_business_cycle",
     *,
@@ -728,13 +939,17 @@ def _refresh_run(conn: sqlite3.Connection, run_id: str) -> None:
     run = conn.execute("SELECT * FROM agent_runs WHERE id=?", (run_id,)).fetchone()
     if not run or run["status"] in {"CANCELLED", "PAUSED"}:
         return
-    rows = conn.execute("SELECT state,task_type,result_json FROM tasks WHERE run_id=?", (run_id,)).fetchall()
+    rows = conn.execute("SELECT state,task_type,assigned_role_id,result_json FROM tasks WHERE run_id=? ORDER BY id", (run_id,)).fetchall()
     if not rows:
         return
     states = {row["state"] for row in rows}
     if states <= {"DONE"}:
         status = "DONE"
-        result = {row["task_type"].removeprefix("workflow."): _loads(row["result_json"], {}) for row in rows}
+        result = {
+            (row["assigned_role_id"] if row["task_type"] == "agent.execute"
+             else row["task_type"].removeprefix("workflow.")): _loads(row["result_json"], {})
+            for row in rows
+        }
         finished = iso()
     elif "FAILED" in states:
         status, result, finished = "FAILED", {"reason_code": "workflow_step_failed"}, iso()
@@ -880,11 +1095,11 @@ def engine_status(*, path: Optional[Path | str] = None) -> dict[str, Any]:
         conn.close()
 
 
-def _workflow_step_result(task: Mapping[str, Any]) -> dict[str, Any]:
+def _workflow_step_result(task: Mapping[str, Any], *, path: Optional[Path | str] = None) -> dict[str, Any]:
     """Run only local, read-only diagnostics for the persisted daily workflow."""
     payload = _loads(task.get("payload_json"), {}) or {}
     step = str(payload.get("step", ""))
-    conn = connect()
+    conn = connect(path)
     try:
         if step == "research":
             count = int(conn.execute("SELECT COUNT(*) FROM opportunities").fetchone()[0])
@@ -946,24 +1161,48 @@ def _workflow_step_result(task: Mapping[str, Any]) -> dict[str, Any]:
         conn.close()
 
 
-def run_worker_once(worker_id: str, *, lease_seconds: int = 60) -> Optional[dict[str, Any]]:
-    task = claim_task(worker_id, lease_seconds=lease_seconds)
+def run_worker_once(worker_id: str, *, lease_seconds: int = 60,
+                    path: Optional[Path | str] = None,
+                    run_id: Optional[str] = None) -> Optional[dict[str, Any]]:
+    task = claim_task(worker_id, lease_seconds=lease_seconds, path=path, run_id=run_id)
     if not task:
         return None
     task_id = int(task["id"])
+    if task["task_type"] == "agent.execute":
+        try:
+            from core.agent_runtime import execute_agent_task
+            result = execute_agent_task(task, path=path)
+            output_state = result.get("status")
+            if output_state == "WAITING_APPROVAL":
+                final = transition_task(task_id, TaskState.WAITING_APPROVAL, result=result,
+                                        reason_code="owner_approval_required", path=path)
+            elif output_state in {"BLOCKED", "NOT_IMPLEMENTED"}:
+                reason = result.get("result", {}).get("reason_code", "agent_task_blocked")
+                final = transition_task(task_id, TaskState.BLOCKED, result=result,
+                                        reason_code=reason, path=path)
+            else:
+                final = complete_task(task_id, worker_id, result, path=path)
+            return {"task_id": task_id, "state": final["state"], "result": result}
+        except Exception as exc:
+            reason = f"agent_step_error:{type(exc).__name__}"
+            failed = fail_task(task_id, worker_id, reason, retryable=False, path=path)
+            structured_log("agent.task_failed", trace_id=task.get("trace_id"), task_id=task_id,
+                           role_id=task.get("assigned_role_id"), reason_code=reason)
+            return {"task_id": task_id, "state": failed["state"], "reason_code": reason}
     if not str(task["task_type"]).startswith("workflow."):
-        fail_task(task_id, worker_id, "unregistered_task_type", retryable=False)
+        fail_task(task_id, worker_id, "unregistered_task_type", retryable=False, path=path)
         return {"task_id": task_id, "state": "FAILED", "reason_code": "unregistered_task_type"}
     try:
-        result = _workflow_step_result(task)
+        result = _workflow_step_result(task, path=path)
         if task["task_type"] == "workflow.quality" and not result.get("quality_pass"):
-            blocked = transition_task(task_id, TaskState.BLOCKED, result=result, reason_code="quality_gate_failed")
+            blocked = transition_task(task_id, TaskState.BLOCKED, result=result,
+                                      reason_code="quality_gate_failed", path=path)
             structured_log("task.blocked", trace_id=task.get("trace_id"), task_id=task_id,
                            reason_code="quality_gate_failed")
             return {"task_id": task_id, "state": blocked["state"], "result": result}
-        final = complete_task(task_id, worker_id, result)
+        final = complete_task(task_id, worker_id, result, path=path)
         if final.get("run_id"):
-            conn = connect()
+            conn = connect(path)
             try:
                 conn.execute("BEGIN IMMEDIATE")
                 _refresh_run(conn, final["run_id"])
@@ -973,7 +1212,7 @@ def run_worker_once(worker_id: str, *, lease_seconds: int = 60) -> Optional[dict
         return {"task_id": task_id, "state": final["state"], "result": result}
     except Exception as exc:
         reason = f"internal_step_error:{type(exc).__name__}"
-        failed = fail_task(task_id, worker_id, reason, retryable=True)
+        failed = fail_task(task_id, worker_id, reason, retryable=True, path=path)
         structured_log("task.failed", trace_id=task.get("trace_id"), task_id=task_id,
                        reason_code=reason, state=failed["state"])
         return {"task_id": task_id, "state": failed["state"], "reason_code": reason}

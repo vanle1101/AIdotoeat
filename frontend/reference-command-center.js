@@ -101,6 +101,8 @@
     let highlightedWorkstationId = null;
     let cutawayZone = null;
     let resizeObserver = null;
+    let canvasObserver = null;
+    let canvasInView = true;
     let globeGroupRef = null;
     let constructionZone = 'scene';
     let staticBatchStats = null;
@@ -108,6 +110,11 @@
     let inspectionZone = null;
     let visibleInspectionZone = undefined;
     let inspectionCutawayZone = null;
+    let activeTaskCount = null;
+    let renderFrameCount = 0;
+    let fpsWindowStart = performance.now();
+    let fpsWindowFrames = 0;
+    let measuredFps = null;
 
     // Render at the CSS pixel size. The stage is already large, and oversampling
     // it on integrated GPUs costs a lot of fill rate without improving the
@@ -176,7 +183,15 @@
       window.addEventListener('resize', resize, { passive: true });
     }
     document.addEventListener('visibilitychange', onVisibility);
-    frame = requestAnimationFrame(render);
+    if ('IntersectionObserver' in window) {
+      canvasObserver = new IntersectionObserver(entries => {
+        canvasInView = entries.some(entry => entry.isIntersecting);
+        if (canvasInView) requestRender();
+        else if (frame) { cancelAnimationFrame(frame); frame = 0; }
+      });
+      canvasObserver.observe(host);
+    }
+    requestRender();
 
     function standard(color, emissive, emissiveIntensity, metalness, roughness, opacity) {
       const resolvedEmissive = emissive || 0x000000;
@@ -740,8 +755,7 @@
       addMesh(scene, new THREE.CylinderGeometry(16.6, 17.6, 0.2, 128), darkMat, [0, 0.4, 0], null);
       addMesh(scene, new THREE.CylinderGeometry(13.6, 16.7, 0.12, 128), standard(0x0b2038, 0x062944, 0.26, 0.64, 0.3), [0, 0.55, 0], null);
       [18.25, 17.25, 15.9, 13.9, 10.4].forEach((radius, index) => {
-        const ring = addRing(scene, radius, index % 2 ? 0.035 : 0.075, index < 2 ? -0.04 : 0.62, index % 2 ? 0x6bb9bc : 0xb38a55, 0.4, null, 128);
-        animated.push({ kind: 'ring', object: ring, speed: index % 2 ? -0.035 : 0.026 });
+        addRing(scene, radius, index % 2 ? 0.035 : 0.075, index < 2 ? -0.04 : 0.62, index % 2 ? 0x6bb9bc : 0xb38a55, 0.4, null, 128);
       });
       const inset = new THREE.GridHelper(31, 24, 0x0a5273, 0x09283e);
       inset.position.y = 0.615;
@@ -810,8 +824,7 @@
       addInstancedPrimitives(scene, new THREE.TorusGeometry(0.55, 0.035, 10, 48), energyRingMaterial, energyRingParts, null);
       addMesh(scene, new THREE.CylinderGeometry(2.1, 1.25, 1.4, 12), standard(0x112840, 0x064369, 0.34, 0.82, 0.24), [0, -1.55, 0], null, { castShadow: true });
       addMesh(scene, new THREE.ConeGeometry(0.86, 1.7, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0x188fc9, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false }), [0, -3.0, 0], null);
-      const coreRing = addRing(scene, 1.5, 0.055, -2.22, 0x29dfff, 0.72, null, 64);
-      animated.push({ kind: 'ring', object: coreRing, speed: -0.08 });
+      addRing(scene, 1.5, 0.055, -2.22, 0x29dfff, 0.72, null, 64);
     }
 
     function buildLandscaping() {
@@ -1353,7 +1366,6 @@
         ring.rotation.x = Math.PI / 2 + i * 0.21;
         ring.rotation.z = i * 0.53;
         commandOrbitMeshes.push(ring);
-        animated.push({ kind: 'orbit-ring', object: ring, speed: i % 2 ? -0.18 : 0.14 });
       }
       addHoloScreen(group, 1.7, 0.95, [-2.7, 2.55, 1.5], 'command', 'COMMAND', 0x35eaff, 0.27);
       addHoloScreen(group, 1.7, 0.95, [2.7, 2.55, 1.5], 'command', 'AI NETWORK', 0xa667ff, -0.27);
@@ -1706,8 +1718,7 @@
 
       const beaconMat = colored(accent);
       [-1, 1].forEach(xSign => [-1, 1].forEach(zSign => {
-        const beacon = addMesh(parent, new THREE.SphereGeometry(0.105, 10, 8), beaconMat, [xSign * (width / 2 + 0.16), baseY + height + 0.18, zSign * (depth / 2 + 0.16)], zone);
-        animated.push({ kind: 'beacon', object: beacon, phase: (xSign + 2) * 0.4 + (zSign + 2) * 0.2 });
+        addMesh(parent, new THREE.SphereGeometry(0.105, 10, 8), beaconMat, [xSign * (width / 2 + 0.16), baseY + height + 0.18, zSign * (depth / 2 + 0.16)], zone);
       }));
     }
 
@@ -1789,8 +1800,7 @@
       addHoloScreen(group, 1.6, 0.72, [-2.5, 2.75, 2.92], 'agents', 'TASK FLOW', 0x8e78ff, 0.05);
       addHoloScreen(group, 1.6, 0.72, [2.5, 2.75, 2.92], 'agents', 'RUNTIME', 0x44eac6, -0.05);
       addMesh(group, new THREE.CylinderGeometry(0.1, 0.12, 0.82, 8), frame, [0, 5.84, -2.1], 'agents');
-      const antenna = addMesh(group, new THREE.SphereGeometry(0.12, 12, 8), colored(0x42e7ff), [0, 6.3, -2.1], 'agents');
-      animated.push({ kind: 'beacon', object: antenna, phase: 1.2 });
+      addMesh(group, new THREE.SphereGeometry(0.12, 12, 8), colored(0x42e7ff), [0, 6.3, -2.1], 'agents');
       const canopy = addMesh(
         group,
         new THREE.TorusGeometry(3.9, 0.06, 8, 112),
@@ -1881,8 +1891,7 @@
       const dish = addMesh(group, new THREE.SphereGeometry(0.8, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), standard(0x223457, 0x4776be, 0.44, 0.72, 0.22), [0, 6.02, -2.05], 'ads', { castShadow: true });
       dish.rotation.x = Math.PI;
       addMesh(group, new THREE.CylinderGeometry(0.06, 0.08, 0.72, 8), frame, [0, 6.42, -2.05], 'ads');
-      const beacon = addMesh(group, new THREE.SphereGeometry(0.12, 10, 8), colored(0xd59bff), [0, 6.86, -2.05], 'ads');
-      animated.push({ kind: 'beacon', object: beacon, phase: 2.1 });
+      addMesh(group, new THREE.SphereGeometry(0.12, 10, 8), colored(0xd59bff), [0, 6.86, -2.05], 'ads');
     }
 
     function buildServerRack(parent, x, z, y, zone, accent) {
@@ -1995,8 +2004,7 @@
       const pedestal = standard(0x102640, 0x08719a, 0.45, 0.76, 0.2);
       [2.15, 1.72, 1.32].forEach((radius, index) => addMesh(group, new THREE.CylinderGeometry(radius, radius * 1.08, index ? 0.22 : 0.3, 64), pedestal, [0, 1.24 + index * 0.25, 0], 'live', { castShadow: true }));
       [1.5, 1.95, 2.45, 3.0].forEach((radius, index) => {
-        const ring = addRing(group, radius, index === 0 ? 0.06 : 0.032, 1.53 + (index % 2) * 0.28, index % 2 ? 0x9f65ff : 0x29e8ff, 0.82, 'live', 80);
-        animated.push({ kind: 'orbit-ring', object: ring, speed: index % 2 ? -0.2 : 0.16 });
+        addRing(group, radius, index === 0 ? 0.06 : 0.032, 1.53 + (index % 2) * 0.28, index % 2 ? 0x9f65ff : 0x29e8ff, 0.82, 'live', 80);
       });
       const globeSupports = [0, Math.PI / 3, Math.PI * 2 / 3].map(angle => ({
         matrix: new THREE.Matrix4().compose(
@@ -2173,11 +2181,10 @@
       orbitA.rotation.set(0.88, 0.1, 0.14);
       const orbitB = addMesh(globeGroup, new THREE.TorusGeometry(2.25, 0.026, 8, 96), new THREE.MeshBasicMaterial({ color: 0xb16cff, transparent: true, opacity: 0.72 }), [0, 0, 0], 'global');
       orbitB.rotation.set(1.1, -0.6, 0.5);
-      animated.push({ kind: 'orbit-ring', object: orbitA, speed: 0.22 }, { kind: 'orbit-ring', object: orbitB, speed: -0.16 });
       const satellitePositions = [[-2.75, 2.1, 1.4], [2.75, 2.1, 1.4], [-2.75, 2.1, -1.4], [2.75, 2.1, -1.4]];
       satellitePositions.forEach((position, index) => {
         addMesh(group, new THREE.CylinderGeometry(0.08, 0.12, 1.9, 8), standard(0x263956, 0x0b486e, 0.4, 0.8, 0.25), [position[0], 2.0, position[2]], 'live');
-        addHoloScreen(group, 1.0, 0.63, [position[0], 3.0, position[2] + (position[2] > 0 ? 0.12 : -0.12)], 'live', index % 2 ? 'LIVE FEED' : 'DATA NODE', index % 2 ? 0x9b6cff : 0x29eaff, position[0] < 0 ? 0.22 : -0.22);
+        addHoloScreen(group, 1.0, 0.63, [position[0], 3.0, position[2] + (position[2] > 0 ? 0.12 : -0.12)], 'live', index % 2 ? 'EVENT NODE' : 'DATA NODE', index % 2 ? 0x9b6cff : 0x29eaff, position[0] < 0 ? 0.22 : -0.22);
       });
       addLabel(group, 'DATA HUB', [0, 1.52, 2.18], 0x76edff, 0.76, 'live');
       addLabel(globeGroup, 'GLOBAL TRAFFIC', [0, 2.42, 0], 0x91ddff, 0.62, 'global');
@@ -2227,8 +2234,7 @@
       addRing(group, 1.52, 0.04, 3.97, 0xe3a4ff, 0.74, 'revenue', 64);
       addMesh(group, new THREE.CylinderGeometry(0.3, 0.5, 0.42, 16), standard(0x352958, 0xa24de0, 0.5, 0.68, 0.2), [0, 1.96, -0.15], 'revenue');
       addHoloScreen(group, 2.6, 0.9, [0, 4.92, -1.6], 'revenue', 'AFFILIATE HUB', 0xc17aff, 0);
-      const beacon = addMesh(group, new THREE.SphereGeometry(0.17, 12, 8), colored(0xe2a0ff), [0, 5.45, -2.45], 'revenue');
-      animated.push({ kind: 'beacon', object: beacon, phase: 0.8 });
+      addMesh(group, new THREE.SphereGeometry(0.17, 12, 8), colored(0xe2a0ff), [0, 5.45, -2.45], 'revenue');
       addLabel(group, 'AFFILIATE', [0, 5.05, 2.3], 0xd3a0ff, 0.86, 'revenue');
     }
 
@@ -2708,6 +2714,11 @@
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
+      requestRender();
+    }
+
+    function requestRender() {
+      if (!frame && !destroyed && !document.hidden && canvasInView) frame = requestAnimationFrame(render);
     }
 
     function bindControls() {
@@ -2756,6 +2767,7 @@
             dragging.y = event.clientY;
           }
           pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+          requestRender();
           return;
         }
         const hit = pick(event.clientX, event.clientY);
@@ -2781,6 +2793,7 @@
         event.preventDefault();
         cameraTransition = false;
         spherical.radius = clamp(spherical.radius * Math.exp(event.deltaY * 0.001), 6.5, 54);
+        requestRender();
       }, { passive: false });
       canvas.addEventListener('dblclick', event => {
         const hit = pick(event.clientX, event.clientY);
@@ -2800,7 +2813,7 @@
         else if (event.key === '-') spherical.radius = clamp(spherical.radius * 1.1, 6.5, 54);
         else if (event.key.toLowerCase() === 'r' || event.key === 'Home') reset();
         else handled = false;
-        if (handled) { event.preventDefault(); cameraTransition = false; }
+        if (handled) { event.preventDefault(); cameraTransition = false; requestRender(); }
       });
     }
 
@@ -2897,6 +2910,7 @@
       setWorkstationHighlight(hoveredObjectId || (workstations.has(selectedObjectId) ? selectedObjectId : null));
       canvas.style.cursor = zone ? 'pointer' : dragging ? (dragging.pan ? 'move' : 'grabbing') : 'grab';
       options && options.onHover && options.onHover(zone, x, y, item || null);
+      requestRender();
     }
 
     function refreshGlow(zone) {
@@ -2960,6 +2974,7 @@
       refreshGlow(previous);
       refreshGlow(zone);
       options && options.onZoneSelect && options.onZoneSelect(zone, object);
+      requestRender();
     }
 
     function focusWorkstation(item) {
@@ -3026,13 +3041,15 @@
       const hasVerifiedAgents = agentsMetric && agentsMetric.status === 'observed';
       agents.userData.dataStatus = hasVerifiedAgents ? 'observed' : 'unknown';
       agents.userData.activeCount = hasVerifiedAgents ? Number(agentsMetric.value) : null;
+      activeTaskCount = hasVerifiedAgents ? Math.max(0, Number(agentsMetric.value) || 0) : null;
       // Geometry remains a design model. No animated person or activity is invented from missing telemetry.
+      requestRender();
     }
 
     function render() {
       if (destroyed) return;
-      if (document.hidden) { frame = 0; return; }
-      frame = requestAnimationFrame(render);
+      frame = 0;
+      if (document.hidden || !canvasInView) return;
       if (!canvas.clientWidth || !canvas.clientHeight) return;
       const delta = Math.min(clock.getDelta(), 0.045);
       if (cameraTransition) {
@@ -3087,13 +3104,10 @@
         renderer.shadowMap.enabled = needsDetailShadows;
         renderer.shadowMap.needsUpdate = true;
       }
-      if (!reducedMotion) {
+      if (!reducedMotion && activeTaskCount > 0) {
         animated.forEach(item => {
-          if (item.kind === 'ring') item.object.rotation.z += delta * item.speed;
-          else if (item.kind === 'orbit-ring') item.object.rotation.y += delta * item.speed;
-          else if (item.kind === 'brain') { item.object.rotation.y += delta * 0.075; item.object.position.y = 8.42 + Math.sin(elapsed * 0.8) * 0.08; }
+          if (item.kind === 'brain') { item.object.rotation.y += delta * 0.075; item.object.position.y = 8.42 + Math.sin(elapsed * 0.8) * 0.08; }
           else if (item.kind === 'globe') item.object.rotation.y += delta * item.speed;
-          else if (item.kind === 'beacon') item.object.scale.setScalar(0.78 + (Math.sin(elapsed * 2.2 + item.phase) + 1) * 0.16);
           else if (item.kind === 'energy-pulses') {
             item.tracks.forEach((track, index) => {
               const progress = ((elapsed * 0.12 * track.direction + track.phase) % 1 + 1) % 1;
@@ -3108,11 +3122,22 @@
       try {
         renderer.info.reset();
         renderer.render(scene, camera);
+        renderFrameCount += 1;
+        fpsWindowFrames += 1;
+        const fpsNow = performance.now();
+        if (fpsNow - fpsWindowStart >= 1000) {
+          measuredFps = Math.round(fpsWindowFrames * 1000 / (fpsNow - fpsWindowStart));
+          fpsWindowStart = fpsNow;
+          fpsWindowFrames = 0;
+        }
         if (!hasRenderedFrame) {
           hasRenderedFrame = true;
           const draw = renderer.info && renderer.info.render;
           options && options.onStatus && options.onStatus(draw && draw.calls > 0 && draw.triangles > 0 ? 'ready' : 'error');
         }
+        // Keep the renderer idle after a static frame. Continuous frames are
+        // needed only for camera transitions or a backend-confirmed live task.
+        if ((!reducedMotion && activeTaskCount > 0) || cameraTransition) requestRender();
       } catch (error) {
         if (!renderFailed) {
           renderFailed = true;
@@ -3127,7 +3152,7 @@
     function onVisibility() {
       if (!document.hidden) {
         resize();
-        if (!frame && !destroyed) frame = requestAnimationFrame(render);
+        requestRender();
       }
     }
 
@@ -3147,6 +3172,7 @@
           inspectionCutawayZone,
           visibleZones: Array.from(zoneGroups.entries()).filter(([, group]) => isVisibleInScene(group)).map(([zone]) => zone),
           highlightedWorkstationId,
+          activeTaskCount,
           zones: Array.from(zoneGroups.keys()),
           pickableMeshes: pickTargets.length,
           zonePickMeshes: zonePickTargets.length,
@@ -3179,14 +3205,16 @@
           render: renderer.info && renderer.info.render ? {
             calls: renderer.info.render.calls,
             triangles: renderer.info.render.triangles,
-            hasRenderedFrame
+            hasRenderedFrame,
+            frames: renderFrameCount,
+            measuredFps
           } : { hasRenderedFrame },
           staticBatching: staticBatchStats,
           memory: renderer.info && renderer.info.memory ? {
             geometries: renderer.info.memory.geometries,
             textures: renderer.info.memory.textures
           } : null,
-          renderer: renderer.isWebGLRenderer,
+          renderer: Boolean(renderer && typeof renderer.render === 'function' && renderer.domElement === canvas),
           projection: camera.isPerspectiveCamera
         };
       },
@@ -3195,6 +3223,7 @@
         destroyed = true;
         cancelAnimationFrame(frame);
         resizeObserver && resizeObserver.disconnect();
+        canvasObserver && canvasObserver.disconnect();
         window.removeEventListener('resize', resize);
         document.removeEventListener('visibilitychange', onVisibility);
         scene.traverse(node => {

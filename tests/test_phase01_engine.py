@@ -46,12 +46,12 @@ class EngineTestCase(unittest.TestCase):
 
 class MigrationTests(EngineTestCase):
     def test_migrations_are_idempotent_and_all_domain_projections_exist(self):
-        self.assertEqual(engine.ensure_schema(), 6)
-        self.assertEqual(engine.ensure_schema(), 6)
+        self.assertEqual(engine.ensure_schema(), 13)
+        self.assertEqual(engine.ensure_schema(), 13)
         conn = engine.connect()
         try:
             versions = [row[0] for row in conn.execute("SELECT version FROM schema_migrations ORDER BY version")]
-            self.assertEqual(versions, [1, 2, 3, 4, 5, 6])
+            self.assertEqual(versions, list(range(1, 14)))
             objects = {row["name"]: row["type"] for row in conn.execute("SELECT name,type FROM sqlite_master")}
             for name in ("opportunities", "evidence", "experiments", "customers", "leads", "offers", "products",
                          "assets", "tasks", "task_events", "agent_runs", "approval_requests", "orders",
@@ -64,6 +64,12 @@ class MigrationTests(EngineTestCase):
             self.assertEqual(objects["payment_claims"], "view")
             self.assertEqual(objects["llm_usage"], "table")
             self.assertEqual(objects["llm_cache"], "table")
+            self.assertEqual(objects["market_research_fetch_state"], "table")
+            self.assertEqual(objects["gtm_analytics_events"], "table")
+            self.assertEqual(objects["gtm_publication_queue"], "table")
+            for name in ("cash_orders", "cash_quotes", "cash_claims", "cash_transactions",
+                         "cash_adjustments", "cash_deliveries", "cash_events"):
+                self.assertEqual(objects[name], "table")
         finally:
             conn.close()
 
@@ -206,9 +212,11 @@ class TaskLifecycleTests(EngineTestCase):
             engine.transition_task(first["id"], TaskState.DONE)
 
     def test_crash_recovery_lease_heartbeat_and_bounded_timeout(self):
-        start = engine.utc_now()
         row = engine.create_task(TaskSpec(title="Recover me", category="BUILD", task_type="workflow.build",
                                          idempotency_key="crash-recovery"))
+        # Claim time must be sampled after task creation; otherwise a second
+        # boundary can make the queue item not yet available in this test.
+        start = engine.utc_now()
         claimed = engine.claim_task("worker-a", lease_seconds=5, now=start)
         self.assertEqual(claimed["id"], row["id"])
         self.assertFalse(engine.heartbeat_task(row["id"], "worker-b", now=start))

@@ -180,7 +180,8 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
         self.assertTrue("getAdminHeaders(Boolean(options.body), options.headers || {}, targetBase)" in core_js,
                         "The API target must be checked before attaching the admin key")
         self.assertNotIn("admin_key: entered.trim()", core_js)
-        self.assertTrue("window.location.protocol === 'https:'" in dashboard_js, "Dashboard details must not send keys over HTTP")
+        self.assertTrue("window.location.protocol !== 'https:'" in dashboard_js,
+                        "Dashboard details must not read or send the owner key over HTTP")
         self.assertFalse("window.__verifyOwnerPinHash(pin)" in scene_js, "Client-only PIN unlock must not authorize admin UI")
 
     def test_direct_backend_entrypoint_uses_loopback_8450(self):
@@ -306,6 +307,23 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
         self.assertIsNone(response.json()["kpis_real_verified"]["verified_revenue_usd"])
         self.assertIsNone(response.json()["dashboard_data"]["metrics"]["revenue_usd"]["value_usd"])
 
+    def test_operations_dashboard_requires_owner_key_over_https_and_is_no_store(self):
+        expected_key = os.environ["AUTOPROFIT_ADMIN_API_KEY"]
+        with mock.patch.object(backend_main, "dashboard_operations_summary", return_value={"status": "fixture"}):
+            self.assertEqual(self.https_client.get("/api/dashboard/operations").status_code, 403)
+            self.assertEqual(self.http_client.get(
+                "/api/dashboard/operations", headers={"X-Admin-Key": expected_key}
+            ).status_code, 403)
+            self.assertEqual(self.https_client.get(
+                "/api/dashboard/operations", headers={"X-Admin-Key": "invalid"}
+            ).status_code, 403)
+            response = self.https_client.get(
+                "/api/dashboard/operations", headers={"X-Admin-Key": expected_key}
+            )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "fixture"})
+        self.assertEqual(response.headers.get("cache-control"), "private, no-store")
+
     def test_financial_configuration_rejects_private_rpc_and_invalid_owner_values(self):
         with self.assertRaises(ValueError):
             OwnerFinanceConfig(BSC_RPC_URL="https://127.0.0.1/rpc")
@@ -406,7 +424,7 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
         response = self.https_client.get("/api/dashboard")
         self.assertEqual(response.json()["system"]["system_status"], "IDLE")
 
-    def test_bank_proof_cannot_be_replaced_after_submission(self):
+    def test_legacy_bank_proof_submission_is_retired(self):
         order_id = "phase00-proof-order"
         workflow_api._record(
             "order",
@@ -422,10 +440,12 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
             "/api/payments/submit-mbbank-proof",
             json={"order_id": order_id, "bank_tx_ref": "bank-ref-0002", "amount_vnd": 100_000},
         )
-        self.assertEqual(first.status_code, 202)
-        self.assertEqual(second.status_code, 409)
+        self.assertEqual(first.status_code, 410)
+        self.assertEqual(second.status_code, 410)
+        record = workflow_api._get_record("order", order_id)
+        self.assertEqual(record["status"], "PENDING_PAYMENT")
 
-    def test_public_bsc_payment_cannot_reuse_a_transaction(self):
+    def test_public_bsc_post_cannot_create_an_order_or_verified_transaction(self):
         product = workflow_api._products()[0]
         tx_hash = "0x" + ("a" * 64)
         with mock.patch.object(workflow_api, "_verify_bsc_receipt", side_effect=lambda _tx, amount: amount):
@@ -437,8 +457,13 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
                 "/api/public/orders/verify-bsc-tx",
                 json={"item_slug": product["slug"], "buyer_email": "buyer@example.test", "tx_hash": tx_hash},
             )
-        self.assertEqual(first.status_code, 200)
-        self.assertEqual(second.status_code, 409)
+        self.assertEqual(first.status_code, 410)
+        self.assertEqual(second.status_code, 410)
+        conn = workflow_api.get_connection()
+        try:
+            self.assertEqual(conn.execute("SELECT COUNT(*) FROM transactions WHERE lower(tx_hash)=lower(?)", (tx_hash,)).fetchone()[0], 0)
+        finally:
+            conn.close()
 
 
 if __name__ == "__main__":

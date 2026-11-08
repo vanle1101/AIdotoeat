@@ -192,6 +192,15 @@ class LLMRuntimeTests(unittest.TestCase):
         result = self.gateway.run("niche_classification", self._niche_payload(), use_cache=False)
         self.assertEqual(result.provenance["tokens"], {"prompt": "unknown", "completion": "unknown"})
 
+    def test_agent_output_budget_is_applied_without_exceeding_task_cap(self):
+        FakeProviderState.reset()
+        self.gateway.run("niche_classification", self._niche_payload(), use_cache=False,
+                         max_output_tokens=24)
+        self.assertEqual(FakeProviderState.requests[0]["max_tokens"], 24)
+        with self.assertRaises(ValueError):
+            self.gateway.run("niche_classification", self._niche_payload(), use_cache=False,
+                             max_output_tokens=0)
+
     def test_kill_switch_blocks_inference_and_template_is_not_a_model_benchmark(self):
         with mock.patch.dict(os.environ, {"AUTOPROFIT_BUDGET_KILL_SWITCH": "true"}):
             with self.assertRaises(LLMError) as caught:

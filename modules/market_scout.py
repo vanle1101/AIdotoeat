@@ -6,23 +6,29 @@ from typing import Dict, List
 
 
 class MarketScout:
-    """Return static ideas explicitly separated from verified opportunities."""
+    """Expose starter templates without conflating them with sourced demand."""
 
     SEED_IDEAS = [
         {"id": "NICHE_SCRAPER_ECOMMERCE", "title": "Cào dữ liệu sản phẩm & giá Shopee/Tiki/TikTok Shop",
-         "evidence_status": "UNVERIFIED_IDEA_TEMPLATE", "estimated_value_vnd": None,
+         "evidence_status": "UNVALIDATED", "validation_status": "UNVALIDATED",
+         "policy_status": "BLOCKED_PENDING_PERMISSION_REVIEW",
+         "policy_note": "Do not scrape marketplace data; use only an explicitly permitted API/export/feed.",
+         "estimated_value_vnd": None,
          "deliverable": "Python Scraper Script + Xuất Excel", "effort_minutes": None,
          "target_roles": ["DEV_SCRAPER_SPECIALIST", "DEV_EXCEL_CSV_WIZARD", "OPS_PROPOSAL_CRAFTER"]},
         {"id": "NICHE_TELEGRAM_NOTIFIER", "title": "Bot Telegram thông báo biến động giá / tin tức tự động",
-         "evidence_status": "UNVERIFIED_IDEA_TEMPLATE", "estimated_value_vnd": None,
+         "evidence_status": "UNVALIDATED", "validation_status": "UNVALIDATED",
+         "estimated_value_vnd": None,
          "deliverable": "Python Bot Script", "effort_minutes": None,
          "target_roles": ["DEV_TELEGRAM_BOT_CRAFTER", "DEV_PYTHON_ENGINEER", "OPS_PROPOSAL_CRAFTER"]},
         {"id": "NICHE_CHROME_EXT_DATA_EXTRACTOR", "title": "Tiện ích Chrome trích xuất dữ liệu ra Excel",
-         "evidence_status": "UNVERIFIED_IDEA_TEMPLATE", "estimated_value_vnd": None,
+         "evidence_status": "UNVALIDATED", "validation_status": "UNVALIDATED",
+         "estimated_value_vnd": None,
          "deliverable": "Chrome Extension (Manifest V3)", "effort_minutes": None,
          "target_roles": ["DEV_CHROME_EXT_BUILDER", "MKT_COPYWRITER", "OPS_DELIVERY_DISPATCHER"]},
         {"id": "NICHE_EXCEL_CLEANER_AUTOMATION", "title": "Script chuẩn hóa dữ liệu Excel",
-         "evidence_status": "UNVERIFIED_IDEA_TEMPLATE", "estimated_value_vnd": None,
+         "evidence_status": "UNVALIDATED", "validation_status": "UNVALIDATED",
+         "estimated_value_vnd": None,
          "deliverable": "Python Automation Tool", "effort_minutes": None,
          "target_roles": ["DEV_EXCEL_CSV_WIZARD", "DEV_PYTHON_ENGINEER", "OPS_PROPOSAL_CRAFTER"]},
     ]
@@ -33,8 +39,8 @@ class MarketScout:
 
     @classmethod
     def get_validated_opportunities(cls) -> List[Dict]:
-        """Compatibility alias; no item returned here is actually validated."""
-        return cls.get_seed_ideas()
+        """Compatibility API returns no rows until source-backed research exists."""
+        return []
 
     @classmethod
     def parse_client_request(cls, raw_text: str) -> Dict:

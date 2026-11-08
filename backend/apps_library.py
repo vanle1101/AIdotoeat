@@ -29,12 +29,29 @@ TOOL_DEFINITIONS = [
     },
     {
         "slug": "seo-opengraph-meta-generator",
-        "name": "Social Meta & OpenGraph Studio",
+        "name": "Offline SEO Snapshot Auditor",
         "category": "Marketing & Social Growth",
-        "price_usd": 1.99,
-        "price_vnd": 50000,
-        "description": "Preview and generate Facebook, Twitter, Discord, and Google Rich Snippet meta tags in 1 click.",
-        "icon": "🌐"
+        "price_usd": None,
+        "price_vnd": None,
+        "pricing_model": "Free basic demo; customization, installation, and license require an owner-reviewed quote after scope and an actual order.",
+        "description": "Inspect an owner-provided HTML snapshot locally for technical SEO, mobile metadata, headings, image alt text, and possible JavaScript-rendered content.",
+        "icon": "🌐",
+        "studio": {
+            "app_type": "seo_snapshot",
+            "version": "2.0.0",
+            "readiness": "SOURCE_BACKED_CANDIDATE_NOT_PAID_VALIDATED",
+            "evidence_categories": ["website_seo_technical_fixes"],
+            "requirements": ["Local HTML file import", "Static title/description/viewport/H1/image-alt checks", "Heuristic JS-rendering indicator with explicit limitations", "JSON report export", "No network access or execution of imported HTML"],
+            "unique_value_proof": "A public question reports difficulty crawling dynamic content with JavaScript disabled; this offline tool compares only the supplied source snapshot and labels that clue as a hypothesis.",
+            "acceptance_tests": ["HTML file import", "Known missing metadata/accessibility checks", "Malicious script fixture stays inert", "JSON report download", "Mobile viewport and zero outbound requests"],
+            "changelog": ["2.0.0: Replaced metadata-only input with local source snapshot audit and report export."],
+            "license_ip_check": "Project-authored code, no external assets; owner review required before commercial redistribution.",
+            "sample_dataset": "Synthetic HTML fixture only",
+            "installation": "Open the standalone HTML file in a current browser.",
+            "support": "Offline support package; no guaranteed SEO ranking or performance result.",
+            "quality_score": None,
+            "quality_status": "NOT_BUILT",
+        }
     },
     {
         "slug": "vietqr-crypto-payment-generator",
@@ -83,12 +100,29 @@ TOOL_DEFINITIONS = [
     },
     {
         "slug": "papaparse-csv-to-json-cleaner",
-        "name": "Smart CSV to JSON & Data Cleaner",
+        "name": "Offline CSV Workbench — Map, Deduplicate & Export",
         "category": "Data & Automation",
-        "price_usd": 2.99,
-        "price_vnd": 70000,
-        "description": "Parse large CSV tables, clean encoding, remove duplicates, and export valid JSON or sanitized Excel.",
-        "icon": "📊"
+        "price_usd": None,
+        "price_vnd": None,
+        "pricing_model": "Free basic demo; customization, installation, and license require an owner-reviewed quote after scope and an actual order.",
+        "description": "Import a local CSV, map headers, normalize whitespace, deduplicate exact rows, and export formula-safe CSV with a change report.",
+        "icon": "📊",
+        "studio": {
+            "app_type": "csv_workbench",
+            "version": "2.0.0",
+            "readiness": "SOURCE_BACKED_CANDIDATE_NOT_PAID_VALIDATED",
+            "evidence_categories": ["csv_file_utilities", "excel_csv_cleanup"],
+            "requirements": ["Local CSV file import", "Explicit JSON header mapping", "Exact normalized-row deduplication", "Formula-safe CSV export", "Change report and no data upload"],
+            "unique_value_proof": "Public CSV questions provide problem signals. The tool combines explicit header mapping, deterministic deduplication, spreadsheet formula neutralization, and a local change report; paid demand and uniqueness remain unverified.",
+            "acceptance_tests": ["CSV import", "Header mapping", "Duplicate row removal", "Formula injection protection", "Download round-trip", "Mobile viewport and zero outbound requests"],
+            "changelog": ["2.0.0: Added local file import/export, mapping, deduplication, formula-safe output, and audit summary."],
+            "license_ip_check": "Project-authored code, synthetic sample only, no external assets; owner review required before commercial redistribution.",
+            "sample_dataset": "Synthetic CSV fixture only",
+            "installation": "Open the standalone HTML file in a current browser.",
+            "support": "Offline support package; customer files must remain under customer control.",
+            "quality_score": None,
+            "quality_status": "NOT_BUILT",
+        }
     },
     {
         "slug": "css-glassmorphism-card-builder",
@@ -127,6 +161,42 @@ TOOL_DEFINITIONS = [
         "icon": "⏱️"
     }
 ]
+
+
+def product_studio_catalog() -> Dict[str, Any]:
+    """Return all existing catalog rows without implying untested quality."""
+    items = []
+    for tool in TOOL_DEFINITIONS:
+        studio = tool.get("studio")
+        if not studio:
+            studio = {
+                "version": "1.0.0", "readiness": "UNVALIDATED_TEMPLATE",
+                "quality_score": None, "quality_status": "NOT_BUILT",
+                "note": "Legacy utility template; not approved for publication by the product studio.",
+            }
+        items.append({
+            "slug": tool["slug"], "name": tool["name"], "category": tool["category"],
+            "description": tool["description"],
+            "price_usd": None if tool.get("studio") else tool["price_usd"],
+            "pricing_model": (
+                "Free basic demo; customization, installation or licensing requires an owner-reviewed scope and quote after an actual order."
+                if tool.get("studio") else "configured_catalog_price"
+            ),
+            "studio": studio,
+        })
+    return {
+        "items": items, "total": len(items), "source": "existing_product_catalog",
+        "tracks": [
+            {"id": "A", "name": "B2B website snapshot audit", "requires": "Current website technical-SEO opportunity plus owner-authorized HTML snapshot.", "network": "No crawl or outbound request; screenshot uses sanitized local HTML."},
+            {"id": "B", "name": "CSV/Excel data workflow pack", "requires": "Current CSV/Excel source-backed opportunity.", "network": "Local file processing only; no upload or scraping."},
+            {"id": "C", "name": "Offline microtool / white-label pack", "requires": "Current website and CSV source-backed opportunities.", "network": "Two existing catalog apps; no clone pages or app telemetry."},
+        ],
+    }
+
+
+def requires_owner_quote(product: Dict[str, Any] | None) -> bool:
+    """Studio demos are free; paid work needs a separately approved quote."""
+    return bool(product and product.get("studio"))
 
 
 def _tool_processor_js(slug: str) -> str:
@@ -443,8 +513,113 @@ def _tool_processor_js(slug: str) -> str:
     });
     '''.replace('__TOOL_SLUG__', json.dumps(slug)).replace('__SLUG__', slug)
 
+def _generate_studio_tool_html(tool: Dict[str, Any]) -> str:
+    """Generate a self-contained, offline-first page for audited studio tools."""
+    studio = tool["studio"]
+    title = html.escape(str(tool["name"]), quote=True)
+    description = html.escape(str(tool["description"]), quote=True)
+    app_type = str(studio.get("app_type", ""))
+    common_style = """
+      :root{color-scheme:dark;--bg:#0b1020;--panel:#111a2d;--line:#2a3853;--text:#e6eefb;--muted:#a6b5cb;--accent:#67d5c1}
+      *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,sans-serif;padding:16px}
+      main{max-width:980px;margin:0 auto}header,.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:clamp(16px,4vw,28px);margin:0 0 16px}
+      h1{font-size:clamp(1.35rem,4vw,2rem);line-height:1.2;margin:.3rem 0 .6rem}p{color:var(--muted)}label{display:block;margin:.8rem 0 .3rem;font-weight:650}
+      textarea,input{font:inherit;width:100%;color:var(--text);background:#080d19;border:1px solid var(--line);border-radius:8px;padding:10px}
+      textarea{min-height:130px;font:13px/1.45 ui-monospace,monospace}input[type=file]{max-width:100%}button{font:inherit;font-weight:650;color:#06211f;background:var(--accent);border:0;border-radius:8px;padding:10px 14px;min-height:44px;cursor:pointer}
+      button.secondary{color:var(--text);background:#263651;border:1px solid var(--line)}button:disabled{opacity:.55;cursor:not-allowed}.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+      pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d19;border:1px solid var(--line);border-radius:8px;padding:12px;min-height:90px;max-height:45vh;overflow:auto}
+      #status{min-height:1.5em;color:var(--accent)}.badge{display:inline-block;padding:3px 9px;border:1px solid #28766b;border-radius:999px;color:var(--accent);font-size:.8rem;font-weight:700}
+      .foot{font-size:.9rem;border-top:1px solid var(--line);padding-top:12px}@media(max-width:520px){body{padding:10px}.actions button{flex:1 1 100%}}
+    """
+    if app_type == "csv_workbench":
+        controls = """
+      <label for="csvFile">Choose a CSV file (max 5 MB)</label><input id="csvFile" type="file" accept=".csv,text/csv">
+      <label for="inputData">Or paste CSV data locally</label><textarea id="inputData" autocomplete="off" spellcheck="false" placeholder="id,name,note&#10;1,Ada,example"></textarea>
+      <label for="columnMapping">Optional header mapping (JSON object)</label><textarea id="columnMapping" rows="2" autocomplete="off" spellcheck="false" placeholder='{"old_header":"new_header"}'></textarea>
+      <div class="actions"><button id="processCsv" type="button">Process locally</button><button id="downloadCsv" class="secondary" type="button" disabled>Download cleaned CSV</button><button id="downloadReport" class="secondary" type="button" disabled>Download report JSON</button><button id="clearData" class="secondary" type="button">Clear</button></div>
+      <p id="status" role="status" aria-live="polite"></p><h2>Result</h2><pre id="outputResult" aria-live="polite">Your file stays in this browser.</pre>
+    """
+        processor = r'''(() => {
+  const file = document.querySelector('#csvFile'), input = document.querySelector('#inputData'), mappingField = document.querySelector('#columnMapping');
+  const output = document.querySelector('#outputResult'), status = document.querySelector('#status');
+  const downloadCsv = document.querySelector('#downloadCsv'), downloadReport = document.querySelector('#downloadReport');
+  let cleanedCsv = '', reportData = null;
+  function parseCsv(text) {
+    text = String(text).replace(/^\uFEFF/, ''); const rows=[]; let row=[], cell='', quoted=false;
+    for(let i=0;i<text.length;i++){const ch=text[i];
+      if(quoted&&ch==='"'&&text[i+1]==='"'){cell+='"';i++;}
+      else if(ch==='"'){if(quoted)quoted=false;else if(cell==='')quoted=true;else throw new Error('Unexpected quote in CSV cell.');}
+      else if(ch===','&&!quoted){row.push(cell);cell='';}
+      else if((ch==='\n'||ch==='\r')&&!quoted){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v.trim()))rows.push(row);row=[];cell='';}
+      else cell+=ch;
+    }
+    if(quoted)throw new Error('CSV has an unclosed quoted cell.');row.push(cell);if(row.some(v=>v.trim()))rows.push(row);
+    if(rows.length<2)throw new Error('CSV needs a header and at least one data row.');
+    const width=rows[0].length;if(!width||width>500||rows.length>50001||rows.some(r=>r.length>width))throw new Error('CSV size or column limit exceeded.');
+    let headers=rows.shift().map((v,i)=>v.trim()||`column_${i+1}`);const counts=new Map();headers=headers.map(h=>{const n=(counts.get(h)||0)+1;counts.set(h,n);return n===1?h:`${h}_${n}`;});
+    return {headers,rows};
+  }
+  const safeCell=value=>{const text=String(value??'');return /^[\x00-\x20\u00a0\u2000-\u200b\u2028\u2029\ufeff]*[=+\-@]/.test(text)?"'"+text:text;};
+  const quoteCell=value=>'"'+String(value??'').replaceAll('"','""')+'"';
+  function transform(text,mapping){const parsed=parseCsv(text);const headers=parsed.headers.map(h=>String(mapping[h]??h).trim());
+    if(headers.some(h=>!h)||new Set(headers).size!==headers.length)throw new Error('Mapped headers must be non-empty and unique.');
+    const seen=new Set(),result=[];let duplicates=0,escaped=0,blank=0;
+    for(const raw of parsed.rows){const values=parsed.headers.map((_,i)=>(raw[i]??'').trim());if(!values.some(Boolean)){blank++;continue;}
+      const key=JSON.stringify(values.map(v=>v.toLocaleLowerCase()));if(seen.has(key)){duplicates++;continue;}seen.add(key);
+      const safe=values.map(safeCell);escaped+=safe.filter((v,i)=>v!==values[i]).length;result.push(safe);}
+    const safeHeaders=headers.map(safeCell);escaped+=safeHeaders.filter((v,i)=>v!==headers[i]).length;
+    const csv=[safeHeaders,...result].map(row=>row.map(quoteCell).join(',')).join('\r\n')+'\r\n';
+    return {csv,report:{input_rows:parsed.rows.length,output_rows:result.length,duplicate_rows_removed:duplicates,blank_rows_skipped:blank,formula_cells_escaped:escaped,network_requests:0,input_persisted:false}};
+  }
+  function save(name,text,type){const url=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  file.addEventListener('change',async()=>{const selected=file.files&&file.files[0];if(!selected)return;if(selected.size>5000000){status.textContent='File exceeds 5 MB.';file.value='';return;}input.value=await selected.text();status.textContent='File loaded locally; nothing uploaded.';});
+  document.querySelector('#processCsv').addEventListener('click',()=>{try{const text=input.value||(file.files&&file.files[0]?input.value:'');if(!text)throw new Error('Choose a CSV or paste local CSV data.');if(new TextEncoder().encode(text).length>5000000)throw new Error('CSV exceeds 5 MB.');
+    const mappingText=mappingField.value.trim();const mapping=mappingText?JSON.parse(mappingText):{};if(!mapping||Array.isArray(mapping)||typeof mapping!=='object'||Object.values(mapping).some(v=>typeof v!=='string'))throw new Error('Mapping must be a JSON object of string headers.');
+    const result=transform(text,mapping);cleanedCsv=result.csv;reportData=result.report;output.textContent=JSON.stringify({...result.report,preview_csv:cleanedCsv.split('\r\n').slice(0,6).join('\n')},null,2);downloadCsv.disabled=false;downloadReport.disabled=false;status.textContent=`Processed ${result.report.input_rows} input rows; ${result.report.duplicate_rows_removed} duplicate row(s) removed.`;
+  }catch(error){cleanedCsv='';reportData=null;downloadCsv.disabled=true;downloadReport.disabled=true;output.textContent='';status.textContent=error.message;}});
+  downloadCsv.addEventListener('click',()=>{if(cleanedCsv)save('cleaned.csv','\uFEFF'+cleanedCsv,'text/csv;charset=utf-8');});
+  downloadReport.addEventListener('click',()=>{if(reportData)save('cleaning-report.json',JSON.stringify(reportData,null,2),'application/json');});
+  document.querySelector('#clearData').addEventListener('click',()=>{input.value='';file.value='';mappingField.value='';output.textContent='';status.textContent='Cleared from this page.';cleanedCsv='';reportData=null;downloadCsv.disabled=true;downloadReport.disabled=true;});
+  globalThis.productStudioExports={parseCsv,transform};
+})();'''
+    elif app_type == "seo_snapshot":
+        controls = """
+      <label for="htmlFile">Choose an HTML snapshot (max 750 KB)</label><input id="htmlFile" type="file" accept=".html,.htm,text/html">
+      <label for="inputData">Or paste saved HTML locally</label><textarea id="inputData" autocomplete="off" spellcheck="false" placeholder="Paste an owner-authorized HTML snapshot; scripts are parsed as data only."></textarea>
+      <div class="actions"><button id="auditHtml" type="button">Audit snapshot locally</button><button id="downloadReport" class="secondary" type="button" disabled>Download report JSON</button><button id="clearData" class="secondary" type="button">Clear</button></div>
+      <p id="status" role="status" aria-live="polite"></p><h2>Report</h2><pre id="outputResult" aria-live="polite">No page source has been sent or uploaded.</pre>
+    """
+        processor = r'''(() => {
+  const file=document.querySelector('#htmlFile'),input=document.querySelector('#inputData'),output=document.querySelector('#outputResult'),status=document.querySelector('#status'),download=document.querySelector('#downloadReport');let report=null;
+  file.addEventListener('change',async()=>{const selected=file.files&&file.files[0];if(!selected)return;if(selected.size>750000){status.textContent='Snapshot exceeds 750 KB.';file.value='';return;}input.value=await selected.text();status.textContent='Snapshot loaded locally; nothing uploaded.';});
+  function analyze(source){if(new TextEncoder().encode(source).length>750000)throw new Error('Snapshot exceeds 750 KB.');const doc=new DOMParser().parseFromString(source,'text/html'),issues=[];const add=(check_id,severity,observation,suggestion)=>issues.push({check_id,severity,observation,suggestion});
+    if(!doc.title.trim())add('seo.title.missing','high','No non-empty title element.','Add a unique descriptive title in the source HTML.');
+    if(!doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim())add('seo.description.missing','medium','No meta description.','Add a concise description to the source HTML.');
+    if(!doc.querySelector('meta[name="viewport"]'))add('accessibility.mobile.viewport_missing','medium','No responsive viewport declaration.','Add a viewport meta declaration and test at mobile widths.');
+    const h1=doc.querySelectorAll('h1').length;if(h1!==1)add('accessibility.heading.h1_count','medium',`Found ${h1} H1 elements; expected one.`,'Use one page-level heading and preserve heading order.');
+    const missingAlt=[...doc.images].filter(image=>!image.hasAttribute('alt')).length;if(missingAlt)add('accessibility.images.alt_missing','high',`${missingAlt} image(s) have no alt attribute.`,'Add meaningful alt text or alt="" for decorative images.');
+    const text=(doc.body?.textContent||'').trim(),scripts=doc.scripts.length;if(scripts&&text.length<80)add('seo.rendering.js_dependency_possible','review','Source has scripts and little static text; client-rendered content may be absent when JavaScript is disabled.','Compare with a browser-rendered page; this is a hypothesis, not proof of crawler failure.');
+    const external=[...doc.querySelectorAll('img[src],script[src],iframe[src],link[rel~="stylesheet"][href]')].filter(el=>/^https?:|^\/\//i.test(el.getAttribute('src')||el.getAttribute('href')||'')).length;
+    return {source_bytes:new TextEncoder().encode(source).length,measurements:{title_present:!!doc.title.trim(),meta_description_present:!!doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim(),viewport_present:!!doc.querySelector('meta[name="viewport"]'),h1_count:h1,images_missing_alt:missingAlt,script_count:scripts,external_resource_references:external,performance_timing:'NOT_MEASURED; no network load or Lighthouse run'},issues,limitations:['Owner-provided HTML snapshot only; no crawl or network requests.','Script-rendering warning is heuristic and requires browser-rendered comparison.','Core Web Vitals, HTTP status, robots.txt, canonical and server headers are not measured.']};}
+  function save(name,text){const url=URL.createObjectURL(new Blob([text],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  document.querySelector('#auditHtml').addEventListener('click',()=>{try{if(!input.value.trim())throw new Error('Choose or paste an HTML snapshot.');report=analyze(input.value);output.textContent=JSON.stringify(report,null,2);download.disabled=false;status.textContent='Audit complete. Static findings only; performance was not measured.';}catch(error){report=null;output.textContent='';download.disabled=true;status.textContent=error.message;}});
+  download.addEventListener('click',()=>{if(report)save('seo-snapshot-report.json',JSON.stringify(report,null,2));});
+  document.querySelector('#clearData').addEventListener('click',()=>{input.value='';file.value='';output.textContent='';status.textContent='Cleared from this page.';report=null;download.disabled=true;});
+  globalThis.productStudioExports={analyze};
+})();'''
+    else:
+        raise ValueError("Unknown studio app type.")
+    return """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="__DESCRIPTION__"><title>__TITLE__</title><style>__STYLE__</style></head><body><main>
+    <header><span class="badge">FREE BASIC DEMO · OFFLINE</span><h1>__TITLE__</h1><p>__DESCRIPTION__</p></header>
+    <section class="panel"><h2>Local workspace</h2><p>Choose a local file or paste data. Processing stays in this browser. No telemetry, account, ad, external asset, or upload.</p>__CONTROLS__</section>
+    <section class="panel foot"><strong>Offer:</strong> Free basic demo. Customization, installation or a redistribution license is available only under a separate owner-reviewed scope and quote; no price or performance guarantee is implied. Keep a copy of original files. Code is project-authored; review license terms before redistribution.</section>
+    </main><script>__PROCESSOR__</script></body></html>""".replace("__TITLE__", title).replace("__DESCRIPTION__", description).replace("__STYLE__", common_style).replace("__CONTROLS__", controls).replace("__PROCESSOR__", processor)
+
+
 def generate_tool_html(tool: Dict[str, Any]) -> str:
-    """Generates a complete, responsive dark-mode HTML app with built-in monetization."""
+    """Generate a catalog app; studio entries use an isolated offline template."""
+    if tool.get("studio"):
+        return _generate_studio_tool_html(tool)
     slug = tool["slug"]
     name = tool["name"]
     category = tool["category"]

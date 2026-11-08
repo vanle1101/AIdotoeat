@@ -27,7 +27,9 @@ class BudgetAuditor:
         },
         "local.file_generation": {
             "modules.product_builder.ProductBuilder.build_chrome_extension",
-            "modules.product_builder.ProductBuilder.build_python_scraper_bundle",
+            "modules.product_builder.ProductBuilder.build_service_pack",
+            "modules.product_builder.ProductBuilder.build_data_workflow_pack",
+            "modules.product_builder.ProductBuilder.build_microtool_bundle",
         },
         "local.qr_generation": {
             "modules.qr_vault.VietQRVault.generate_vietqr_url",

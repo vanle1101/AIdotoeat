@@ -2670,7 +2670,7 @@ function init3DAIBaseWorld() {
       sync3DOverlayControlButtons();
       applyReducedMotionState();
       startOrUpdatePolling();
-      refreshAllData(false);
+      if (!document.body.classList.contains('ap-reference-ui')) refreshAllData(false);
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('diag') === '1') {
         setTimeout(() => {
@@ -2756,6 +2756,7 @@ function init3DAIBaseWorld() {
           if (typeof onResize3DWorld === 'function') onResize3DWorld();
         }, 60);
       }
+      if (CURRENT_OVERVIEW_WS_TAB === 'TAB_CRYPTO_MMO') refreshLiveCryptoArbitragePrices();
       if (CURRENT_OVERVIEW_WS_TAB === 'TAB_WEBAPP_STORE' && typeof renderGithubWebFactorySection === 'function') {
         renderGithubWebFactorySection(GITHUB_WEB_FACTORY_CACHE);
       }
@@ -2805,13 +2806,19 @@ function init3DAIBaseWorld() {
           : `Catalog: ${LIVE_PACKAGED_COUNT_BASE} Web App & Tool`;
       }
       if (latestAppTitle) {
+        const configuredPrice = Number(latestPrice);
+        const marketPrice = Number(latestMarket);
+        const displayedPrice = Number.isFinite(configuredPrice) && configuredPrice > 0
+          ? `$${configuredPrice.toFixed(2)} USD` : 'Giá chưa xác minh';
+        const displayedMarket = Number.isFinite(marketPrice) && marketPrice > 0
+          ? `$${marketPrice.toFixed(2)} USD` : 'chưa có giá thị trường xác minh';
         const statusEl = document.getElementById('liveGlobalScannerStatusText');
         if (statusEl) {
-          statusEl.innerHTML = `🔥 <strong>AI VỪA QUÉT GITHUB &amp; ĐÓNG GÓI XONG #${LIVE_PACKAGED_COUNT_BASE}:</strong> <span style="color:#fff;">${escapeHtml(latestAppTitle)}</span> • Giá thị trường: <s>$${latestMarket || 19}</s> ➔ <strong style="color:#34d399;">Giá AI: $${Number(latestPrice || 2.99).toFixed(2)} USD</strong>`;
+          statusEl.innerHTML = `<strong>Mục catalog:</strong> <span style="color:#fff;">${escapeHtml(latestAppTitle)}</span> • Giá tham khảo: <s>${displayedMarket}</s> ➔ <strong style="color:#34d399;">Giá cấu hình: ${displayedPrice}</strong>`;
         }
         const tickerEl = document.getElementById('githubHarvesterLiveTicker');
         if (tickerEl) {
-          tickerEl.innerHTML = `🔥 AI VỪA ĐÓNG GÓI MỚI (#${LIVE_PACKAGED_COUNT_BASE}): <code style="color:#fff;">${escapeHtml(latestAppTitle)}</code> → Giá thị trường $${latestMarket || 19} giảm còn <strong>$${Number(latestPrice || 2.99).toFixed(2)} USD (Rẻ hơn 85%)</strong>`;
+          tickerEl.innerHTML = `Catalog item: <code style="color:#fff;">${escapeHtml(latestAppTitle)}</code> · Giá tham khảo: ${displayedMarket} · Giá cấu hình: <strong>${displayedPrice}</strong>`;
         }
       }
     }
@@ -2820,6 +2827,7 @@ function init3DAIBaseWorld() {
 
     // Live Crypto Prices & Arbitrage Spread Ticker Updater
     async function refreshLiveCryptoArbitragePrices() {
+      if (CURRENT_OVERVIEW_WS_TAB !== 'TAB_CRYPTO_MMO' || document.hidden) return null;
       try {
         const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22SOLUSDT%22,%22BNBUSDT%22%5D');
         if (r.ok) {
@@ -3325,14 +3333,14 @@ function init3DAIBaseWorld() {
     const EXACT_PHRASE_TRANSLATIONS_VI_TO_EN = [
       ['1. Doanh Thu Xác Minh', '1. Verified Revenue'],
       ['2. Lợi Nhuận Ròng (Sau Thuế & API)', '2. Net Profit (After Tax & Costs)'],
-      ['3. Quỹ Dự Phòng Vận Hành (25%)', '3. Operating Reserve Fund (25%)'],
-      ['4. Chủ Nhân Có Thể Rút (75%)', '4. Owner Withdrawable (75%)'],
+      ['3. Quỹ Dự Phòng Vận Hành (25%)', '3. Reserve allocation policy not configured'],
+      ['4. Chủ Nhân Có Thể Rút (75%)', '4. Withdrawable balance: no verified data'],
       ['5. Kho Web App Tự Đóng Gói', '5. Packaged Web Apps Vault'],
       ['6. Hệ Thống 10 Kênh Đẻ Nhánh', '6. 10-Channel Multi-Branch Engine'],
-      ['100% Từ Đơn Hàng & Quảng Cáo Thực Tế', '100% Verified Orders, Affiliate & Ad Revenue'],
-      ['Đã trừ chi phí vận hành máy chủ ($0.00)', 'Server & API operating cost deducted ($0.00)'],
-      ['Tự động trích lập tái đầu tư hạ tầng', 'Auto-allocated for infrastructure scaling'],
-      ['Sẵn sàng rút về VPBank / Ví Binance USDT', 'Ready for payout via Bank / Binance USDT'],
+      ['100% Từ Đơn Hàng & Quảng Cáo Thực Tế', 'Revenue is counted only after verified settlement; ads are not connected'],
+      ['Chi phí vận hành máy chủ chưa được xác minh', 'Operating costs have no verified data source'],
+      ['Tự động trích lập tái đầu tư hạ tầng', 'No verified reserve allocation is configured'],
+      ['Sẵn sàng rút về VPBank / Ví Binance USDT', 'Withdrawable balance: no verified data'],
       ['Ứng dụng HTML5/JS chạy trực tiếp (Giá $1.99–$5.99)', 'Client-side HTML5/JS Web Apps ($1.99–$5.99 USD)'],
       ['24+ Nhân Sự AI • Tự Động Nhân Bản Nhánh Kiếm Tiền', '24+ AI Staff • Autonomous Monetization Branches'],
       ['Lượt Khách Truy Cập Web Thực Tế', 'Real Website Visitor Traffic'],
@@ -3595,172 +3603,27 @@ function init3DAIBaseWorld() {
       return null;
     };
 
-    // Sync total verified revenue = A-Ads Verified Revenue ($0.02+) + Binance On-Chain Verified USDT Revenue
+    // Crypto balances and ad-network values are not cash revenue; the server cash ledger is authoritative.
     window.recalculateAndSyncTotalVerifiedRevenueUI = async () => null;
 
     // Poll BNB Smart Chain Mainnet every 12 seconds for live balance & new incoming transfers
     window.pollLiveBinanceWalletOnChain = async function() { return null; };
 
-    // Build and trigger instant White-Label Source Code download for verified buyers
-    window.generateAndDownloadPurchasedWebAppPackage = function(itemTitle, itemSlug, priceUsd, txHash) {
-      const cleanSlug = String(itemSlug || 'autoprofit-webapp').replace(/[^a-zA-Z0-9\-_]/g, '-');
-      const nowIso = new Date().toISOString();
-      const packageHtml = `<!DOCTYPE html>
-<html lang="en">
-<!--
-  ============================================================================
-  AUTOPROFIT AI — COMMERCIAL WHITE-LABEL WEB APP SOURCE CODE PACKAGE
-  Product: ${itemTitle} (${cleanSlug})
-  License: Full Commercial White-Label MIT License (100% Ownership)
-  Verified Blockchain Payment TxHash: ${txHash}
-  Delivered At: ${nowIso}
-  ============================================================================
--->
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${itemTitle} — White-Label Edition</title>
-  <style>
-    body { margin:0; font-family: system-ui, -apple-system, sans-serif; background:#070b14; color:#f8fafc; padding:32px; }
-    .container { max-width:960px; margin:0 auto; background:#0f172a; border:1px solid #38bdf8; border-radius:16px; padding:28px; }
-    .badge { display:inline-block; padding:4px 10px; border-radius:6px; background:rgba(16,185,129,0.2); color:#34d399; font-size:12px; font-weight:700; }
-    h1 { color:#fff; margin:12px 0 8px; }
-    .workspace { margin-top:20px; padding:20px; background:#060a12; border-radius:12px; border:1px solid rgba(148,163,184,0.25); }
-    textarea { width:100%; min-height:180px; background:#0d1527; color:#6ee7b7; border:1px solid #334155; border-radius:8px; padding:12px; font-family:monospace; }
-    button { background:#10b981; color:#04130d; font-weight:800; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; margin-top:12px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <span class="badge">✅ WHITE-LABEL COMMERCIAL EDITION • VERIFIED TX: ${txHash.slice(0, 18)}...</span>
-    <h1>${itemTitle}</h1>
-    <p style="color:#94a3b8;">100% Client-Side Standalone HTML5/JS Application. Customize branding, ad unit IDs, and affiliate links freely.</p>
-    <div class="workspace">
-      <label style="display:block; margin-bottom:8px; font-weight:700; color:#38bdf8;">Interactive Input Workspace:</label>
-      <textarea id="appInput">Enter your data, JSON, SQL, or prompt payload here...</textarea>
-      <button onclick="document.getElementById('appOutput').textContent = 'Processed successfully at ' + new Date().toLocaleTimeString() + ':\\n' + document.getElementById('appInput').value;">⚡ Execute Tool</button>
-      <pre id="appOutput" style="margin-top:16px; padding:14px; background:#090e1a; border-radius:8px; color:#fde68a; white-space:pre-wrap;"></pre>
-    </div>
-  </div>
-
-
-    
-
-</body>
-</html>`;
-
-      const blob = new Blob([packageHtml], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${cleanSlug}-white-label-source.html`;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 1500);
-      return url;
+    // Phase 07 removes client-generated fake purchases and routes every buyer through
+    // the owner-reviewed, expiring order-to-cash flow.
+    window.generateAndDownloadPurchasedWebAppPackage = function(_title, slug) {
+      const safeSlug = String(slug || '').replace(/[^a-z0-9-]/gi, '');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(safeSlug)}`);
+      return null;
     };
-
-    // Upgrade openVisitorBuyCheckoutModal to inject the live Binance On-Chain Verification status bar
-    const _origOpenCheckoutModal = window.openVisitorBuyCheckoutModal;
-    window.openVisitorBuyCheckoutModal = function(itemTitle, priceUsd, itemSlug) {
-      if (typeof _origOpenCheckoutModal === 'function') {
-        _origOpenCheckoutModal(itemTitle, priceUsd, itemSlug);
-      }
-      const modal = document.getElementById('visitorBuyCheckoutModal');
-      if (!modal) return;
-
-      const walInput = document.getElementById('checkoutModalUsdtWalletInput');
-      if (walInput) walInput.value = window.OWNER_BINANCE_BEP20_WALLET;
-
-      let statusBox = document.getElementById('checkoutLiveVerificationAndDeliveryBox');
-      if (!statusBox) {
-        const txInput = document.getElementById('checkoutTxProofInput');
-        const parentGrid = txInput ? txInput.closest('.grid-2') : null;
-        if (parentGrid && parentGrid.parentElement) {
-          statusBox = document.createElement('div');
-          statusBox.id = 'checkoutLiveVerificationAndDeliveryBox';
-          statusBox.style.cssText = 'margin-bottom:12px; padding:10px 12px; border-radius:10px; background:rgba(16,185,129,0.09); border:1px solid rgba(16,185,129,0.35); font-size:11.5px; color:#cbd5e1;';
-          parentGrid.parentElement.insertBefore(statusBox, parentGrid.nextSibling);
-        }
-      }
-      if (statusBox) {
-        const isEn = (typeof CURRENT_LANG !== 'undefined' && CURRENT_LANG === 'en');
-        statusBox.textContent = isEn
-          ? 'Live wallet monitoring is not connected. Submitted transaction hashes are checked by the server.'
-          : 'Theo dõi số dư ví trực tiếp chưa kết nối. Mã giao dịch gửi lên sẽ được máy chủ kiểm tra.';
-      }
+    window.openVisitorBuyCheckoutModal = function(_title, _price, slug) {
+      const safeSlug = String(slug || '').replace(/[^a-z0-9-]/gi, '');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(safeSlug)}`);
     };
-
-    // Override submitVisitorQuickCheckoutOrder to perform REAL On-Chain BNB Smart Chain verification!
-    window.submitVisitorQuickCheckoutOrder = async function() {
-      const email = (document.getElementById('checkoutBuyerEmail')?.value || '').trim().toLowerCase();
-      const reference = (document.getElementById('checkoutTxProofInput')?.value || '').trim();
-      const statusBox = document.getElementById('checkoutLiveVerificationAndDeliveryBox');
-      const isEn = (typeof CURRENT_LANG !== 'undefined' && CURRENT_LANG === 'en');
-      const setStatus = (message, error = false) => {
-        if (!statusBox) return;
-        statusBox.textContent = message;
-        statusBox.style.color = error ? '#fca5a5' : '#86efac';
-      };
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setStatus(isEn ? 'Enter a valid email address.' : 'Nhập email hợp lệ để nhận liên kết tải.', true);
-        document.getElementById('checkoutBuyerEmail')?.focus();
-        return;
-      }
-      if (!reference || reference.length < 4) {
-        setStatus(isEn ? 'Enter the bank reference or BSC transaction hash.' : 'Nhập mã chuyển khoản hoặc TxHash để gửi đối soát.', true);
-        return;
-      }
-      const item = window.CURRENT_CHECKOUT_ITEM || { title: 'Web App', priceUsd: 2.99, slug: '' };
-      const button = document.querySelector('#visitorBuyCheckoutModal [data-submit-checkout]');
-      if (button) { button.disabled = true; button.textContent = isEn ? 'Checking…' : 'Đang kiểm tra…'; }
-      try {
-        if (/^0x/i.test(reference)) {
-          setStatus(isEn ? 'The server is checking the transaction on BNB Smart Chain…' : 'Máy chủ đang kiểm tra giao dịch trên BNB Smart Chain…');
-          const result = await apiFetch('/api/public/orders/verify-bsc-tx', {
-            method: 'POST',
-            body: JSON.stringify({ item_slug: item.slug, buyer_email: email, tx_hash: reference.toLowerCase() })
-          }, 15000);
-          if (!result?.accepted || result.status !== 'PAID_VERIFIED' || !result.download_url) {
-            throw new Error(result?.detail || (isEn ? 'The payment has not been verified.' : 'Máy chủ chưa xác minh được khoản thanh toán.'));
-          }
-          const link = document.createElement('a');
-          link.href = String(result.download_url);
-          link.className = 'btn btn-primary';
-          link.textContent = isEn ? 'Download verified purchase' : 'Tải sản phẩm đã xác minh';
-          link.target = '_blank';
-          link.rel = 'noopener';
-          statusBox.replaceChildren(document.createTextNode(isEn
-            ? `Payment verified by the server. Order ${result.order_id}. `
-            : `Máy chủ đã xác minh thanh toán. Mã đơn ${result.order_id}. `), link);
-          if (typeof refreshAllData === 'function') refreshAllData(false);
-          showToast(isEn ? 'Payment verified by the server.' : 'Thanh toán đã được máy chủ xác minh.');
-          return;
-        }
-        setStatus(isEn ? 'Submitting the bank transfer for owner review…' : 'Đang gửi mã chuyển khoản để chủ cửa hàng đối soát…');
-        const result = await apiFetch('/api/public/payment-reports', {
-          method: 'POST',
-          body: JSON.stringify({ product_slug: item.slug, payment_method: 'BANK_TRANSFER', customer_email: email, reference })
-        }, 15000);
-        if (!result?.accepted || !result.report_id) {
-          throw new Error(result?.detail || (isEn ? 'The server did not save the payment report.' : 'Máy chủ chưa xác nhận đã lưu yêu cầu.'));
-        }
-        setStatus(isEn
-          ? `Request ${result.report_id} is waiting for owner review. Payment is not verified and no download is available yet.`
-          : `Đã lưu yêu cầu ${result.report_id}, đang chờ chủ cửa hàng đối soát. Chưa xác nhận thanh toán và chưa mở tải.`);
-        showToast(isEn ? 'Payment review request saved.' : 'Đã gửi yêu cầu đối soát thanh toán.');
-      } catch (error) {
-        setStatus(`${isEn ? 'No verified order was recorded.' : 'Chưa ghi nhận đơn đã thanh toán.'} ${error?.message || ''}`, true);
-        showToast(error?.message || (isEn ? 'Could not verify payment.' : 'Không xác minh được thanh toán.'), true);
-      } finally {
-        if (button) { button.disabled = false; button.textContent = isEn ? 'Submit payment for review' : 'Gửi yêu cầu đối soát thanh toán'; }
-      }
+    window.submitVisitorQuickCheckoutOrder = function() {
+      const slug = window.CURRENT_CHECKOUT_ITEM?.slug || '';
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(String(slug).replace(/[^a-z0-9-]/gi, ''))}`);
     };
-
-  
 
 // Phase 00 removed retired synthetic telemetry and artificial engagement routines.
 

@@ -174,6 +174,18 @@ def engine_task_decision(task_id: int, request: Request, body: TaskDecision):
     return {"task_id": task_id, "state": row["state"], "state_version": row["state_version"]}
 
 
+@router.post("/api/engine/tasks/{task_id}/cancel")
+def engine_cancel_task(task_id: int, request: Request):
+    _admin(request)
+    try:
+        row = engine.cancel_task(task_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Task not found")
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+    return {"task_id": task_id, "state": row["state"], "state_version": row["state_version"]}
+
+
 @router.get("/api/engine/queue")
 def engine_queue(request: Request, limit: int = Query(default=100, ge=1, le=500)):
     _admin(request)
@@ -328,3 +340,85 @@ def engine_invoke(tool_name: str, request: Request, body: ToolInvoke):
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc))
     return result
+
+
+# Phase 03 task-specific agent runtime. All detailed views and mutations use
+# the same HTTPS + admin-key guard as the canonical engine API.
+@router.get("/api/agents/registry")
+def agents_registry(request: Request):
+    _admin(request)
+    from core.agent_runtime import AGENT_REGISTRY, agent_registry
+
+    items = agent_registry()
+    return {"items": items, "logical_roles": len(AGENT_REGISTRY),
+            "ready_handlers": sum(item["readiness"] == "READY" for item in items),
+            "not_implemented": sum(item["readiness"] == "NOT_IMPLEMENTED" for item in items),
+            "model_instances": "task-scoped; never one per logical role"}
+
+
+@router.get("/api/agents/runtime")
+def agents_runtime(request: Request):
+    _admin(request)
+    from core.agent_runtime import runtime_profile
+
+    return runtime_profile()
+
+
+@router.get("/api/agents/status")
+def agents_status(request: Request):
+    _admin(request)
+    from core.agent_runtime import agent_role_statuses
+
+    return {"items": agent_role_statuses(), "status_source": "canonical_task_events_and_leases"}
+
+
+@router.post("/api/agents/workflows", status_code=202)
+def agents_create_workflow(request: Request, body: dict[str, Any] = Body(...)):
+    _admin(request)
+    from core.agent_runtime import AgentWorkflowRequest, start_public_problem_workflow
+
+    try:
+        parsed = AgentWorkflowRequest.model_validate(body)
+        run = start_public_problem_workflow(parsed)
+    except (TypeError, ValueError):
+        raise HTTPException(status_code=422, detail="Agent workflow input failed validation or public-source policy")
+    worker_started = engine.ensure_runtime_started()
+    return {"id": run["id"], "workflow": run["workflow"], "status": run["status"],
+            "trace_id": run["trace_id"], "created_at": run["created_at"],
+            "worker_enabled": engine.runtime_enabled(), "worker_started": worker_started}
+
+
+@router.get("/api/agents/workflows")
+def agents_list_workflows(request: Request, limit: int = Query(default=50, ge=1, le=200)):
+    _admin(request)
+    return {"items": engine.list_workflow_runs(limit), "total": None}
+
+
+@router.get("/api/agents/workflows/{run_id}")
+def agents_workflow_detail(run_id: str, request: Request):
+    _admin(request)
+    run = engine.get_workflow_run(run_id)
+    if not run:
+        raise HTTPException(status_code=404, detail="Agent workflow not found")
+    return run
+
+
+@router.get("/api/agents/artifacts/{artifact_id}")
+def agents_get_artifact(artifact_id: str, request: Request):
+    _admin(request)
+    artifact = engine.get_agent_artifact(artifact_id)
+    if not artifact:
+        raise HTTPException(status_code=404, detail="Agent artifact not found")
+    return artifact
+
+
+@router.get("/api/agents/memory")
+def agents_memory(request: Request, namespace: str = Query(min_length=1, max_length=80)):
+    _admin(request)
+    return {"items": engine.list_agent_memory(namespace), "status": "source_cited_ttl_memory"}
+
+
+@router.delete("/api/agents/memory/{memory_id}")
+def agents_delete_memory(memory_id: str, request: Request):
+    _admin(request)
+    return {"id": memory_id, "deleted": engine.delete_agent_memory(memory_id)}

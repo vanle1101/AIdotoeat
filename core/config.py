@@ -7,10 +7,10 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = Path(os.getenv("AUTOPROFIT_CORE_DATA_DIR", "").strip() or str(BASE_DIR / "data")).resolve()
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = DATA_DIR / "company.db"
-OUTPUTS_DIR = BASE_DIR / "outputs"
+OUTPUTS_DIR = Path(os.getenv("AUTOPROFIT_OUTPUTS_DIR", "").strip() or str(BASE_DIR / "outputs")).resolve()
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 
 @dataclass(frozen=True)

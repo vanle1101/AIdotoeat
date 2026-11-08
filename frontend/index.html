@@ -20,6 +20,7 @@
 
   <link rel="stylesheet" href="/autoprofit-styles.css?v=1793375876" />
   <link rel="stylesheet" href="/reference-dashboard.css?v=12&r=5-button-states-20261106" />
+  <link rel="stylesheet" href="/reference-ops-panels.css?v=1&r=phase08-ops-20261108" />
   <link rel="stylesheet" href="/reference-business-views.css?v=1" />
   <link rel="stylesheet" href="/reference-system-views.css?v=1" />
 
@@ -27,7 +28,7 @@
 
 </head>
 
-<body class="visitor-readonly-mode" style="background:#060b16; color:#f8fafc; margin:0; padding:0;">
+<body class="visitor-readonly-mode ap-reference-ui" style="background:#060b16; color:#f8fafc; margin:0; padding:0;">
 
 <!-- LEFT SIDEBAR NAVIGATION (10 EXACT VIEWS) -->
 
@@ -109,7 +110,7 @@
 
       <li class="nav-item" data-view="agents" onclick="switchView('agents')">
 
-        <div class="nav-item-left"><span class="nav-index">02</span><span data-vi="Nhân Sự AI Đang Hoạt Động" data-en="Active AI Workforce">Nhân Sự AI Đang Hoạt Động</span></div>
+        <div class="nav-item-left"><span class="nav-index">02</span><span data-vi="Vai Trò AI" data-en="AI Roles">Vai Trò AI</span></div>
 
         <span class="nav-badge" id="badge-agents">—</span>
 
@@ -349,7 +350,7 @@
 
           <div class="compact-metric-card" style="border-color:rgba(16,185,129,0.65); background:linear-gradient(135deg, rgba(16,185,129,0.14), rgba(15,23,42,0.95));">
 
-            <span class="compact-metric-label" data-vi="2. Tiền Lợi Nhuận Ròng (Kiếm Được)" data-en="2. Net Profit Earned (Ads + Affiliate)">2. Tiền Lợi Nhuận Ròng (Kiếm Được)</span>
+            <span class="compact-metric-label" data-vi="2. Lợi Nhuận Ròng Đã Xác Minh" data-en="2. Verified Net Profit">2. Lợi Nhuận Ròng Đã Xác Minh</span>
 
             <div class="compact-metric-val" id="kpi-net-profit" style="color:#34d399;">—</div>
 
@@ -371,7 +372,7 @@
 
                     <div class="compact-metric-card" style="border-color:rgba(16,185,129,0.45); cursor:pointer;" onclick="switchOverviewWorkspaceTab('TAB_3D_ACTIVE')">
 
-            <span class="compact-metric-label" data-vi="4. Đội Ngũ AI Đang Làm Việc" data-en="4. Active AI Workforce">4. Đội Ngũ AI Đang Làm Việc</span>
+            <span class="compact-metric-label" data-vi="4. Trạng Thái Runtime AI" data-en="4. AI Runtime Status">4. Trạng Thái Runtime AI</span>
 
             <div class="compact-metric-val"><span id="kpi-active-agents" style="font-size:14.5px;color:#34d399;">Runtime not connected</span> <span style="font-size:11px; color:var(--accent-cyan);" id="kpi-active-tasks-inline">No task data</span></div>
 
@@ -383,11 +384,11 @@
 
             <span class="compact-metric-label" data-vi="5. Kho Web App & Tool AI" data-en="5. Packaged Web Apps & Tools">5. Kho Web App & Tool AI</span>
 
-            <div class="compact-metric-val" id="kpi-packaged-webapps-count" style="color:#fbbf24;">12 apps</div>
+            <div class="compact-metric-val" id="kpi-packaged-webapps-count" style="color:#fbbf24;">—</div>
 
             <span class="compact-metric-sub" id="kpi-packaged-webapps-sub">Registered catalog tools • no verified ratings.</span>
 
-            <span id="kpi-attention-tasks" style="display:none;">0</span><span id="kpi-attention-tasks-sub" style="display:none;"></span>
+            <span id="kpi-attention-tasks" style="display:none;">—</span><span id="kpi-attention-tasks-sub" style="display:none;"></span>
 
           </div>
 
@@ -585,7 +586,7 @@
 
                 <div style="background:rgba(7,11,20,0.8); border:1px solid rgba(245,158,11,0.28); border-radius:6px; padding:4px 8px; display:flex; justify-content:space-between; align-items:center;">
 
-                  <span>🔗 <strong>Hướng 3 (Link Trả Tiền $22/1k):</strong></span>
+                  <span>🔗 <strong>Hướng 3 (link rút gọn · hoa hồng chưa xác minh):</strong></span>
 
                   <button id="paidShortenerStatusBadge" type="button" class="btn btn-sm" style="padding:3px 8px; font-size:10px;" onclick="window.openSelfSustaining4DirectionsModal()">Chưa xác minh doanh thu</button>
 
@@ -631,7 +632,7 @@
 
               <button type="button" class="ws-tab-btn" id="wsTabBtn_TAB_WEBAPP_STORE" onclick="switchOverviewWorkspaceTab('TAB_WEBAPP_STORE')" style="border-color:rgba(245,158,11,0.55); color:#fde68a;">
 
-                🛍️ 4. Chợ <span id="tabBadgeWebAppCount">135</span> Web App ($1.99–$5.99)
+                🛍️ 4. Chợ <span id="tabBadgeWebAppCount">—</span> Web App
 
               </button>
 
@@ -961,7 +962,7 @@
 
               <button type="button" class="btn btn-sm" onclick="filterAffiliateDealsByPlatform('AMAZON')" id="affFilterBtn_AMAZON" style="border-color:rgba(249,115,22,0.5); color:#fdba74;">📦 Amazon (4%–10%)</button>
 
-              <button type="button" class="btn btn-sm" onclick="filterAffiliateDealsByPlatform('SHOPIFY')" id="affFilterBtn_SHOPIFY" style="border-color:rgba(132,204,22,0.5); color:#bef264;">🛍️ Shopify ($150/Ref)</button>
+              <button type="button" class="btn btn-sm" onclick="filterAffiliateDealsByPlatform('SHOPIFY')" id="affFilterBtn_SHOPIFY" style="border-color:rgba(132,204,22,0.5); color:#bef264;">🛍️ Shopify · hoa hồng chưa xác minh</button>
 
               <button type="button" class="btn btn-sm" onclick="filterAffiliateDealsByPlatform('SAAS_AI')" id="affFilterBtn_SAAS_AI" style="border-color:rgba(56,189,248,0.5); color:#7dd3fc;">🤖 SaaS &amp; AI (20%–50%)</button>
 
@@ -1439,7 +1440,7 @@
 
                 <span style="color:#fde68a;">🎯 Công cụ đã đóng gói: <strong>Web3 Airdrop &amp; Quest Tracker</strong></span>
 
-                <button class="btn btn-sm btn-primary" style="padding:2px 8px; font-size:10px;" onclick="openLiveGithubWebAppModal('github-web3-airdrop-testnet-quest-tracker')">🚀 Mở Tool ($3.99)</button>
+                <button class="btn btn-sm btn-primary" style="padding:2px 8px; font-size:10px;" onclick="openLiveGithubWebAppModal('github-web3-airdrop-testnet-quest-tracker')">🚀 Mở Tool</button>
 
               </div>
 
@@ -1449,21 +1450,21 @@
 
 
 
-          <!-- MARKET PRICE COMPARISON BANNER (SHOWING WHY OUR $1.99-$5.99 PRICES BEAT THE CROWD) -->
+          <!-- Catalog price notice: no unverified market comparison. -->
 
           <div style="padding:8px 12px; border-radius:8px; background:rgba(6,182,212,0.1); border:1px dashed rgba(56,189,248,0.45); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; font-size:11.5px;">
 
             <div>
 
-              📉 <strong style="color:#fff;">Báo Cáo Quét Giá Thị Trường Internet (Gumroad / CodeCanyon / Envato / Fiverr):</strong>
+              🏷️ <strong style="color:#fff;">Giá catalog sản phẩm:</strong>
 
-              <span style="color:#cbd5e1;">Đa số đám đông trên mạng đang bán các bộ mã nguồn Web Tool &amp; Script tự động giá từ <strong>$19.00 – $49.00 USD</strong>. AI của chúng ta đã <strong>tự động điều chỉnh giảm toàn bộ bảng giá xuống chỉ còn $1.99 – $5.99 USD (49k – 149k VNĐ • Rẻ hơn 85%)</strong> để thu hút số đông khách hàng chốt đơn ngay lập tức!</span>
+              <span style="color:#cbd5e1;">Giá hiển thị trong catalog là cấu hình hiện tại theo từng sản phẩm. Chưa có dữ liệu so sánh thị trường hoặc bằng chứng xác nhận mức sẵn sàng chi trả.</span>
 
             </div>
 
             <button type="button" class="btn btn-sm btn-primary" onclick="switchOverviewWorkspaceTab('TAB_WEBAPP_STORE')">
 
-              🛒 Xem Bảng Giá Đã Giảm ($1.99–$5.99) ➔
+              🛒 Xem catalog sản phẩm ➔
 
             </button>
 
@@ -1483,21 +1484,21 @@
 
                 <span class="chip success" style="font-weight:800; font-size:10.5px;">🌍 BÁN HÀNG QUỐC TẾ BẰNG 100% TIẾNG ANH (GLOBAL ENGLISH OUTREACH)</span>
 
-                <span class="chip cyan" id="outreachStatsBadge" style="font-size:10.5px;">Dữ liệu lead công khai • Chưa gửi email tự động</span>
+                <span class="chip cyan" id="outreachStatsBadge" style="font-size:10.5px;">Lead do chủ sở hữu nhập/opt-in • Không gửi email tự động</span>
 
-                <span class="chip warn" id="autoMailModeBadge" style="font-size:10.5px;">Email: soạn nháp thủ công • SMTP chưa kết nối</span>
+                <span class="chip warn" id="autoMailModeBadge" style="font-size:10.5px;">Email: tắt • Không có SMTP</span>
 
               </div>
 
               <h3 style="margin:6px 0 2px; font-size:15px; color:#fff;">
 
-                🌍 Cơ Hội Quốc Tế &amp; Soạn Email Thủ Công
+                🌍 Nguồn Vấn Đề Công Khai &amp; CRM Có Đồng Ý
 
               </h3>
 
               <p style="margin:0; font-size:11.5px; color:#94a3b8;">
 
-                Dùng nút quét để lấy cơ hội từ API công khai. Email không được gửi tự động; hãy xem lại nội dung trong Gmail/Mail trước khi tự gửi.
+                Quét chỉ ghi nhận vấn đề có nguồn công khai. Không biến tác giả bài đăng thành lead và không liên hệ họ. Chỉ lưu liên hệ khách hàng sau khi có sự đồng ý rõ ràng.
 
               </p>
 
@@ -1505,15 +1506,15 @@
 
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
 
-              <button type="button" class="btn btn-sm btn-primary" style="background:linear-gradient(135deg,#f59e0b,#ea580c); font-weight:800;" onclick="openAutoMailSmtpConfigModal()">
+              <button type="button" class="btn btn-sm btn-primary" style="background:linear-gradient(135deg,#f59e0b,#ea580c); font-weight:800;" onclick="document.getElementById('autoMailSmtpConfigDrawer').style.display='block'">
 
-                ✉️ Hướng Dẫn Soạn Email
+                ✉️ Quy Tắc Liên Hệ
 
               </button>
 
-              <button type="button" class="btn btn-sm btn-primary" id="btnRunInternetOutreachNow" style="background:linear-gradient(135deg,#10b981,#0284c7); font-weight:800;" onclick="triggerLiveInternetOutreachRun()">
+              <button type="button" class="btn btn-sm btn-primary" id="btnRunInternetOutreachNow" style="background:linear-gradient(135deg,#10b981,#0284c7); font-weight:800;" onclick="runLiveInternetScan()">
 
-                ⚡ Quét Thêm Cơ Hội Công Khai
+                ⚡ Quét Tín Hiệu Nguồn
 
               </button>
 
@@ -1529,14 +1530,14 @@
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
 
-              <strong style="color:#fde68a; font-size:13px;">✉️ SOẠN EMAIL THỦ CÔNG</strong>
+              <strong style="color:#fde68a; font-size:13px;">✉️ LIÊN HỆ CÓ SỰ ĐỒNG Ý</strong>
 
               <button type="button" class="btn btn-sm" onclick="document.getElementById('autoMailSmtpConfigDrawer').style.display='none'">✕ Đóng</button>
 
             </div>
 
             <div style="font-size:11.5px; color:#cbd5e1; margin-bottom:10px;">
-              Tự động gửi mail chưa có backend. Không dán mật khẩu Gmail hoặc API key vào dashboard. Mỗi thẻ lead có liên kết Gmail/Mail để mở bản nháp; kiểm tra nội dung rồi tự bấm gửi.
+              Không có kết nối SMTP và không tạo thư chào bán tự động. Không dán mật khẩu hoặc API key vào dashboard. Chỉ xem hoặc lưu liên hệ do khách chủ động đồng ý trong CRM.
             </div>
 
             <div style="display:flex; justify-content:flex-end; gap:8px;">
@@ -1579,7 +1580,7 @@
 
                     <span class="chip warn" style="font-size:9.2px; font-weight:800;">🔥 Ví dụ Affiliate chưa xác minh (Amazon Associates Global)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $2.49 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
@@ -1589,7 +1590,7 @@
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Best-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/Best-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2</a> • Shortlink: <a href="https://tinyurl.com/22g5svtc" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22g5svtc</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Best-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a> • Shortlink: <a href="https://tinyurl.com/22g5svtc" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22g5svtc</a>
 
                   </div>
 
@@ -1623,17 +1624,17 @@
 
                     <span class="chip warn" style="font-size:9.2px; font-weight:800;">🔥 Ví dụ Affiliate chưa xác minh (Shopify Partners & AutoDS)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $1.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">How to Launch an AI-Automated Shopify Dropshipping Store for $1/Month + AutoDS Winning Products (2026)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">How to Launch an AI-Automated Shopify Dropshipping Store + AutoDS Product Research (2026)</div>
 
-                  <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Step-by-step blueprint for launching a global Shopify e-commerce store using the official $1/month starter promo, automated US/EU supplier fulfillment via ...</div>
+                  <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Draft overview of a Shopify store workflow and supplier fulfillment. Check current vendor terms and pricing before relying on this example.</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/How-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/How-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2</a> • Shortlink: <a href="https://tinyurl.com/2bj8pgjp" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2bj8pgjp</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/How-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a> • Shortlink: <a href="https://tinyurl.com/2bj8pgjp" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2bj8pgjp</a>
 
                   </div>
 
@@ -1667,17 +1668,17 @@
 
                     <span class="chip warn" style="font-size:9.2px; font-weight:800;">🔥 Ví dụ Affiliate chưa xác minh (SaaS & AI Tools Recurring (Semrush & Hostinger))</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $1.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">Best AI SEO & Cloud Hosting Stack for Indie Hackers (2026): Semrush Pro + Hostinger 75% Off + JSON-LD Studio ($1.99)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">AI SEO &amp; Cloud Hosting Stack for Indie Hackers (2026): Semrush Pro + Hostinger + JSON-LD Studio</div>
 
-                  <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Discover how SaaS founders combine Semrush keyword gap analysis, Hostinger NVMe Cloud Hosting (75% off + free domain), and our $1.99 Schema.org JSON-LD Gen...</div>
+                  <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Example workflow combining SEO research, cloud hosting, and a Schema.org JSON-LD tool. Vendor plans, promotions, and product pricing are unverified here.</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Best-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/Best-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2</a> • Shortlink: <a href="https://tinyurl.com/22lal5q6" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22lal5q6</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Best-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a> • Shortlink: <a href="https://tinyurl.com/22lal5q6" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22lal5q6</a>
 
                   </div>
 
@@ -1711,7 +1712,7 @@
 
                     <span class="chip warn" style="font-size:9.2px; font-weight:800;">🔥 Ví dụ Affiliate chưa xác minh (Shopee Mall & TikTok Shop Affiliate)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $1.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
@@ -1721,7 +1722,7 @@
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Top-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/Top-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2</a> • Shortlink: <a href="https://tinyurl.com/267l6wjx" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/267l6wjx</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Top-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a> • Shortlink: <a href="https://tinyurl.com/267l6wjx" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/267l6wjx</a>
 
                   </div>
 
@@ -1755,7 +1756,7 @@
 
                     <span class="chip warn" style="font-size:9.2px; font-weight:800;">🔥 Ví dụ Affiliate chưa xác minh (Binance / Bybit & Ledger Cold Wallet)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $2.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
@@ -1765,7 +1766,7 @@
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Binance-Official-CPA-Bonus-100-USDT-Voucher-Code-CPA-00IQVAN8MG--CEXDEX-Arbitrage--186-DeFi-APY-Guide-2026-10-29" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/Binance-Official-CPA-Bonus-100-USDT-Voucher-Code-CPA-00IQVAN8MG--CEXDEX-Arbitrage--186-DeFi-APY-Guide-2026-10-29</a> • Shortlink: <a href="https://tinyurl.com/233ouqgl" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/233ouqgl</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Binance-Official-CPA-Bonus-100-USDT-Voucher-Code-CPA-00IQVAN8MG--CEXDEX-Arbitrage--186-DeFi-APY-Guide-2026-10-29" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a> • Shortlink: <a href="https://tinyurl.com/233ouqgl" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/233ouqgl</a>
 
                   </div>
 
@@ -1799,17 +1800,17 @@
 
                     <span class="chip warn" style="font-size:9.2px; font-weight:800;">🔥 Ví dụ Affiliate chưa xác minh (Notion Affiliate, Printful POD & White-Label Store)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $3.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">493+ White-Label HTML5/AI Web Apps ($1.99–$5.99 USD) + Notion AI Second Brain & Printful POD Starter Kit</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">White-Label HTML5/AI Web Apps + Notion AI Second Brain &amp; Printful POD Starter Kit</div>
 
-                  <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Why pay $19–$49 on Gumroad or CodeCanyon? Acquire production-ready, single-file HTML5/JS White-Label Web Apps for just $1.99–$5.99 USD alongside Notion AI ...</div>
+                  <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Example overview of single-file HTML5/JS white-label web apps alongside Notion AI and Printful. No market-price comparison has been verified.</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2</a> • Shortlink: <a href="https://tinyurl.com/2aw3a98j" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2aw3a98j</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a> • Shortlink: <a href="https://tinyurl.com/2aw3a98j" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2aw3a98j</a>
 
                   </div>
 
@@ -1843,17 +1844,17 @@
 
                     <span class="chip success" style="font-size:9.2px; font-weight:800;">🤖 AI ĐÃ TỰ ĐĂNG BÁN WEB APP #7 (100% EN)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $1.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">JSON Formatter, Validator & Schema.org JSON-LD Studio Web App — Free Online Web Tool & White-Label Source Code ($1.99 USD • 85% Off $15 Market Price)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">JSON Formatter, Validator & Schema.org JSON-LD Studio Web App — White-Label Source Code</div>
 
                   <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Validate, format, and minify complex JSON payloads in real time, and automatically generate Google-compliant Schema.org JSON-LD structured data snippets fo...</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/JSON-Formatter-Validator--Schemaorg-JSON-LD-Studio-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-29-USD-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/JSON-Formatter-Validator--Schemaorg-JSON-LD-Studio-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-29-USD-10-29-5</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/JSON-Formatter-Validator--Schemaorg-JSON-LD-Studio-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-29-USD-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a>
 
                   </div>
 
@@ -1887,17 +1888,17 @@
 
                     <span class="chip success" style="font-size:9.2px; font-weight:800;">🤖 AI ĐÃ TỰ ĐĂNG BÁN WEB APP #8 (100% EN)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $1.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">Smart QR Code, UTM Link & VietQR/Web3 Payment Button Generator — Free Online Web Tool & White-Label Source Code ($1.99 USD • 85% Off $15 Market Price)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">Smart QR Code, UTM Link & VietQR/Web3 Payment Button Generator — White-Label Source Code</div>
 
                   <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Generate high-conversion QR codes, trackable UTM marketing links, and instant Web3 USDT (BEP20) / QR checkout buttons for SaaS landing pages, indie hackers...</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Smart-QR-Code-UTM-Link--VietQRWeb3-Payment-Button-Generator--Free-Online-Web-Tool--White-Label-Source-Code-35-USD-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/Smart-QR-Code-UTM-Link--VietQRWeb3-Payment-Button-Generator--Free-Online-Web-Tool--White-Label-Source-Code-35-USD-10-29-5</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Smart-QR-Code-UTM-Link--VietQRWeb3-Payment-Button-Generator--Free-Online-Web-Tool--White-Label-Source-Code-35-USD-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a>
 
                   </div>
 
@@ -1931,17 +1932,17 @@
 
                     <span class="chip success" style="font-size:9.2px; font-weight:800;">🤖 AI ĐÃ TỰ ĐĂNG BÁN WEB APP #9 (100% EN)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $2.49 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">Live Markdown-to-HTML Editor, SEO Word Counter & AI Prompt Studio — Free Online Web Tool & White-Label Source Code ($2.49 USD • 85% Off $19 Market Price)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">Live Markdown-to-HTML Editor, SEO Word Counter & AI Prompt Studio — White-Label Source Code</div>
 
                   <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Live Markdown-to-HTML compiler, real-time SEO heading & keyword density analyzer, and structured LLM System Prompt engineering workspace — running 100% cli...</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Live-Markdown-to-HTML-Editor-SEO-Word-Counter--AI-Prompt-Studio--Free-Online-Web-Tool--White-Label-Source-Code-24-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/Live-Markdown-to-HTML-Editor-SEO-Word-Counter--AI-Prompt-Studio--Free-Online-Web-Tool--White-Label-Source-Code-24-10-29-5</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/Live-Markdown-to-HTML-Editor-SEO-Word-Counter--AI-Prompt-Studio--Free-Online-Web-Tool--White-Label-Source-Code-24-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a>
 
                   </div>
 
@@ -1975,17 +1976,17 @@
 
                     <span class="chip success" style="font-size:9.2px; font-weight:800;">🤖 AI ĐÃ TỰ ĐĂNG BÁN WEB APP #10 (100% EN)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $2.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">CyberSecurity Password Entropy, SHA-256 Hash & JWT Inspector Web App — Free Online Web Tool & White-Label Source Code ($2.99 USD • 85% Off $24 Market Price)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">CyberSecurity Password Entropy, SHA-256 Hash & JWT Inspector Web App — White-Label Source Code</div>
 
                   <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Enterprise-grade 24-character cryptographic password generator, real-time bit-entropy calculator, SHA-256 digest auditor, and JWT token payload inspector w...</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/CyberSecurity-Password-Entropy-SHA-256-Hash--JWT-Inspector-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/CyberSecurity-Password-Entropy-SHA-256-Hash--JWT-Inspector-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-10-29-5</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/CyberSecurity-Password-Entropy-SHA-256-Hash--JWT-Inspector-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a>
 
                   </div>
 
@@ -2019,17 +2020,17 @@
 
                     <span class="chip success" style="font-size:9.2px; font-weight:800;">🤖 AI ĐÃ TỰ ĐĂNG BÁN WEB APP #11 (100% EN)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $3.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">CSS Glassmorphism, Neon Gradient & SaaS Landing Page Code Generator — Free Online Web Tool & White-Label Source Code ($3.99 USD • 85% Off $29 Market Price)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">CSS Glassmorphism, Neon Gradient & SaaS Landing Page Code Generator — White-Label Source Code</div>
 
                   <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Interactive CSS3 Glassmorphism, neon gradient, and high-converting SaaS landing page card generator. Adjust backdrop-filter blur and opacity sliders and co...</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/CSS-Glassmorphism-Neon-Gradient--SaaS-Landing-Page-Code-Generator--Free-Online-Web-Tool--White-Label-Source-Code-4-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/CSS-Glassmorphism-Neon-Gradient--SaaS-Landing-Page-Code-Generator--Free-Online-Web-Tool--White-Label-Source-Code-4-10-29-5</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/CSS-Glassmorphism-Neon-Gradient--SaaS-Landing-Page-Code-Generator--Free-Online-Web-Tool--White-Label-Source-Code-4-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a>
 
                   </div>
 
@@ -2063,17 +2064,17 @@
 
                     <span class="chip success" style="font-size:9.2px; font-weight:800;">🤖 AI ĐÃ TỰ ĐĂNG BÁN WEB APP #12 (100% EN)</span>
 
-                    <span class="chip cyan" style="font-size:9.2px;">💰 Giá Web: $1.99 USD (Rẻ hơn 85%)</span>
+                    <span class="chip cyan" style="font-size:9.2px;">Giá bài viết: chưa xác minh • xem catalog</span>
 
                   </div>
 
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">SaaS Revenue Margin Calculator & Developer Pomodoro Focus Web App — Free Online Web Tool & White-Label Source Code ($1.99 USD • 85% Off $19 Market Price)</div>
+                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:3px;">SaaS Revenue Margin Calculator & Developer Pomodoro Focus Web App — White-Label Source Code</div>
 
                   <div style="font-size:10.5px; color:#cbd5e1; margin-bottom:4px;">Calculate SaaS Monthly Recurring Revenue (MRR), Annual Run-Rate (ARR), unit economics, and passive ad revenue margins alongside an integrated developer Pom...</div>
 
                   <div style="font-family:var(--font-mono); font-size:10px; color:#34d399; word-break:break-all; margin-bottom:4px;">
 
-                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/SaaS-Revenue-Margin-Calculator--Developer-Pomodoro-Focus-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-19-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">https://telegra.ph/SaaS-Revenue-Margin-Calculator--Developer-Pomodoro-Focus-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-19-10-29-5</a>
+                    🔗 Bài trên Telegra.ph: <a href="https://telegra.ph/SaaS-Revenue-Margin-Calculator--Developer-Pomodoro-Focus-Web-App--Free-Online-Web-Tool--White-Label-Source-Code-19-10-29-5" target="_blank" rel="noopener" style="color:#6ee7b7; text-decoration:underline;">Mở bài viết (chưa xác minh)</a>
 
                   </div>
 
@@ -2105,698 +2106,11 @@
 
 
 
-          <!-- PART 2: REAL HUNTED STARTUP FOUNDERS WITH AUTO-PINGED ANALYTICS & AUTO/1-CLICK EMAIL -->
-
-          <div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
-
-              <div style="font-weight:800; font-size:13px; color:#38bdf8;">
-
-                🎯 2. KHÁCH HÀNG QUỐC TẾ AI ĐÃ TỰ ĐỘNG BẮN LINK TIẾP CẬN &amp; XẾP HÀNG GỬI EMAIL TIẾNG ANH
-
-              </div>
-
-              <span style="font-size:11px; color:#94a3b8;">Danh sách các dự án &amp; Startup quốc tế mà AI đã tự động phân tích nhu cầu, định giá rẻ hơn thị trường 85% ($1.99–$4.99 USD) và tự động tiếp cận</span>
-
-            </div>
-
-            <div id="internetHuntedLeadsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(360px, 1fr)); gap:10px;">
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: mazinsiyad567@gmail.com</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @devthewariend — Show HN: Open-source AI workspace with shared procedural memory</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/TheWariend/CleanSlate" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/TheWariend/CleanSlate</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($2.49 USD) + Amazon Associates Global Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Best-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22g5svtc</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=mazinsiyad567%40gmail.com&su=Quick+collab+%26+tool+for+Show+HN%3A+Open-source+AI+workspace+with+sha+%28%242.49+White-Label+Web+App+%2B+Amazon+Associates+Global+Perks%29&body=Hi+%40devthewariend%2C%0A%0AI+just+checked+out+Show+HN%3A+Open-source+AI+workspace+with+shared+procedural+memory+%28https%3A%2F%2Fgithub.com%2FTheWariend%2FCleanSlate%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+Mini+PCs+%28Ryzen+7+8845HS%29%2C+RTX+4070+Ti+Super+GPUs+%26+NVMe+SSDs+on+Amazon+%282026+Buyer+Guide%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22g5svtc%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Amazon+Associates+Global%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Famazon-deals.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.49+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-ai-prompt-markdown-converter.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.49+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-ai-prompt-markdown-converter%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (mazinsiyad567@gmail.com) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:mazinsiyad567@gmail.com?subject=Quick+collab+%26+tool+for+Show+HN%3A+Open-source+AI+workspace+with+sha+%28%242.49+White-Label+Web+App+%2B+Amazon+Associates+Global+Perks%29&body=Hi+%40devthewariend%2C%0A%0AI+just+checked+out+Show+HN%3A+Open-source+AI+workspace+with+shared+procedural+memory+%28https%3A%2F%2Fgithub.com%2FTheWariend%2FCleanSlate%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+Mini+PCs+%28Ryzen+7+8845HS%29%2C+RTX+4070+Ti+Super+GPUs+%26+NVMe+SSDs+on+Amazon+%282026+Buyer+Guide%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22g5svtc%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Amazon+Associates+Global%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Famazon-deals.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.49+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-ai-prompt-markdown-converter.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.49+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-ai-prompt-markdown-converter%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(0, 'https://news.ycombinator.com/item?id=50282336', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: i@liuliu.me</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @liuliu — Show HN: Local Code – Run DeepSeek 4.1 Flash 1017 Locally on Your Mac</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/drawthingsai/local-code-community" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/drawthingsai/local-code-community</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($1.99 USD) + Shopify Partners & AutoDS Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/How-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2bj8pgjp</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=i%40liuliu.me&su=Quick+collab+%26+tool+for+Show+HN%3A+Local+Code+%E2%80%93+Run+DeepSeek+4.1+Fla+%28%241.99+White-Label+Web+App+%2B+Shopify+Partners+%26+AutoDS+Perks%29&body=Hi+%40liuliu%2C%0A%0AI+just+checked+out+Show+HN%3A+Local+Code+%E2%80%93+Run+DeepSeek+4.1+Flash+1017+Locally+on+Your+Mac+%28https%3A%2F%2Fgithub.com%2Fdrawthingsai%2Flocal-code-community%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+How+to+Launch+an+AI-Automated+Shopify+Dropshipping+Store+for+%241%2FMonth+%2B+AutoDS+Winning+Products+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FHow-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2bj8pgjp%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopify+Partners+%26+AutoDS%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopify-trial.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-saas-roi-pomodoro-calculator.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-saas-roi-pomodoro-calculator%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (i@liuliu.me) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:i@liuliu.me?subject=Quick+collab+%26+tool+for+Show+HN%3A+Local+Code+%E2%80%93+Run+DeepSeek+4.1+Fla+%28%241.99+White-Label+Web+App+%2B+Shopify+Partners+%26+AutoDS+Perks%29&body=Hi+%40liuliu%2C%0A%0AI+just+checked+out+Show+HN%3A+Local+Code+%E2%80%93+Run+DeepSeek+4.1+Flash+1017+Locally+on+Your+Mac+%28https%3A%2F%2Fgithub.com%2Fdrawthingsai%2Flocal-code-community%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+How+to+Launch+an+AI-Automated+Shopify+Dropshipping+Store+for+%241%2FMonth+%2B+AutoDS+Winning+Products+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FHow-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2bj8pgjp%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopify+Partners+%26+AutoDS%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopify-trial.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-saas-roi-pomodoro-calculator.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-saas-roi-pomodoro-calculator%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(1, 'https://news.ycombinator.com/item?id=50281590', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: me@rgo.pt</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @kraktoos — Show HN: Open Source CS2 Skins Marketplace (early stage)</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/getopenfloat/openfloat" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/getopenfloat/openfloat</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($1.99 USD) + SaaS & AI Tools Recurring (Semrush & Hostinger) Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Best-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22lal5q6</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=me%40rgo.pt&su=Quick+collab+%26+tool+for+Show+HN%3A+Open+Source+CS2+Skins+Marketplace+%28%241.99+White-Label+Web+App+%2B+SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29+Perks%29&body=Hi+%40kraktoos%2C%0A%0AI+just+checked+out+Show+HN%3A+Open+Source+CS2+Skins+Marketplace+%28early+stage%29+%28https%3A%2F%2Fgithub.com%2Fgetopenfloat%2Fopenfloat%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+SEO+%26+Cloud+Hosting+Stack+for+Indie+Hackers+%282026%29%3A+Semrush+Pro+%2B+Hostinger+75%25+Off+%2B+JSON-LD+Studio+%28%241.99%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22lal5q6%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fsemrush-seo.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-json-schema-seo-studio.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-json-schema-seo-studio%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (me@rgo.pt) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:me@rgo.pt?subject=Quick+collab+%26+tool+for+Show+HN%3A+Open+Source+CS2+Skins+Marketplace+%28%241.99+White-Label+Web+App+%2B+SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29+Perks%29&body=Hi+%40kraktoos%2C%0A%0AI+just+checked+out+Show+HN%3A+Open+Source+CS2+Skins+Marketplace+%28early+stage%29+%28https%3A%2F%2Fgithub.com%2Fgetopenfloat%2Fopenfloat%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+SEO+%26+Cloud+Hosting+Stack+for+Indie+Hackers+%282026%29%3A+Semrush+Pro+%2B+Hostinger+75%25+Off+%2B+JSON-LD+Studio+%28%241.99%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22lal5q6%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fsemrush-seo.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-json-schema-seo-studio.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-json-schema-seo-studio%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(2, 'https://news.ycombinator.com/item?id=50281154', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: danielblignaut@gmail.com</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @solsol94 — Show HN: ~, An open-source agent registry</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/trytilde/tilde" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/trytilde/tilde</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($1.99 USD) + Shopee Mall & TikTok Shop Affiliate Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Top-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/267l6wjx</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=danielblignaut%40gmail.com&su=Quick+collab+%26+tool+for+Show+HN%3A+~%2C+An+open-source+agent+registry+%28%241.99+White-Label+Web+App+%2B+Shopee+Mall+%26+TikTok+Shop+Affiliate+Perks%29&body=Hi+%40solsol94%2C%0A%0AI+just+checked+out+Show+HN%3A+~%2C+An+open-source+agent+registry+%28https%3A%2F%2Fgithub.com%2Ftrytilde%2Ftilde%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Top+Shopee+Mall+%26+TikTok+Shop+Tech+Accessories%2C+AI+Livestream+Gear+%26+Voucher+Hub+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FTop-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F267l6wjx%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopee+Mall+%26+TikTok+Shop+Affiliate%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopee-flash.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-vietqr-crypto-payment-link-maker.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-vietqr-crypto-payment-link-maker%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (danielblignaut@gmail.com) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:danielblignaut@gmail.com?subject=Quick+collab+%26+tool+for+Show+HN%3A+~%2C+An+open-source+agent+registry+%28%241.99+White-Label+Web+App+%2B+Shopee+Mall+%26+TikTok+Shop+Affiliate+Perks%29&body=Hi+%40solsol94%2C%0A%0AI+just+checked+out+Show+HN%3A+~%2C+An+open-source+agent+registry+%28https%3A%2F%2Fgithub.com%2Ftrytilde%2Ftilde%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Top+Shopee+Mall+%26+TikTok+Shop+Tech+Accessories%2C+AI+Livestream+Gear+%26+Voucher+Hub+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FTop-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F267l6wjx%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopee+Mall+%26+TikTok+Shop+Affiliate%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopee-flash.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-vietqr-crypto-payment-link-maker.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-vietqr-crypto-payment-link-maker%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(3, 'https://news.ycombinator.com/item?id=50281119', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: skorotkiewicz@gmail.com</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @modinfo — Show HN: LFM3 Video Chat</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/skorotkiewicz/lfm3-chat" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/skorotkiewicz/lfm3-chat</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($2.99 USD) + Binance / Bybit & Ledger Cold Wallet Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Binance-Official-CPA-Bonus-100-USDT-Voucher-Code-CPA-00IQVAN8MG--CEXDEX-Arbitrage--186-DeFi-APY-Guide-2026-10-29" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/233ouqgl</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=skorotkiewicz%40gmail.com&su=Quick+collab+%26+tool+for+Show+HN%3A+LFM3+Video+Chat+%28%242.99+White-Label+Web+App+%2B+Binance+%2F+Bybit+%26+Ledger+Cold+Wallet+Perks%29&body=Hi+%40modinfo%2C%0A%0AI+just+checked+out+Show+HN%3A+LFM3+Video+Chat+%28https%3A%2F%2Fgithub.com%2Fskorotkiewicz%2Flfm3-chat%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Crypto+CEX%2FDEX+Arbitrage%2C+DeFi+Stablecoin+APY+%2818.6%25%29+%26+20%25+Fee+Rebate+on+Binance%2FBybit+%2B+Ledger+Nano+X+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FCrypto-CEXDEX-Arbitrage-DeFi-Stablecoin-APY-186--20-Fee-Rebate-on-BinanceBybit--Ledger-Nano-X-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F233ouqgl%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Binance+%2F+Bybit+%26+Ledger+Cold+Wallet%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fbinance-cpa.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.99+USD+%2885%25+cheaper+than+the+%2424+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-password-hash-security-auditor.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-password-hash-security-auditor%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (skorotkiewicz@gmail.com) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:skorotkiewicz@gmail.com?subject=Quick+collab+%26+tool+for+Show+HN%3A+LFM3+Video+Chat+%28%242.99+White-Label+Web+App+%2B+Binance+%2F+Bybit+%26+Ledger+Cold+Wallet+Perks%29&body=Hi+%40modinfo%2C%0A%0AI+just+checked+out+Show+HN%3A+LFM3+Video+Chat+%28https%3A%2F%2Fgithub.com%2Fskorotkiewicz%2Flfm3-chat%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Crypto+CEX%2FDEX+Arbitrage%2C+DeFi+Stablecoin+APY+%2818.6%25%29+%26+20%25+Fee+Rebate+on+Binance%2FBybit+%2B+Ledger+Nano+X+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FCrypto-CEXDEX-Arbitrage-DeFi-Stablecoin-APY-186--20-Fee-Rebate-on-BinanceBybit--Ledger-Nano-X-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F233ouqgl%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Binance+%2F+Bybit+%26+Ledger+Cold+Wallet%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fbinance-cpa.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.99+USD+%2885%25+cheaper+than+the+%2424+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-password-hash-security-auditor.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-password-hash-security-auditor%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(4, 'https://news.ycombinator.com/item?id=50280966', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: admin@neurons.me</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @neurons-me — neurons-me.github.io — Landing Page</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/neurons-me/neurons-me.github.io" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/neurons-me/neurons-me.github.io</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($3.99 USD) + Notion Affiliate, Printful POD & White-Label Store Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2aw3a98j</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=admin%40neurons.me&su=Quick+collab+%26+tool+for+neurons-me.github.io+%E2%80%94+Landing+Page+%28%243.99+White-Label+Web+App+%2B+Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store+Perks%29&body=Hi+%40neurons-me%2C%0A%0AI+just+checked+out+neurons-me.github.io+%E2%80%94+Landing+Page+%28https%3A%2F%2Fgithub.com%2Fneurons-me%2Fneurons-me.github.io%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+493%2B+White-Label+HTML5%2FAI+Web+Apps+%28%241.99%E2%80%93%245.99+USD%29+%2B+Notion+AI+Second+Brain+%26+Printful+POD+Starter+Kit%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2F493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2aw3a98j%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fnotion-pod.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%243.99+USD+%2885%25+cheaper+than+the+%2429+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-css-glassmorphism-landing-builder.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%243.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-css-glassmorphism-landing-builder%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (admin@neurons.me) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:admin@neurons.me?subject=Quick+collab+%26+tool+for+neurons-me.github.io+%E2%80%94+Landing+Page+%28%243.99+White-Label+Web+App+%2B+Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store+Perks%29&body=Hi+%40neurons-me%2C%0A%0AI+just+checked+out+neurons-me.github.io+%E2%80%94+Landing+Page+%28https%3A%2F%2Fgithub.com%2Fneurons-me%2Fneurons-me.github.io%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+493%2B+White-Label+HTML5%2FAI+Web+Apps+%28%241.99%E2%80%93%245.99+USD%29+%2B+Notion+AI+Second+Brain+%26+Printful+POD+Starter+Kit%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2F493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2aw3a98j%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fnotion-pod.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%243.99+USD+%2885%25+cheaper+than+the+%2429+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-css-glassmorphism-landing-builder.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%243.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-css-glassmorphism-landing-builder%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(5, 'https://github.com/neurons-me/neurons-me.github.io/issues', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: 243472@students.au.edu.pk</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @mafzalkalwardev — CallAudit-X — AI call auditing SaaS for transcription, quality scoring, review workf</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://call-audit-x.vercel.app" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://call-audit-x.vercel.app</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($2.49 USD) + Amazon Associates Global Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Best-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22g5svtc</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=243472%40students.au.edu.pk&su=Quick+collab+%26+tool+for+CallAudit-X+%E2%80%94+AI+call+auditing+SaaS+for+tr+%28%242.49+White-Label+Web+App+%2B+Amazon+Associates+Global+Perks%29&body=Hi+%40mafzalkalwardev%2C%0A%0AI+just+checked+out+CallAudit-X+%E2%80%94+AI+call+auditing+SaaS+for+transcription%2C+quality+scoring%2C+review+workf+%28https%3A%2F%2Fcall-audit-x.vercel.app%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+Mini+PCs+%28Ryzen+7+8845HS%29%2C+RTX+4070+Ti+Super+GPUs+%26+NVMe+SSDs+on+Amazon+%282026+Buyer+Guide%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22g5svtc%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Amazon+Associates+Global%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Famazon-deals.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.49+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-ai-prompt-markdown-converter.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.49+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-ai-prompt-markdown-converter%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (243472@students.au.edu.pk) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:243472@students.au.edu.pk?subject=Quick+collab+%26+tool+for+CallAudit-X+%E2%80%94+AI+call+auditing+SaaS+for+tr+%28%242.49+White-Label+Web+App+%2B+Amazon+Associates+Global+Perks%29&body=Hi+%40mafzalkalwardev%2C%0A%0AI+just+checked+out+CallAudit-X+%E2%80%94+AI+call+auditing+SaaS+for+transcription%2C+quality+scoring%2C+review+workf+%28https%3A%2F%2Fcall-audit-x.vercel.app%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+Mini+PCs+%28Ryzen+7+8845HS%29%2C+RTX+4070+Ti+Super+GPUs+%26+NVMe+SSDs+on+Amazon+%282026+Buyer+Guide%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-Mini-PCs-Ryzen-7-8845HS-RTX-4070-Ti-Super-GPUs--NVMe-SSDs-on-Amazon-2026-Buyer-Guide-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22g5svtc%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Amazon+Associates+Global%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Famazon-deals.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.49+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-ai-prompt-markdown-converter.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.49+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-ai-prompt-markdown-converter%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(6, 'https://github.com/mafzalkalwardev/CallAudit-X/issues', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: jared@jaredjohnson.dev</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @jaredjj3 — webappwiz — Web/SaaS Project</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/jaredjj3/webappwiz" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/jaredjj3/webappwiz</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($1.99 USD) + Shopify Partners & AutoDS Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/How-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2bj8pgjp</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=jared%40jaredjohnson.dev&su=Quick+collab+%26+tool+for+webappwiz+%E2%80%94+Web%2FSaaS+Project+%28%241.99+White-Label+Web+App+%2B+Shopify+Partners+%26+AutoDS+Perks%29&body=Hi+%40jaredjj3%2C%0A%0AI+just+checked+out+webappwiz+%E2%80%94+Web%2FSaaS+Project+%28https%3A%2F%2Fgithub.com%2Fjaredjj3%2Fwebappwiz%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+How+to+Launch+an+AI-Automated+Shopify+Dropshipping+Store+for+%241%2FMonth+%2B+AutoDS+Winning+Products+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FHow-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2bj8pgjp%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopify+Partners+%26+AutoDS%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopify-trial.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-saas-roi-pomodoro-calculator.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-saas-roi-pomodoro-calculator%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (jared@jaredjohnson.dev) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:jared@jaredjohnson.dev?subject=Quick+collab+%26+tool+for+webappwiz+%E2%80%94+Web%2FSaaS+Project+%28%241.99+White-Label+Web+App+%2B+Shopify+Partners+%26+AutoDS+Perks%29&body=Hi+%40jaredjj3%2C%0A%0AI+just+checked+out+webappwiz+%E2%80%94+Web%2FSaaS+Project+%28https%3A%2F%2Fgithub.com%2Fjaredjj3%2Fwebappwiz%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+How+to+Launch+an+AI-Automated+Shopify+Dropshipping+Store+for+%241%2FMonth+%2B+AutoDS+Winning+Products+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FHow-to-Launch-an-AI-Automated-Shopify-Dropshipping-Store-for-1Month--AutoDS-Winning-Products-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2bj8pgjp%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopify+Partners+%26+AutoDS%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopify-trial.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2419+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-saas-roi-pomodoro-calculator.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-saas-roi-pomodoro-calculator%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(7, 'https://github.com/jaredjj3/webappwiz/issues', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: site-sync@icaro0310.github.io</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @Icaro0310 — Icaro0310.github.io — Personal site and catalog of the devin-* open-source ecosystem</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/Icaro0310/Icaro0310.github.io" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/Icaro0310/Icaro0310.github.io</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($1.99 USD) + SaaS & AI Tools Recurring (Semrush & Hostinger) Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Best-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/22lal5q6</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=site-sync%40icaro0310.github.io&su=Quick+collab+%26+tool+for+Icaro0310.github.io+%E2%80%94+Personal+site+and+ca+%28%241.99+White-Label+Web+App+%2B+SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29+Perks%29&body=Hi+%40Icaro0310%2C%0A%0AI+just+checked+out+Icaro0310.github.io+%E2%80%94+Personal+site+and+catalog+of+the+devin-%2A+open-source+ecosystem+%28https%3A%2F%2Fgithub.com%2FIcaro0310%2FIcaro0310.github.io%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+SEO+%26+Cloud+Hosting+Stack+for+Indie+Hackers+%282026%29%3A+Semrush+Pro+%2B+Hostinger+75%25+Off+%2B+JSON-LD+Studio+%28%241.99%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22lal5q6%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fsemrush-seo.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-json-schema-seo-studio.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-json-schema-seo-studio%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (site-sync@icaro0310.github.io) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:site-sync@icaro0310.github.io?subject=Quick+collab+%26+tool+for+Icaro0310.github.io+%E2%80%94+Personal+site+and+ca+%28%241.99+White-Label+Web+App+%2B+SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29+Perks%29&body=Hi+%40Icaro0310%2C%0A%0AI+just+checked+out+Icaro0310.github.io+%E2%80%94+Personal+site+and+catalog+of+the+devin-%2A+open-source+ecosystem+%28https%3A%2F%2Fgithub.com%2FIcaro0310%2FIcaro0310.github.io%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Best+AI+SEO+%26+Cloud+Hosting+Stack+for+Indie+Hackers+%282026%29%3A+Semrush+Pro+%2B+Hostinger+75%25+Off+%2B+JSON-LD+Studio+%28%241.99%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FBest-AI-SEO--Cloud-Hosting-Stack-for-Indie-Hackers-2026-Semrush-Pro--Hostinger-75-Off--JSON-LD-Studio-199-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F22lal5q6%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28SaaS+%26+AI+Tools+Recurring+%28Semrush+%26+Hostinger%29%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fsemrush-seo.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-json-schema-seo-studio.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-json-schema-seo-studio%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(8, 'https://github.com/Icaro0310/Icaro0310.github.io/issues', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: dylandjomou@yahoo.de</span>
-
-                    <span class="chip" style="font-size:9px;">🇩🇪 Germany / DACH (Đức) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @dyalndjomou — Show HN: Fengarde–OCSF-native open-source SIEM with local AI triage (Apache-2.0)</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://supermhel.github.io/fengarde/" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://supermhel.github.io/fengarde/</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($1.99 USD) + Shopee Mall & TikTok Shop Affiliate Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Top-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/267l6wjx</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=dylandjomou%40yahoo.de&su=Quick+collab+%26+tool+for+Show+HN%3A+Fengarde%E2%80%93OCSF-native+open-source++%28%241.99+White-Label+Web+App+%2B+Shopee+Mall+%26+TikTok+Shop+Affiliate+Perks%29&body=Hi+%40dyalndjomou%2C%0A%0AI+just+checked+out+Show+HN%3A+Fengarde%E2%80%93OCSF-native+open-source+SIEM+with+local+AI+triage+%28Apache-2.0%29+%28https%3A%2F%2Fsupermhel.github.io%2Ffengarde%2F%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Top+Shopee+Mall+%26+TikTok+Shop+Tech+Accessories%2C+AI+Livestream+Gear+%26+Voucher+Hub+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FTop-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F267l6wjx%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopee+Mall+%26+TikTok+Shop+Affiliate%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopee-flash.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-vietqr-crypto-payment-link-maker.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-vietqr-crypto-payment-link-maker%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (dylandjomou@yahoo.de) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:dylandjomou@yahoo.de?subject=Quick+collab+%26+tool+for+Show+HN%3A+Fengarde%E2%80%93OCSF-native+open-source++%28%241.99+White-Label+Web+App+%2B+Shopee+Mall+%26+TikTok+Shop+Affiliate+Perks%29&body=Hi+%40dyalndjomou%2C%0A%0AI+just+checked+out+Show+HN%3A+Fengarde%E2%80%93OCSF-native+open-source+SIEM+with+local+AI+triage+%28Apache-2.0%29+%28https%3A%2F%2Fsupermhel.github.io%2Ffengarde%2F%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Top+Shopee+Mall+%26+TikTok+Shop+Tech+Accessories%2C+AI+Livestream+Gear+%26+Voucher+Hub+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FTop-Shopee-Mall--TikTok-Shop-Tech-Accessories-AI-Livestream-Gear--Voucher-Hub-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F267l6wjx%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Shopee+Mall+%26+TikTok+Shop+Affiliate%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fshopee-flash.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%241.99+USD+%2885%25+cheaper+than+the+%2415+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-vietqr-crypto-payment-link-maker.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%241.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-vietqr-crypto-payment-link-maker%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(9, 'https://news.ycombinator.com/item?id=50282830', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: servicios@synapseaihub.com.ar</span>
-
-                    <span class="chip" style="font-size:9px;">🇪🇸 Spain / LatAm (Tây Ban Nha) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @LScelza — Show HN: synapseForge - Open-source Python framework with built-in agent creator</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://www.synapseaihub.com.ar/" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://www.synapseaihub.com.ar/</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($2.99 USD) + Binance / Bybit & Ledger Cold Wallet Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/Binance-Official-CPA-Bonus-100-USDT-Voucher-Code-CPA-00IQVAN8MG--CEXDEX-Arbitrage--186-DeFi-APY-Guide-2026-10-29" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/233ouqgl</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=servicios%40synapseaihub.com.ar&su=Quick+collab+%26+tool+for+Show+HN%3A+synapseForge+-+Open-source+Python+%28%242.99+White-Label+Web+App+%2B+Binance+%2F+Bybit+%26+Ledger+Cold+Wallet+Perks%29&body=Hi+%40LScelza%2C%0A%0AI+just+checked+out+Show+HN%3A+synapseForge+-+Open-source+Python+framework+with+built-in+agent+creator+%28https%3A%2F%2Fwww.synapseaihub.com.ar%2F%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Crypto+CEX%2FDEX+Arbitrage%2C+DeFi+Stablecoin+APY+%2818.6%25%29+%26+20%25+Fee+Rebate+on+Binance%2FBybit+%2B+Ledger+Nano+X+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FCrypto-CEXDEX-Arbitrage-DeFi-Stablecoin-APY-186--20-Fee-Rebate-on-BinanceBybit--Ledger-Nano-X-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F233ouqgl%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Binance+%2F+Bybit+%26+Ledger+Cold+Wallet%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fbinance-cpa.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.99+USD+%2885%25+cheaper+than+the+%2424+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-password-hash-security-auditor.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-password-hash-security-auditor%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (servicios@synapseaihub.com.ar) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:servicios@synapseaihub.com.ar?subject=Quick+collab+%26+tool+for+Show+HN%3A+synapseForge+-+Open-source+Python+%28%242.99+White-Label+Web+App+%2B+Binance+%2F+Bybit+%26+Ledger+Cold+Wallet+Perks%29&body=Hi+%40LScelza%2C%0A%0AI+just+checked+out+Show+HN%3A+synapseForge+-+Open-source+Python+framework+with+built-in+agent+creator+%28https%3A%2F%2Fwww.synapseaihub.com.ar%2F%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+Crypto+CEX%2FDEX+Arbitrage%2C+DeFi+Stablecoin+APY+%2818.6%25%29+%26+20%25+Fee+Rebate+on+Binance%2FBybit+%2B+Ledger+Nano+X+%282026%29%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2FCrypto-CEXDEX-Arbitrage-DeFi-Stablecoin-APY-186--20-Fee-Rebate-on-BinanceBybit--Ledger-Nano-X-2026-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F233ouqgl%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Binance+%2F+Bybit+%26+Ledger+Cold+Wallet%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fbinance-cpa.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%242.99+USD+%2885%25+cheaper+than+the+%2424+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-password-hash-security-auditor.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%242.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-password-hash-security-auditor%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(10, 'https://news.ycombinator.com/item?id=50282685', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-              <div style="padding:10px 12px; border-radius:10px; background:rgba(11,19,35,0.94); border:1px solid rgba(56,189,248,0.35); display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-
-                <div>
-
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:4px;">
-
-                    <span class="chip success" style="font-size:9.5px; font-weight:800;">📧 Email thật: austinryan295@gmail.com</span>
-
-                    <span class="chip" style="font-size:9px;">🇺🇸 United States / Global (Quốc Tế) • 🇬🇧 100% English</span>
-
-                  </div>
-
-                  <div style="font-weight:800; font-size:12px; color:#fff; margin-bottom:2px;">Founder @AustinRyan — lifeboat — Survival guides for sinking software — 24/7 SaaS shutdown watcher + re</div>
-
-                  <div style="font-size:10.5px; color:#38bdf8; word-break:break-all; margin-bottom:4px;">
-
-                    🌐 Dự án của khách: <a href="https://github.com/AustinRyan/lifeboat" target="_blank" rel="noopener" style="color:#7dd3fc; text-decoration:underline;">https://github.com/AustinRyan/lifeboat</a>
-
-                  </div>
-
-                  <div style="font-size:10.5px; color:#6ee7b7; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.28); padding:5px 7px; border-radius:6px; margin-bottom:4px;">
-
-                    🎯 <strong>Gói chào bán &amp; Affiliate:</strong> White-Label Web App ($3.99 USD) + Notion Affiliate, Printful POD & White-Label Store Affiliate Deal<br/>
-
-                    🔗 <strong>Link Review &amp; Affiliate đính kèm:</strong> <a href="https://telegra.ph/493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2" target="_blank" rel="noopener" style="color:#fde68a; text-decoration:underline;">https://tinyurl.com/2aw3a98j</a><br/>
-
-                    <span style="color:#fde68a; font-size:10px;">📝 <strong>Bản nháp:</strong> Chưa gửi email. Hãy xem lại thư trong Gmail/Mail trước khi tự gửi.</span>
-
-                  </div>
-
-                </div>
-
-                <div style="display:flex; gap:5px; flex-wrap:wrap;">
-
-                  <a class="btn btn-sm btn-primary" href="https://mail.google.com/mail/?view=cm&fs=1&to=austinryan295%40gmail.com&su=Quick+collab+%26+tool+for+lifeboat+%E2%80%94+Survival+guides+for+sinking+sof+%28%243.99+White-Label+Web+App+%2B+Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store+Perks%29&body=Hi+%40AustinRyan%2C%0A%0AI+just+checked+out+lifeboat+%E2%80%94+Survival+guides+for+sinking+software+%E2%80%94+24%2F7+SaaS+shutdown+watcher+%2B+re+%28https%3A%2F%2Fgithub.com%2FAustinRyan%2Flifeboat%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+493%2B+White-Label+HTML5%2FAI+Web+Apps+%28%241.99%E2%80%93%245.99+USD%29+%2B+Notion+AI+Second+Brain+%26+Printful+POD+Starter+Kit%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2F493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2aw3a98j%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fnotion-pod.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%243.99+USD+%2885%25+cheaper+than+the+%2429+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-css-glassmorphism-landing-builder.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%243.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-css-glassmorphism-landing-builder%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" target="_blank" rel="noopener" style="text-decoration:none; background:linear-gradient(135deg,#059669,#0d9488);">
-
-                    📧 Gửi Qua Gmail (austinryan295@gmail.com) ↗
-
-                  </a>
-
-                  <a class="btn btn-sm btn-cyan" href="mailto:austinryan295@gmail.com?subject=Quick+collab+%26+tool+for+lifeboat+%E2%80%94+Survival+guides+for+sinking+sof+%28%243.99+White-Label+Web+App+%2B+Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store+Perks%29&body=Hi+%40AustinRyan%2C%0A%0AI+just+checked+out+lifeboat+%E2%80%94+Survival+guides+for+sinking+software+%E2%80%94+24%2F7+SaaS+shutdown+watcher+%2B+re+%28https%3A%2F%2Fgithub.com%2FAustinRyan%2Flifeboat%29+%E2%80%94+great+execution%21%0A%0AOur+autonomous+AI+team+at+AutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29+just+published+a+2026+resource+bundle+%26+standalone+HTML5%2FJS+Web+App+that+fits+your+stack%3A%0A%0A1%EF%B8%8F%E2%83%A3+493%2B+White-Label+HTML5%2FAI+Web+Apps+%28%241.99%E2%80%93%245.99+USD%29+%2B+Notion+AI+Second+Brain+%26+Printful+POD+Starter+Kit%0A+++%F0%9F%93%96+Read+Live+Review+%26+Benchmarks%3A+https%3A%2F%2Ftelegra.ph%2F493-White-Label-HTML5AI-Web-Apps-199599-USD--Notion-AI-Second-Brain--Printful-POD-Starter-Kit-10-29-2+%28Shortlink%3A+https%3A%2F%2Ftinyurl.com%2F2aw3a98j%29%0A+++%F0%9F%94%A5+Official+Partner+Deal+%28Notion+Affiliate%2C+Printful+POD+%26+White-Label+Store%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fgo%2Fnotion-pod.html%0A%0A2%EF%B8%8F%E2%83%A3+Full+White-Label+HTML5%2FJS+Web+App+Source+Code+for+only+%243.99+USD+%2885%25+cheaper+than+the+%2429+market+average%29%3A%0A+++%F0%9F%9A%80+Try+Free+Live+Web+App%3A+https%3A%2F%2Faikiemtien.surge.sh%2Fwebapps%2Fgithub-css-glassmorphism-landing-builder.html%0A+++%F0%9F%9B%92+Instant+Source+Code+Download+%28%243.99+USD%29%3A+https%3A%2F%2Faikiemtien.surge.sh%2F%3Fbuy%3Dgithub-css-glassmorphism-landing-builder%23githubWebFactoryShowcaseCard%0A%0ABest+regards%2C%0ADan+Quan+%26+Mai+Anh+%E2%80%94+International+Partnerships+%26+Affiliate+Team%0AAutoProfit+AI+%28https%3A%2F%2Faikiemtien.surge.sh%29" style="text-decoration:none;">
-
-                    ✉️ Mở App Mail (EN)
-
-                  </a>
-
-                  <button type="button" class="btn btn-sm" onclick="copyLeadPitchAndOpenThread(11, 'https://github.com/AustinRyan/lifeboat/issues', this)">
-
-                    💬 Copy Thư &amp; Mở Trang Khách ↗
-
-                  </button>
-
-                </div>
-
-              </div>
-
-            </div>
-
+          <!-- Consent-first lead handling: public source authors are not contacts. -->
+          <div style="padding:14px 16px; border:1px solid rgba(56,189,248,0.3); border-radius:10px; background:rgba(11,19,35,0.94);">
+            <div style="font-weight:800; color:#38bdf8; margin-bottom:5px;" data-vi="2. Khách hàng và liên hệ có sự đồng ý" data-en="2. Consented customers and contacts">2. Khách hàng và liên hệ có sự đồng ý</div>
+            <div style="font-size:11.5px; color:var(--text-secondary);" data-vi="Không có email cá nhân thu thập từ trang công khai và không soạn sẵn thư chào bán. Chỉ lưu liên hệ khi khách chủ động đồng ý; xem các lead do chủ sở hữu nhập trong CRM." data-en="No personal emails harvested from public pages and no prewritten cold pitches. Store contacts only after explicit opt-in; review owner-entered leads in the CRM.">Không có email cá nhân thu thập từ trang công khai và không soạn sẵn thư chào bán. Chỉ lưu liên hệ khi khách chủ động đồng ý; xem các lead do chủ sở hữu nhập trong CRM.</div>
+            <button class="btn btn-sm btn-cyan" type="button" style="margin-top:9px;" onclick="switchView('leads')" data-vi="Mở CRM" data-en="Open CRM">Mở CRM</button>
           </div>
 
         </div>
@@ -2847,13 +2161,13 @@
 
               <h3 style="margin:5px 0 3px; font-size:15.5px; color:#fff;">
 
-                🌐 Xưởng AI Tự Lên GitHub Săn Ứng Dụng Về Làm Web Chạy Quảng Cáo A-Ads &amp; Bán Mã Nguồn
+                🌐 Catalog Web Apps &amp; Quy Trình Checkout
 
               </h3>
 
               <div style="font-size:11.5px; color:var(--text-secondary);">
 
-                Kiểm tra trực tiếp: Con AI nào đang kiếm tiền từ nguồn nào, làm ra những trang Web công cụ gì từ GitHub, gắn sẵn quảng cáo A-Ads + link mua hàng + cổng Donate theo IP.
+                Xem catalog công cụ và trạng thái kết nối. Doanh thu chỉ xuất hiện sau khi nguồn xác minh được cấu hình và giao dịch được đối soát.
 
               </div>
 
@@ -2941,23 +2255,23 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px;">
 
-                  <span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #1 ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>
+                  <span class="chip warn" style="font-size:10px; font-weight:800;">Demo · chưa có dữ liệu sử dụng hoặc doanh thu xác minh</span>
 
-                  <span class="chip success" style="font-size:10px;">Giá TT: $19 ➔ Giá AI: $2.99 USD (-84%)</span>
+                  <span class="chip success" style="font-size:10px;">Giá catalog cấu hình · chưa xác minh giá thị trường</span>
 
                 </div>
 
                 <div style="font-weight:800; font-size:13px; color:#fff; margin-bottom:4px;">Web Công Cụ Chuẩn Hóa JSON &amp; Tạo Mã Schema.org JSON-LD Tự Động</div>
 
-                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Thu hút lập trình viên &amp; chủ web vào định dạng JSON / tạo mã Schema SEO -&gt; Ăn tiền hiển thị quảng cáo A-Ads + Bán mã nguồn White-Label.</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Dùng thử công cụ JSON và tạo Schema. Vị trí quảng cáo chưa kết nối; doanh thu và mức sẵn sàng chi trả chưa được xác minh.</div>
 
                 <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Đã Tích Hợp Quảng Cáo A-Ads</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Mạng quảng cáo chưa kết nối</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Bàn Giao Mã Nguồn ($2.99 USD)</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Giao hàng sau xác minh · checkout</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">🔒 Mở TK Thanh Toán Khi Mua</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Đối soát thanh toán theo quy trình checkout</span>
 
                 </div>
 
@@ -2967,7 +2281,7 @@
 
                 <button class="btn btn-sm btn-primary" style="flex:1;" onclick="openLiveGithubWebAppModal('github-json-schema-seo-studio')">🚀 Mở Dùng Thử Web</button>
 
-                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Công Cụ Chuẩn Hóa JSON & Tạo Mã Schema.org JSON-LD', 2.99, 'github-json-schema-seo-studio')">🛒 Mua Ngay ($2.99)</button>
+                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Công Cụ Chuẩn Hóa JSON & Tạo Mã Schema.org JSON-LD', 2.99, 'github-json-schema-seo-studio')">🛒 Xem giá & checkout</button>
 
               </div>
 
@@ -2979,23 +2293,23 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px;">
 
-                  <span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #2 ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>
+                  <span class="chip warn" style="font-size:10px; font-weight:800;">Demo · chưa có dữ liệu sử dụng hoặc doanh thu xác minh</span>
 
-                  <span class="chip success" style="font-size:10px;">Giá TT: $25 ➔ Giá AI: $3.49 USD (-86%)</span>
+                  <span class="chip success" style="font-size:10px;">Giá catalog cấu hình · chưa xác minh giá thị trường</span>
 
                 </div>
 
                 <div style="font-weight:800; font-size:13px; color:#fff; margin-bottom:4px;">Web Tạo Mã QR Thanh Toán Đa Năng, Link UTM &amp; Cổng Donate Web3 Pro</div>
 
-                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Chủ shop &amp; marketer vào tạo mã QR và link chiến dịch miễn phí -&gt; Chạy 2 banner A-Ads trực tiếp + Bán trọn bộ Widget.</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Dùng thử tạo QR và link chiến dịch. Công cụ không tự tạo lượt xem hoặc doanh thu quảng cáo.</div>
 
                 <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Đã Tích Hợp Quảng Cáo A-Ads</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Mạng quảng cáo chưa kết nối</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Bàn Giao Mã Nguồn ($3.49 USD)</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Giao hàng sau xác minh · checkout</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">🔒 Mở TK Thanh Toán Khi Mua</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Đối soát thanh toán theo quy trình checkout</span>
 
                 </div>
 
@@ -3005,7 +2319,7 @@
 
                 <button class="btn btn-sm btn-primary" style="flex:1;" onclick="openLiveGithubWebAppModal('github-vietqr-crypto-payment-link-maker')">🚀 Mở Dùng Thử Web</button>
 
-                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Tạo Mã QR Thanh Toán Đa Năng & Link UTM Pro', 3.49, 'github-vietqr-crypto-payment-link-maker')">🛒 Mua Ngay ($3.49)</button>
+                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Tạo Mã QR Thanh Toán Đa Năng & Link UTM Pro', 3.49, 'github-vietqr-crypto-payment-link-maker')">🛒 Xem giá & checkout</button>
 
               </div>
 
@@ -3017,23 +2331,23 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px;">
 
-                  <span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #3 ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>
+                  <span class="chip warn" style="font-size:10px; font-weight:800;">Demo · chưa có dữ liệu sử dụng hoặc doanh thu xác minh</span>
 
-                  <span class="chip success" style="font-size:10px;">Giá TT: $19 ➔ Giá AI: $2.49 USD (-87%)</span>
+                  <span class="chip success" style="font-size:10px;">Giá catalog cấu hình · chưa xác minh giá thị trường</span>
 
                 </div>
 
                 <div style="font-weight:800; font-size:13px; color:#fff; margin-bottom:4px;">Web Soạn Thảo Markdown Sang HTML &amp; Tối Ưu Câu Lệnh AI (Prompt Studio)</div>
 
-                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Người viết nội dung &amp; người dùng AI vào soạn bài và đếm từ khóa SEO -&gt; Hiển thị quảng cáo A-Ads liên tục + Bán bản Pro.</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Dùng thử soạn Markdown và xem gợi ý SEO. Mạng quảng cáo và phiên bản trả phí chưa được xác minh.</div>
 
                 <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Đã Tích Hợp Quảng Cáo A-Ads</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Mạng quảng cáo chưa kết nối</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Bàn Giao Mã Nguồn ($2.49 USD)</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Giao hàng sau xác minh · checkout</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">🔒 Mở TK Thanh Toán Khi Mua</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Đối soát thanh toán theo quy trình checkout</span>
 
                 </div>
 
@@ -3043,7 +2357,7 @@
 
                 <button class="btn btn-sm btn-primary" style="flex:1;" onclick="openLiveGithubWebAppModal('github-ai-prompt-markdown-converter')">🚀 Mở Dùng Thử Web</button>
 
-                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Soạn Thảo Markdown Sang HTML & Prompt Studio', 2.49, 'github-ai-prompt-markdown-converter')">🛒 Mua Ngay ($2.49)</button>
+                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Soạn Thảo Markdown Sang HTML & Prompt Studio', 2.49, 'github-ai-prompt-markdown-converter')">🛒 Xem giá & checkout</button>
 
               </div>
 
@@ -3055,23 +2369,23 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px;">
 
-                  <span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #4 ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>
+                  <span class="chip warn" style="font-size:10px; font-weight:800;">Demo · chưa có dữ liệu sử dụng hoặc doanh thu xác minh</span>
 
-                  <span class="chip success" style="font-size:10px;">Giá TT: $29 ➔ Giá AI: $3.99 USD (-86%)</span>
+                  <span class="chip success" style="font-size:10px;">Giá catalog cấu hình · chưa xác minh giá thị trường</span>
 
                 </div>
 
                 <div style="font-weight:800; font-size:13px; color:#fff; margin-bottom:4px;">Web Thiết Kế Giao Diện Kính Mờ (Glassmorphism) &amp; Sinh Code Landing Page</div>
 
-                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Designer &amp; chủ startup vào kéo thanh trượt tạo giao diện Landing Page -&gt; Tự động nạp quảng cáo A-Ads + Bán bộ mẫu.</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Dùng thử tạo mockup landing page. Vị trí quảng cáo chưa kết nối; không có dữ liệu doanh thu xác minh.</div>
 
                 <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Đã Tích Hợp Quảng Cáo A-Ads</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Mạng quảng cáo chưa kết nối</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Bàn Giao Mã Nguồn ($3.99 USD)</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Giao hàng sau xác minh · checkout</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">🔒 Mở TK Thanh Toán Khi Mua</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Đối soát thanh toán theo quy trình checkout</span>
 
                 </div>
 
@@ -3081,7 +2395,7 @@
 
                 <button class="btn btn-sm btn-primary" style="flex:1;" onclick="openLiveGithubWebAppModal('github-css-glassmorphism-landing-builder')">🚀 Mở Dùng Thử Web</button>
 
-                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Thiết Kế Giao Diện Glassmorphism & Sinh Code Landing Page', 1.99, 'github-css-glassmorphism-landing-builder')">🛒 Mua Ngay ($1.99)</button>
+                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Thiết Kế Giao Diện Glassmorphism & Sinh Code Landing Page', 1.99, 'github-css-glassmorphism-landing-builder')">🛒 Xem giá & checkout</button>
 
               </div>
 
@@ -3093,23 +2407,23 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px;">
 
-                  <span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #5 ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>
+                  <span class="chip warn" style="font-size:10px; font-weight:800;">Demo · chưa có dữ liệu sử dụng hoặc doanh thu xác minh</span>
 
-                  <span class="chip success" style="font-size:10px;">Giá TT: $24 ➔ Giá AI: $2.99 USD (-88%)</span>
+                  <span class="chip success" style="font-size:10px;">Giá catalog cấu hình · chưa xác minh giá thị trường</span>
 
                 </div>
 
                 <div style="font-weight:800; font-size:13px; color:#fff; margin-bottom:4px;">Web Kiểm Tra Độ Mạnh Mật Khẩu, Tạo Mã Băm SHA-256 &amp; Giải Mã Token JWT</div>
 
-                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Quản trị viên &amp; kỹ sư bảo mật vào kiểm tra mã băm / mật khẩu -&gt; Kiếm tiền CPM/CPC từ quảng cáo A-Ads + Bán gói kiểm toán.</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Dùng thử kiểm tra hash và JWT. Quảng cáo và dịch vụ kiểm toán chưa được xác minh hoặc kết nối.</div>
 
                 <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Đã Tích Hợp Quảng Cáo A-Ads</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Mạng quảng cáo chưa kết nối</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Bàn Giao Mã Nguồn ($2.99 USD)</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Giao hàng sau xác minh · checkout</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">🔒 Mở TK Thanh Toán Khi Mua</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Đối soát thanh toán theo quy trình checkout</span>
 
                 </div>
 
@@ -3119,7 +2433,7 @@
 
                 <button class="btn btn-sm btn-primary" style="flex:1;" onclick="openLiveGithubWebAppModal('github-password-hash-security-auditor')">🚀 Mở Dùng Thử Web</button>
 
-                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Kiểm Tra Độ Mạnh Mật Khẩu, SHA-256 & JWT Inspector', 1.99, 'github-password-hash-security-auditor')">🛒 Mua Ngay ($1.99)</button>
+                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Kiểm Tra Độ Mạnh Mật Khẩu, SHA-256 & JWT Inspector', 1.99, 'github-password-hash-security-auditor')">🛒 Xem giá & checkout</button>
 
               </div>
 
@@ -3131,23 +2445,23 @@
 
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px;">
 
-                  <span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #6 ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>
+                  <span class="chip warn" style="font-size:10px; font-weight:800;">Demo · chưa có dữ liệu sử dụng hoặc doanh thu xác minh</span>
 
-                  <span class="chip success" style="font-size:10px;">Giá TT: $19 ➔ Giá AI: $1.99 USD (-89%)</span>
+                  <span class="chip success" style="font-size:10px;">Giá catalog cấu hình · chưa xác minh giá thị trường</span>
 
                 </div>
 
                 <div style="font-weight:800; font-size:13px; color:#fff; margin-bottom:4px;">Web Tính Toán Lợi Nhuận SaaS (ROI Pro) &amp; Đồng Hồ Tập Trung Pomodoro</div>
 
-                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Người làm tự do &amp; founder giữ tab đồng hồ Pomodoro hàng giờ -&gt; Quảng cáo A-Ads tự động làm mới liên tục + Bán bảng tính.</div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-bottom:6px;">Dùng thử calculator SaaS và đồng hồ Pomodoro. Không có quảng cáo tự làm mới hoặc doanh thu đã xác minh.</div>
 
                 <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:6px;">
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Đã Tích Hợp Quảng Cáo A-Ads</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Mạng quảng cáo chưa kết nối</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">✅ Bàn Giao Mã Nguồn ($1.99 USD)</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Giao hàng sau xác minh · checkout</span>
 
-                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">🔒 Mở TK Thanh Toán Khi Mua</span>
+                  <span class="chip" style="font-size:9.5px; padding:1px 6px;">Đối soát thanh toán theo quy trình checkout</span>
 
                 </div>
 
@@ -3157,7 +2471,7 @@
 
                 <button class="btn btn-sm btn-primary" style="flex:1;" onclick="openLiveGithubWebAppModal('github-saas-roi-pomodoro-calculator')">🚀 Mở Dùng Thử Web</button>
 
-                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Tính Toán Lợi Nhuận SaaS & Đồng Hồ Pomodoro', 1.99, 'github-saas-roi-pomodoro-calculator')">🛒 Mua Ngay ($1.99)</button>
+                <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('Web Tính Toán Lợi Nhuận SaaS & Đồng Hồ Pomodoro', 1.99, 'github-saas-roi-pomodoro-calculator')">🛒 Xem giá & checkout</button>
 
               </div>
 
@@ -3169,7 +2483,7 @@
 
             <div style="font-size:11.5px; color:#bae6fd; text-align:left;" id="githubTop5VisibilityNotice">
 
-              🏆 <strong>Đang hiển thị Top 6 Ứng Dụng Nổi Bật Nhất</strong> (Lượt hiển thị cao • Ăn quảng cáo A-Ads nhiều • Bán chạy nhất). Các ứng dụng khác được thu gọn để giao diện trang chủ không bị dài.
+              🏆 <strong>Một số ứng dụng trong catalog</strong>. Danh sách này không được xếp hạng theo lượt dùng, doanh thu quảng cáo hoặc doanh số; các chỉ số đó chưa được xác minh.
 
             </div>
 
@@ -3189,7 +2503,7 @@
 
               <button type="button" class="btn btn-sm btn-primary" id="btnCollapseGithubAppsTop5" style="display:none;" onclick="collapseToTop5GithubWebApps()">
 
-                🔼 Thu Gọn Về Top 6 Nổi Bật Nhất
+                🔼 Thu Gọn Danh Sách Công Cụ
 
               </button>
 
@@ -3211,7 +2525,7 @@
 
               <div>
 
-                <strong style="color:#fff; font-size:13.5px;" id="modalGithubWebAppTitle">🌐 Trang Web Do AI Đóng Gói Từ GitHub (Đã gắn A-Ads)</strong>
+                <strong style="color:#fff; font-size:13.5px;" id="modalGithubWebAppTitle">🌐 Bản dùng thử Web App</strong>
 
                 <span style="font-family:var(--font-mono); font-size:11px; color:#38bdf8; margin-left:8px;" id="modalGithubWebAppRepoTag"></span>
 
@@ -3427,7 +2741,7 @@
 
               <button class="btn btn-primary btn-sm" onclick="runOrchestratorCycle()" data-vi="▶ Kích Hoạt Chu Kỳ 13 Bước (Lõi AI)" data-en="▶ Trigger 13-Step Cycle (AI Core)">▶ Kích Hoạt Chu Kỳ 13 Bước (Lõi AI)</button>
 
-              <button class="btn btn-cyan btn-sm" onclick="runLiveInternetScan()" data-vi="🌐 Quét Cơ Hội &amp; Khách Hàng Mới" data-en="🌐 Scan Live Opportunities &amp; Leads">🌐 Quét Cơ Hội &amp; Khách Hàng Mới</button>
+              <button class="btn btn-cyan btn-sm" onclick="runLiveInternetScan()" data-vi="🌐 Quét Tín Hiệu Nguồn Mới" data-en="🌐 Scan New Sourced Signals">🌐 Quét Tín Hiệu Nguồn Mới</button>
 
             </div>
 
@@ -3859,7 +3173,7 @@
 
               <button class="btn btn-sm" onclick="switchView('leads')"><span data-vi="Duyệt Đề Xuất Khách Hàng" data-en="Review Client Proposals">Duyệt Đề Xuất Khách Hàng</span> (<span id="overviewLeadsCount">0</span>)</button>
 
-              <span class="chip purple" id="overviewPrimaryPriceChip">Chỉ từ $1.99 – $4.99 USD (Rẻ hơn TT 85%)</span>
+              <span class="chip purple" id="overviewPrimaryPriceChip">Giá catalog: đang tải</span>
 
             </div>
 
@@ -3953,9 +3267,9 @@
 
                 <select class="form-select" id="adPackageSelect">
 
-                  <option value="HOMEPAGE_3D_BILLBOARD" data-vi="Biển Hologram Sảnh Chính 3D ($4.99 / 30 ngày • Giá TT: $49)" data-en="3D HQ Atrium Hologram Billboard ($49 / 30d)">Biển Hologram Sảnh Chính 3D ($4.99 / 30 ngày • Giá TT: $49)</option>
+                  <option value="HOMEPAGE_3D_BILLBOARD" data-vi="Biển Hologram Sảnh Chính 3D · giá thử nghiệm $4.99 / 30 ngày" data-en="3D HQ Atrium Hologram Billboard · $4.99 / 30d pricing hypothesis">Biển Hologram Sảnh Chính 3D · giá thử nghiệm $4.99 / 30 ngày</option>
 
-                  <option value="SPONSORED_TOOL_BANNER" data-vi="Banner Tài Trợ Hệ Thống Web Tool ($2.99 / 30 ngày • Giá TT: $29)" data-en="Sponsored Audit Tool Banner ($29 / 30d)">Banner Tài Trợ Hệ Thống Web Tool ($2.99 / 30 ngày • Giá TT: $29)</option>
+                  <option value="SPONSORED_TOOL_BANNER" data-vi="Banner Tài Trợ Web Tool · giá thử nghiệm $2.99 / 30 ngày" data-en="Sponsored Audit Tool Banner · $2.99 / 30d pricing hypothesis">Banner Tài Trợ Web Tool · giá thử nghiệm $2.99 / 30 ngày</option>
 
                 </select>
 
@@ -4019,7 +3333,7 @@
 
               <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
 
-                <span class="chip purple" id="verifiedDonationsChip">$0.00 Đã xác minh</span>
+                <span class="chip purple" id="verifiedDonationsChip" data-status="no_verified_data">— Chưa có dữ liệu xác minh</span>
 
                 <button class="btn btn-sm admin-only-control" style="font-size:10px; padding:2px 7px;" id="btnToggleVisitorGeoPreview" onclick="toggleVisitorGeoSimulationMode()" title="Chuyển đổi kiểm thử giữa giao diện IP Việt Nam và IP Quốc tế">
 
@@ -4267,7 +3581,7 @@
 
             <div>
 
-              <div class="section-title" data-vi="Điều Khiển Đội Ngũ Nhân Sự AI Đang Hoạt Động (Bảo Vệ Phân Quyền)" data-en="AI Agents Workforce Control (RBAC Protected)">Điều Khiển Đội Ngũ Nhân Sự AI Đang Hoạt Động (Bảo Vệ Phân Quyền)</div>
+              <div class="section-title" data-vi="Điều Khiển Đội Ngũ AI (Bảo Vệ Phân Quyền)" data-en="AI Agents Workforce Control (RBAC Protected)">Điều Khiển Đội Ngũ AI (Bảo Vệ Phân Quyền)</div>
 
               <div class="section-desc" data-vi="Trạng thái chuẩn hóa: ĐANG NGHỈ, ĐANG CHẠY, CHỜ PHÊ DUYỆT, HOÀN THÀNH, LỖI, ĐÃ DỪNG" data-en="Standardized states: IDLE, RUNNING, WAITING_FOR_APPROVAL, COMPLETED, FAILED, BLOCKED, STOPPED">Trạng thái chuẩn hóa: ĐANG NGHỈ, ĐANG CHẠY, CHỜ PHÊ DUYỆT, HOÀN THÀNH, LỖI, ĐÃ DỪNG</div>
 
@@ -4471,7 +3785,7 @@
 
             <div>
 
-              <div class="section-title" data-vi="Nhật Ký Thực Thi Nhiệm Vụ Của Đội Ngũ 15+ Nhân Sự AI Đang Hoạt Động" data-en="AI Agent Task Execution Telemetry">Nhật Ký Thực Thi Nhiệm Vụ Của Đội Ngũ 15+ Nhân Sự AI Đang Hoạt Động</div>
+              <div class="section-title" data-vi="Nhật Ký Thực Thi Nhiệm Vụ AI" data-en="AI Agent Task Execution Telemetry">Nhật Ký Thực Thi Nhiệm Vụ AI</div>
 
               <div class="section-desc" data-vi="Lưu đầy đủ Mã nhiệm vụ, Đầu vào, Nguồn dữ liệu, Kế hoạch, Trạng thái, Đầu ra, Thời gian, Chi phí, Kết quả kiểm thử &amp; Hành động tiếp theo" data-en="Records Task ID, Input, Data Source, Action Plan, Status, Output, Timestamps, Cost, Self-Test Result &amp; Next Action">Lưu đầy đủ Mã nhiệm vụ, Đầu vào, Nguồn dữ liệu, Kế hoạch, Trạng thái, Đầu ra, Thời gian, Chi phí, Kết quả kiểm thử &amp; Hành động tiếp theo</div>
 
@@ -4539,7 +3853,7 @@
 
                 <div class="section-title" data-vi="Quét Cơ Hội Từ Nguồn Công Khai Hợp Pháp" data-en="Scan Opportunities From Legal Public Sources">Quét Cơ Hội Từ Nguồn Công Khai Hợp Pháp</div>
 
-                <div class="section-desc" data-vi="Kết nối API công khai: HackerNews Show HN, Dev.to, Arbeitnow" data-en="Connected to public APIs: HackerNews Show HN, Dev.to, Arbeitnow Job Board">Kết nối API công khai: HackerNews Show HN, Dev.to, Arbeitnow</div>
+                <div class="section-desc" data-vi="API chính thức Hacker News và Stack Exchange; chỉ lưu nguồn vấn đề còn mới, không tạo lead hay suy đoán doanh thu" data-en="Official Hacker News and Stack Exchange APIs; store recent problem sources only, without creating leads or inferring revenue">API chính thức Hacker News và Stack Exchange; chỉ lưu nguồn vấn đề còn mới, không tạo lead hay suy đoán doanh thu</div>
 
               </div>
 
@@ -4711,7 +4025,7 @@
 
               <button class="btn btn-primary btn-sm" onclick="triggerAutoApproveAllLeadsNow()">Chuẩn bị đề xuất để chủ sở hữu rà soát</button>
 
-              <button class="btn btn-cyan btn-sm" onclick="runLiveInternetScan()" data-vi="+ Quét Thêm Trang Web Khách Hàng Mới" data-en="+ Scan New Startup Websites">+ Quét Thêm Trang Web Khách Hàng Mới</button>
+              <button class="btn btn-cyan btn-sm" onclick="runLiveInternetScan()" data-vi="+ Quét Thêm Tín Hiệu Nguồn" data-en="+ Scan More Sourced Signals">+ Quét Thêm Tín Hiệu Nguồn</button>
 
             </div>
 
@@ -5592,15 +4906,15 @@
 
             <ol style="padding-left: 18px; font-size: 12.5px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 5px;">
 
-              <li data-vi="<strong>Bước 1:</strong> Thu thập cơ hội từ API công khai hợp pháp (HackerNews, Dev.to, Arbeitnow)." data-en="<strong>Step 1:</strong> Collect opportunities from compliant public APIs (HackerNews, Dev.to, Arbeitnow)."><strong>Bước 1:</strong> Thu thập cơ hội từ API công khai hợp pháp (HackerNews, Dev.to, Arbeitnow).</li>
+              <li data-vi="<strong>Bước 1:</strong> Đọc Ask HN và câu hỏi Stack Exchange qua API chính thức; không crawl trang liên kết." data-en="<strong>Step 1:</strong> Read Ask HN and Stack Exchange questions via official APIs; do not crawl linked pages."><strong>Bước 1:</strong> Đọc Ask HN và câu hỏi Stack Exchange qua API chính thức; không crawl trang liên kết.</li>
 
-              <li data-vi="<strong>Bước 2:</strong> Kiểm tra tính hợp lệ và nguồn dữ liệu gốc." data-en="<strong>Step 2:</strong> Validate payload integrity and original source URLs."><strong>Bước 2:</strong> Kiểm tra tính hợp lệ và nguồn dữ liệu gốc.</li>
+              <li data-vi="<strong>Bước 2:</strong> Kiểm tra URL, giấy phép trích dẫn, ngày tạo và tín hiệu an toàn." data-en="<strong>Step 2:</strong> Check source URL, quotation license, creation date, and safety signals."><strong>Bước 2:</strong> Kiểm tra URL, giấy phép trích dẫn, ngày tạo và tín hiệu an toàn.</li>
 
-              <li data-vi="<strong>Bước 3:</strong> Loại bỏ dữ liệu trùng lặp trong cơ sở dữ liệu SQLite." data-en="<strong>Step 3:</strong> Deduplicate records in the persistent SQLite database."><strong>Bước 3:</strong> Loại bỏ dữ liệu trùng lặp trong cơ sở dữ liệu SQLite.</li>
+              <li data-vi="<strong>Bước 3:</strong> Gộp nguồn trùng và chống ghi nhận một URL nhiều lần." data-en="<strong>Step 3:</strong> Deduplicate similar problems and prevent counting one source URL twice."><strong>Bước 3:</strong> Gộp nguồn trùng và chống ghi nhận một URL nhiều lần.</li>
 
-              <li data-vi="<strong>Bước 4:</strong> Đánh giá mức độ phù hợp theo 8 trọng số kỹ thuật &amp; thương mại." data-en="<strong>Step 4:</strong> Score opportunity fit across 8 technical &amp; commercial criteria."><strong>Bước 4:</strong> Đánh giá mức độ phù hợp theo 8 trọng số kỹ thuật &amp; thương mại.</li>
+              <li data-vi="<strong>Bước 4:</strong> Chấm điểm ưu tiên theo bằng chứng, cấp bách, tín hiệu trả tiền, khả thi, phân phối, thời gian, ràng buộc chủ sở hữu, cạnh tranh và độ mới." data-en="<strong>Step 4:</strong> Score evidence, urgency, payment signal, feasibility, reach, time-to-value, owner fit, competition, and freshness."><strong>Bước 4:</strong> Chấm điểm ưu tiên theo bằng chứng, cấp bách, tín hiệu trả tiền, khả thi, phân phối, thời gian, ràng buộc chủ sở hữu, cạnh tranh và độ mới.</li>
 
-              <li data-vi="<strong>Bước 5:</strong> Chọn nhiệm vụ ưu tiên cao nhất (Kiểm Toán Kỹ Thuật Website &amp; Tối Ưu SEO)." data-en="<strong>Step 5:</strong> Select highest-priority mission (Website Technical Audit &amp; SEO Fix)."><strong>Bước 5:</strong> Chọn nhiệm vụ ưu tiên cao nhất (Kiểm Toán Kỹ Thuật Website &amp; Tối Ưu SEO).</li>
+              <li data-vi="<strong>Bước 5:</strong> Chỉ đưa vào danh sách khi có nguồn vấn đề còn mới; kết quả rỗng là hợp lệ." data-en="<strong>Step 5:</strong> List only recent, sourced problem signals; an empty result is valid."><strong>Bước 5:</strong> Chỉ đưa vào danh sách khi có nguồn vấn đề còn mới; kết quả rỗng là hợp lệ.</li>
 
               <li data-vi="<strong>Bước 6:</strong> Lập kế hoạch thực hiện chi tiết cho từng nhân vật AI." data-en="<strong>Step 6:</strong> Formulate detailed execution plan for specialized AI Agents."><strong>Bước 6:</strong> Lập kế hoạch thực hiện chi tiết cho từng nhân vật AI.</li>
 
@@ -5614,7 +4928,7 @@
 
               <li data-vi="<strong>Bước 11:</strong> Đo lường chi phí thực tế và đối chiếu số dư ví On-Chain." data-en="<strong>Step 11:</strong> Measure actual operating costs and reconcile on-chain wallet balance."><strong>Bước 11:</strong> Đo lường chi phí thực tế và đối chiếu số dư ví On-Chain.</li>
 
-              <li data-vi="<strong>Bước 12:</strong> Cập nhật chiến lược giá &amp; phễu chuyển đổi khi doanh thu = $0." data-en="<strong>Step 12:</strong> Update pricing &amp; conversion funnel strategy when verified revenue is $0."><strong>Bước 12:</strong> Cập nhật chiến lược giá &amp; phễu chuyển đổi khi doanh thu = $0.</li>
+              <li data-vi="<strong>Bước 12:</strong> Cập nhật chiến lược giá &amp; phễu chuyển đổi khi chưa có doanh thu xác minh." data-en="<strong>Step 12:</strong> Review pricing and the conversion funnel when no verified revenue is recorded."><strong>Bước 12:</strong> Cập nhật chiến lược giá &amp; phễu chuyển đổi khi chưa có doanh thu xác minh.</li>
 
               <li data-vi="<strong>Bước 13:</strong> Tạm dừng an toàn khi có lỗi, vượt giới hạn ngân sách hoặc cần Chủ sở hữu phê duyệt." data-en="<strong>Step 13:</strong> Safely pause on errors, budget threshold breaches, or required Owner approval."><strong>Bước 13:</strong> Tạm dừng an toàn khi có lỗi, vượt giới hạn ngân sách hoặc cần Chủ sở hữu phê duyệt.</li>
 
@@ -5866,7 +5180,7 @@
 
           <p style="color:var(--text-secondary); max-width:580px; margin:0 auto 16px; font-size:13px; line-height:1.55;">
 
-            Bạn đang truy cập với tư cách <strong>👁️ Khách Tham Quan (Chỉ Xem)</strong>. Để bảo mật hệ thống, khách tham quan chỉ được phép xem hoạt động của Nhân Sự AI Đang Hoạt Động, trò chuyện trong Sổ tay nhật ký, sử dụng các Web công cụ GitHub và đặt mua dịch vụ / ủng hộ. Mọi thao tác thay đổi cấu hình, duyệt nhân sự hoặc đối soát tài chính chỉ dành riêng cho Quản Trị Viên.
+            Bạn đang truy cập với tư cách <strong>👁️ Khách Tham Quan (Chỉ Xem)</strong>. Để bảo mật hệ thống, khách tham quan chỉ được phép xem hoạt động của Vai Trò AI, trò chuyện trong Sổ tay nhật ký, sử dụng các Web công cụ GitHub và đặt mua dịch vụ / ủng hộ. Mọi thao tác thay đổi cấu hình, duyệt nhân sự hoặc đối soát tài chính chỉ dành riêng cho Quản Trị Viên.
 
           </p>
 
@@ -6283,17 +5597,12 @@
 
     </nav>
 
-  <script defer src="/three.min.js"></script>
+  <script defer src="/autoprofit-core.js?v=20261108&r=phase08-lazy-refresh"></script>
 
-  <script defer src="/GLTFLoader.js"></script>
-
-  <script defer src="/SkeletonUtils.js"></script>
-
-  <script defer src="/autoprofit-core.js?v=20261106&r=3-clipboard-fallback"></script>
-
-  <script defer src="/autoprofit-3d.js?v=20261106&r=6-button-routes" ></script>
-  <script defer src="/reference-command-center.js?v=21&r=21-cinematic-campus-20261105"></script>
-  <script defer src="/reference-dashboard.js?v=12&r=7-button-coverage-20261106"></script>
+  <script defer src="/autoprofit-3d.js?v=20261108&r=phase08-on-demand-crypto" ></script>
+  <script defer src="/reference-command-center.js?v=21&r=21-phase08-event-node"></script>
+  <script defer src="/reference-dashboard.js?v=12&r=8-phase08-panels"></script>
+  <script defer src="/reference-ops-panels.js?v=1&r=phase08-ops-20261108"></script>
   <script defer src="/phase00-safety.js?v=1"></script>
   <script defer src="/site-telemetry.js?v=2"></script>
 

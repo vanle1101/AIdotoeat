@@ -30,6 +30,8 @@
   };
   const svg = (name, className = '') => `<svg class="ap-icon ${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.activity}</svg>`;
 
+  if (document.body) document.body.classList.add('ap-reference-ui');
+
   const nav = [
     ['overview', 'home', 'Tổng Quan', 'Bảng điều hành chính'],
     ['agents', 'users', 'Nhân Sự AI', 'AI Agent & Tự động hóa'],
@@ -64,7 +66,12 @@
   let summary = null;
   let feedEvents = [];
   let commandCenter = null;
-  let eventSource = null;
+  let activityAbortController = null;
+  let activityReconnectTimer = 0;
+  let commandStartObserver = null;
+  let commandStartQueued = false;
+  let commandStartPromise = null;
+  let threeRuntimePromise = null;
   let feedState = 'connecting';
   let activitySourceStatus = 'unknown';
   let zonePanelOpen = false;
@@ -81,11 +88,24 @@
     return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(value);
   }
 
+  function ownerAdminKey() {
+    if (window.location.protocol !== 'https:') return '';
+    try { return sessionStorage.getItem('autoprofit_owner_admin_key') || ''; } catch (_) { return ''; }
+  }
+
+  function ownerHeaders() {
+    const key = ownerAdminKey();
+    return key ? { 'X-Admin-Key': key } : {};
+  }
+
   function formatMetric(metric) {
     const item = summary?.metrics?.[metric.key];
     if (!item) return { value: 'Chưa có dữ liệu', note: metric.note, status: 'unknown' };
     const status = item.status || 'unknown';
     if (status === 'not_connected') return { value: 'Chưa kết nối', note: metric.note, status };
+    if (status === 'owner_auth_required') return { value: 'Cần xác thực chủ sở hữu', note: metric.note, status };
+    if (status === 'degraded_demo') return { value: 'Demo', note: metric.note, status };
+    if (status === 'pending_review') return { value: 'Chờ duyệt', note: metric.note, status };
     if (status === 'insufficient_coverage') return { value: 'Chưa đủ dữ liệu', note: metric.note, status };
     if (status === 'error') return { value: 'Lỗi nguồn dữ liệu', note: metric.note, status };
     if (status === 'no_verified_records' || status === 'no_data' || status === 'no_verified_amounts') return { value: 'Chưa có dữ liệu', note: metric.note, status };
@@ -106,6 +126,9 @@
 
   function sourceLabel(source, status) {
     if (status === 'not_connected') return 'Nguồn chưa kết nối';
+    if (status === 'owner_auth_required') return 'Cần xác thực chủ sở hữu';
+    if (status === 'degraded_demo') return 'Demo · degraded mode';
+    if (status === 'pending_review') return 'Pending review';
     if (status === 'error') return 'Nguồn đang lỗi';
     if (status === 'no_verified_records') return 'Chưa có bản ghi xác thực';
     if (source === 'transactions') return 'SQLite · giao dịch xác nhận';
@@ -138,7 +161,7 @@
         <section class="ap-traffic-period"><span>${svg('calendar')} 30 NGÀY</span><b id="apMonthValue">—</b><small id="apMonthNote">Pageview đã ghi nhận</small></section>
         <section class="ap-world-panel" aria-label="Thống kê quốc tế"><img class="ap-world-map" src="/assets/world-traffic.webp" alt="" aria-hidden="true"><div class="ap-world-copy"><strong>THỐNG KÊ QUỐC TẾ</strong><b id="apCountryValue">Chưa kết nối</b><small>Chưa có nguồn địa lý tổng hợp đáng tin cậy</small></div></section>
       </div>
-      <div class="ap-toolbar"><div class="ap-scene-tabs" role="tablist" aria-label="Chế độ camera">${[['3d','users','Chế độ 3D'],['panorama','box','Toàn cảnh'],['agents','user','Nhân sự AI'],['ads','megaphone','Mạng QC'],['products','box','Sản phẩm'],['live','chart','Dữ liệu Live'],['revenue','coins','Doanh thu'],['global','globe','Quốc tế']].map(([key, icon, label], i) => `<button type="button" class="${i === 0 ? 'active' : ''}" data-ap-tab="${key}" role="tab" aria-selected="${i === 0}">${svg(icon)} ${label}</button>`).join('')}</div><button type="button" class="ap-reset-view" data-ap-action="reset-scene">${svg('expand')} Reset View</button></div>
+      <div class="ap-toolbar"><div class="ap-scene-tabs" id="apSceneTabs" role="tablist" aria-label="Chế độ camera">${[['3d','users','Chế độ 3D'],['panorama','box','Toàn cảnh'],['agents','user','Nhân sự AI'],['ads','megaphone','Mạng QC'],['products','box','Sản phẩm'],['live','chart','Dữ liệu Live'],['revenue','coins','Doanh thu'],['global','globe','Quốc tế']].map(([key, icon, label], i) => `<button type="button" class="${i === 0 ? 'active' : ''}" data-ap-tab="${key}" role="tab" aria-selected="${i === 0}" tabindex="${i === 0 ? '0' : '-1'}">${svg(icon)} ${label}</button>`).join('')}</div><button type="button" class="ap-reset-view" data-ap-action="reset-scene">${svg('expand')} Reset View</button></div>
       <div class="ap-workspace"><div class="ap-left-workspace"><section class="ap-command-center" id="apCommandCenter" data-view="3d" aria-label="Mô hình WebGL 3D có thể xoay và chọn công trình"><canvas id="apSceneCanvas" tabindex="0" aria-label="Mô hình căn cứ AI 3D. Kéo để orbit, cuộn để zoom, kéo phải để pan, bấm công trình để focus."></canvas><div class="ap-scene-tooltip" id="apSceneTooltip" role="tooltip" hidden></div><div class="ap-scene-heading"><span class="ap-scene-kicker">AUTOProfit AI · 3D COMMAND CENTER</span><span class="ap-scene-data-state" id="apSceneDataState">ĐANG KHỞI TẠO WEBGL</span></div><div class="ap-scene-help">Kéo xoay · Cuộn zoom · Kéo phải pan · Bấm công trình để chọn</div></section>
         <div class="ap-quick-row"><span>${svg('activity')} ĐI TỚI MODULE</span><button type="button" data-ap-view="marketing" title="Mở công cụ nội dung và SEO">Nội dung &amp; SEO</button><button type="button" data-ap-view="products" title="Mở danh mục sản phẩm">Sản phẩm</button><button type="button" data-ap-view="marketing" title="Mở trang quản lý tiếp thị">Tiếp thị</button><button type="button" data-ap-view="opportunities" title="Mở cơ hội thị trường">Cơ hội thị trường</button><button type="button" data-ap-view="analytics" title="Mở phân tích dữ liệu">Phân tích</button><button type="button" data-ap-action="export-report" title="Tải báo cáo số liệu hiện có">Xuất báo cáo</button></div>
         <div class="ap-composer"><span class="ap-composer-bot">${svg('bot')}</span><div class="ap-composer-status" role="status">Chat AI chưa kết nối workflow. Nhật ký backend khả dụng khi có sự kiện thật.</div><button type="button" class="ap-bottom-tool" data-ap-view="agents">${svg('users')} Nhật ký task</button><button type="button" class="ap-bottom-tool" data-ap-view="security">${svg('gear')} Cài đặt</button><button type="button" class="ap-icon-button ap-expand" data-ap-action="expand" aria-label="Mở rộng scene" aria-pressed="false">${svg('expand')}</button></div></div>
@@ -147,12 +170,43 @@
     </div>`);
 
     document.addEventListener('click', handleClick);
+    document.getElementById('apSceneTabs')?.addEventListener('keydown', event => {
+      const current = event.target.closest('[data-ap-tab]');
+      if (!current) return;
+      const tabs = [...document.querySelectorAll('#apSceneTabs [data-ap-tab]')];
+      const currentIndex = tabs.indexOf(current);
+      let nextIndex = currentIndex;
+      if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % tabs.length;
+      else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      else if (event.key === 'Home') nextIndex = 0;
+      else if (event.key === 'End') nextIndex = tabs.length - 1;
+      else return;
+      event.preventDefault();
+      tabs[nextIndex]?.focus();
+      tabs[nextIndex]?.click();
+    });
     document.getElementById('apChartWindow')?.addEventListener('change', event => refreshSummary(event.target.value));
     document.getElementById('apActivityFilter')?.addEventListener('change', renderActivity);
     document.getElementById('apAgentFilter')?.addEventListener('change', renderActivity);
     document.getElementById('apMoreActivity')?.addEventListener('click', loadOlderActivity);
     document.getElementById('apTrafficChart')?.addEventListener('keydown', handleChartKeydown);
     document.getElementById('apDetailScrim')?.addEventListener('click', event => { if (event.target.id === 'apDetailScrim') closeDetail(); });
+    window.addEventListener('ap-owner-auth-change', () => {
+      activityAbortController?.abort();
+      activityAbortController = null;
+      window.clearTimeout(activityReconnectTimer);
+      activityReconnectTimer = 0;
+      if (ownerAdminKey()) {
+        feedState = 'connecting';
+        connectActivityStream();
+      } else {
+        feedEvents = [];
+        activityBeforeId = null;
+        activitySourceStatus = 'owner_auth_required';
+        feedState = 'owner_auth_required';
+        renderActivity();
+      }
+    });
     document.addEventListener('fullscreenchange', () => {
       const expand = document.querySelector('.ap-expand');
       expand?.setAttribute('aria-pressed', String(document.fullscreenElement === document.getElementById('apCommandCenter')));
@@ -178,31 +232,74 @@
     startCommandCenter();
   }
 
+  function loadThreeRuntime() {
+    if (window.THREE?.WebGLRenderer) return Promise.resolve(true);
+    if (threeRuntimePromise) return threeRuntimePromise;
+    threeRuntimePromise = new Promise(resolve => {
+      const script = document.createElement('script');
+      script.src = '/three.min.js?v=phase08-lazy-scene';
+      script.async = true;
+      script.onload = () => resolve(Boolean(window.THREE?.WebGLRenderer));
+      script.onerror = () => resolve(false);
+      document.head.appendChild(script);
+    }).then(loaded => {
+      if (!loaded) threeRuntimePromise = null;
+      return loaded;
+    });
+    return threeRuntimePromise;
+  }
+
   function startCommandCenter(attempt = 0) {
-    const factory = window.AutoProfitCommandCenter;
-    if (typeof factory?.create === 'function') {
-      try {
-        commandCenter = factory.create({
-          canvas: document.getElementById('apSceneCanvas'),
-          onZoneSelect: selectZone,
-          onHover: renderSceneHover,
-          onStatus: renderZoneStatus
-        });
-        window.__AUTOProfitCommandCenter = commandCenter;
-        if (!commandCenter && !document.querySelector('.ap-scene-fallback')) {
-          renderZoneStatus('error');
-          showSceneFallback('Không khởi tạo được WebGL. Kiểm tra tăng tốc phần cứng của trình duyệt.');
-        }
-      } catch (error) {
-        console.error('AUTOProfit 3D command center failed to initialize.', error);
-        renderZoneStatus('error');
-        showSceneFallback('Không khởi tạo được WebGL. Mô hình 3D chưa thể chạy trên thiết bị này.');
-      }
+    if (commandCenter || commandStartQueued || commandStartPromise) return;
+    const host = document.getElementById('apCommandCenter');
+    if (attempt === 0 && host && 'IntersectionObserver' in window) {
+      commandStartQueued = true;
+      commandStartObserver = new IntersectionObserver(entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return;
+        commandStartObserver?.disconnect();
+        commandStartObserver = null;
+        commandStartQueued = false;
+        startCommandCenter(1);
+      });
+      commandStartObserver.observe(host);
       return;
     }
-    if (attempt < 20) { window.setTimeout(() => startCommandCenter(attempt + 1), 100); return; }
-    renderZoneStatus('unavailable');
-    showSceneFallback('Bộ dựng Three.js chưa tải được.');
+    commandStartPromise = (async () => {
+      const loaded = await loadThreeRuntime();
+      if (!loaded) {
+        renderZoneStatus('unavailable');
+        showSceneFallback('Bộ dựng Three.js chưa tải được.');
+        return;
+      }
+      const factory = window.AutoProfitCommandCenter;
+      if (typeof factory?.create === 'function') {
+        try {
+          commandCenter = factory.create({
+            canvas: document.getElementById('apSceneCanvas'),
+            onZoneSelect: selectZone,
+            onHover: renderSceneHover,
+            onStatus: renderZoneStatus
+          });
+          window.__AUTOProfitCommandCenter = commandCenter;
+          if (!commandCenter && !document.querySelector('.ap-scene-fallback')) {
+            renderZoneStatus('error');
+            showSceneFallback('Không khởi tạo được WebGL. Kiểm tra tăng tốc phần cứng của trình duyệt.');
+          }
+        } catch (error) {
+          console.error('AUTOProfit 3D command center failed to initialize.', error);
+          renderZoneStatus('error');
+          showSceneFallback('Không khởi tạo được WebGL. Mô hình 3D chưa thể chạy trên thiết bị này.');
+        }
+        return;
+      }
+      if (attempt < 20) {
+        commandStartPromise = null;
+        window.setTimeout(() => startCommandCenter(attempt + 1), 100);
+        return;
+      }
+      renderZoneStatus('unavailable');
+      showSceneFallback('Bộ dựng Three.js chưa tải được.');
+    })();
   }
 
   function showSceneFallback(message) {
@@ -320,7 +417,10 @@
     const online = metrics.online_sessions;
     const onlineEl = document.getElementById('apOnlineCount');
     const onlineState = document.getElementById('apOnlineState');
-    if (onlineEl) onlineEl.textContent = online && online.value != null ? formatNumber(online.value) : 'Chưa có dữ liệu';
+    if (onlineEl) {
+      onlineEl.dataset.status = online?.status || 'unknown';
+      onlineEl.textContent = online && online.value != null ? formatNumber(online.value) : 'Chưa có dữ liệu';
+    }
     if (onlineState) {
       onlineState.textContent = online?.status === 'observed' ? 'Telemetry đang kết nối' : 'Chưa kết nối';
       onlineState.dataset.live = String(online?.status === 'observed');
@@ -466,14 +566,14 @@
     const badge = document.getElementById('apFeedBadge');
     const badgeText = badge?.querySelector('span');
     if (badge) badge.dataset.state = feedState;
-    if (badgeText) badgeText.textContent = feedState === 'live' ? 'Realtime' : feedState === 'no_source' ? 'Nguồn chưa kết nối' : feedState === 'error' ? 'Mất kết nối' : 'Đang kết nối lại';
+    if (badgeText) badgeText.textContent = feedState === 'live' ? 'Đã nhận event trong phiên' : feedState === 'connected' ? 'Đã kết nối · chờ event' : feedState === 'no_source' ? 'Nguồn chưa kết nối' : feedState === 'owner_auth_required' ? 'Cần xác thực chủ sở hữu' : feedState === 'error' ? 'Mất kết nối' : 'Đang kết nối';
     const streamLabel = document.getElementById('apStreamState');
-    if (streamLabel) streamLabel.textContent = feedState === 'live' ? 'Activity stream · live' : feedState === 'no_source' ? 'Event store · chưa kết nối' : feedState === 'error' ? 'Activity stream · disconnected' : 'Activity stream · reconnecting';
+    if (streamLabel) streamLabel.textContent = feedState === 'live' ? 'SSE · đã nhận event' : feedState === 'connected' ? 'SSE · đang chờ event' : feedState === 'no_source' ? 'Event store · chưa kết nối' : feedState === 'owner_auth_required' ? 'SSE · cần xác thực' : feedState === 'error' ? 'SSE · mất kết nối' : 'SSE · đang kết nối';
     const count = document.getElementById('apActivityCount');
     if (count) count.textContent = filtered.length ? `${filtered.length} sự kiện` : 'Chưa có sự kiện';
     if (!filtered.length) {
       const noRecords = feedEvents.length === 0;
-      list.innerHTML = `<div class="ap-empty-state"><span>${svg('activity')}</span><strong>${feedState === 'no_source' ? 'Nguồn task/event chưa kết nối' : noRecords ? 'Chưa có hoạt động được ghi nhận' : 'Không có sự kiện phù hợp'}</strong><p>${feedState === 'error' ? 'Không kết nối được event stream; thử tải lại lịch sử.' : feedState === 'no_source' ? 'Feed sẽ hiện dữ liệu sau khi runtime task kết nối event store.' : noRecords ? 'Nhật ký chỉ xuất hiện khi backend ghi một sự kiện task thực tế.' : 'Đổi bộ lọc để xem các sự kiện khác.'}</p></div>`;
+      list.innerHTML = `<div class="ap-empty-state"><span>${svg('activity')}</span><strong>${feedState === 'no_source' ? 'Nguồn task/event chưa kết nối' : feedState === 'owner_auth_required' ? 'Nhật ký cần xác thực chủ sở hữu' : noRecords ? 'Chưa có hoạt động được ghi nhận' : 'Không có sự kiện phù hợp'}</strong><p>${feedState === 'owner_auth_required' ? 'Nhập khóa quản trị trong Trung tâm vận hành; khóa chỉ được gửi qua HTTPS.' : feedState === 'error' ? 'Không kết nối được event stream; thử tải lại lịch sử.' : feedState === 'no_source' ? 'Feed sẽ hiện dữ liệu sau khi runtime task kết nối event store.' : noRecords ? 'Nhật ký chỉ xuất hiện khi backend ghi một sự kiện task thực tế.' : 'Đổi bộ lọc để xem các sự kiện khác.'}</p></div>`;
     } else {
       list.innerHTML = filtered.map(activityMarkup).join('');
     }
@@ -482,10 +582,25 @@
   }
 
   async function loadActivity(beforeId) {
+    if (!ownerAdminKey()) {
+      feedState = 'owner_auth_required';
+      activitySourceStatus = 'owner_auth_required';
+      renderActivity();
+      return [];
+    }
     try {
       const query = new URLSearchParams({ limit: '25' });
       if (beforeId) query.set('before_id', String(beforeId));
-      const response = await fetch(`/api/dashboard/activity?${query}`, { cache: 'no-store', credentials: 'same-origin' });
+      const response = await fetch(`/api/dashboard/activity?${query}`, { headers: ownerHeaders(), cache: 'no-store', credentials: 'same-origin' });
+      if (response.status === 401 || response.status === 403) {
+        try { sessionStorage.removeItem('autoprofit_owner_admin_key'); } catch (_) {}
+        feedState = 'owner_auth_required';
+        activitySourceStatus = 'owner_auth_required';
+        feedEvents = [];
+        renderActivity();
+        window.dispatchEvent(new Event('ap-owner-auth-change'));
+        return [];
+      }
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const result = await response.json();
       activitySourceStatus = result.status || 'unknown';
@@ -520,28 +635,103 @@
   }
 
   async function connectActivityStream() {
+    if (!ownerAdminKey()) {
+      feedState = 'owner_auth_required';
+      activitySourceStatus = 'owner_auth_required';
+      renderActivity();
+      return;
+    }
     const history = await loadActivity();
+    if (!ownerAdminKey()) return;
     const lastId = Math.max(0, ...history.map(item => Number(item.event_id) || 0));
     if (!['observed', 'no_data'].includes(activitySourceStatus)) {
       feedState = activitySourceStatus === 'not_connected' ? 'no_source' : 'error';
       renderActivity();
       return;
     }
-    if (!window.EventSource) { feedState = 'error'; renderActivity(); return; }
-    if (eventSource) eventSource.close();
-    eventSource = new EventSource(`/api/dashboard/activity/stream?after_id=${lastId}`);
-    eventSource.onopen = () => { activitySourceStatus = 'connected'; feedState = 'live'; renderActivity(); refreshSummary(document.getElementById('apChartWindow')?.value || 'today'); };
-    eventSource.addEventListener('activity', event => {
-      try {
-        const item = JSON.parse(event.data);
-        if (feedEvents.some(existing => Number(existing.event_id) === Number(item.event_id))) return;
-        feedEvents = uniqueTasks([item, ...feedEvents]);
+    if (!window.fetch || !window.ReadableStream) { feedState = 'error'; renderActivity(); return; }
+    activityAbortController?.abort();
+    const controller = new AbortController();
+    activityAbortController = controller;
+    try {
+      const response = await fetch(`/api/dashboard/activity/stream?after_id=${lastId}`, {
+        headers: { ...ownerHeaders(), Accept: 'text/event-stream' },
+        credentials: 'same-origin', cache: 'no-store', signal: controller.signal
+      });
+      if (response.status === 401 || response.status === 403) {
+        try { sessionStorage.removeItem('autoprofit_owner_admin_key'); } catch (_) {}
+        activitySourceStatus = 'owner_auth_required';
+        feedState = 'owner_auth_required';
+        feedEvents = [];
         renderActivity();
-        refreshSummary(document.getElementById('apChartWindow')?.value || 'today');
-      } catch (_) {}
+        window.dispatchEvent(new Event('ap-owner-auth-change'));
+        return;
+      }
+      if (!response.ok || !response.body) {
+        if (response.status === 503) {
+          const problem = await response.json().catch(() => ({}));
+          activitySourceStatus = problem.status || 'not_connected';
+          feedState = 'no_source';
+        } else {
+          activitySourceStatus = 'error';
+          feedState = 'error';
+        }
+        renderActivity();
+        scheduleActivityReconnect();
+        return;
+      }
+      activitySourceStatus = 'connected';
+      feedState = 'connected';
+      renderActivity();
+      refreshSummary(document.getElementById('apChartWindow')?.value || 'today');
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      while (!controller.signal.aborted) {
+        const chunk = await reader.read();
+        if (chunk.done) break;
+        buffer += decoder.decode(chunk.value, { stream: true });
+        const blocks = buffer.split(/\r?\n\r?\n/);
+        buffer = blocks.pop() || '';
+        blocks.forEach(handleActivitySseBlock);
+      }
+      if (!controller.signal.aborted) throw new Error('event_stream_closed');
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      activitySourceStatus = 'error';
+      feedState = 'error';
+      renderActivity();
+      scheduleActivityReconnect();
+    }
+  }
+
+  function handleActivitySseBlock(block) {
+    let eventName = 'message';
+    const dataLines = [];
+    block.split(/\r?\n/).forEach(line => {
+      if (!line || line.startsWith(':')) return;
+      const separator = line.indexOf(':');
+      const field = separator < 0 ? line : line.slice(0, separator);
+      const value = separator < 0 ? '' : line.slice(separator + 1).replace(/^ /, '');
+      if (field === 'event') eventName = value;
+      else if (field === 'data') dataLines.push(value);
     });
-    eventSource.onerror = () => { feedState = activitySourceStatus === 'not_connected' ? 'no_source' : activitySourceStatus === 'error' || eventSource?.readyState === EventSource.CLOSED ? 'error' : 'connecting'; renderActivity(); };
-    window.addEventListener('beforeunload', () => eventSource?.close(), { once: true });
+    if (eventName !== 'activity' || !dataLines.length) return;
+    try {
+      const item = JSON.parse(dataLines.join('\n'));
+      if (feedEvents.some(existing => Number(existing.event_id) === Number(item.event_id))) return;
+      activitySourceStatus = 'observed';
+      feedState = 'live';
+      feedEvents = uniqueTasks([item, ...feedEvents]);
+      renderActivity();
+      refreshSummary(document.getElementById('apChartWindow')?.value || 'today');
+    } catch (_) {}
+  }
+
+  function scheduleActivityReconnect() {
+    window.clearTimeout(activityReconnectTimer);
+    if (!ownerAdminKey()) return;
+    activityReconnectTimer = window.setTimeout(() => connectActivityStream(), 15000);
   }
 
   async function openDetail(eventId) {
@@ -549,15 +739,15 @@
     const body = document.getElementById('apDetailBody');
     const title = document.getElementById('apDetailTitle');
     if (!scrim || !body || !title) return;
+    if (!ownerAdminKey()) {
+      scrim.hidden = false;
+      body.innerHTML = '<p class="ap-detail-error">Nhập khóa quản trị trong Trung tâm vận hành để xem nhật ký.</p>';
+      return;
+    }
     scrim.hidden = false;
     body.innerHTML = '<p class="ap-detail-loading">Đang tải chi tiết sự kiện…</p>';
     try {
-      const headers = {};
-      if (window.location.protocol === 'https:') {
-        const adminKey = sessionStorage.getItem('autoprofit_owner_admin_key');
-        if (adminKey) headers['X-Admin-Key'] = adminKey;
-      }
-      const response = await fetch(`/api/dashboard/activity/${encodeURIComponent(eventId)}`, { headers, cache: 'no-store', credentials: 'same-origin' });
+      const response = await fetch(`/api/dashboard/activity/${encodeURIComponent(eventId)}`, { headers: ownerHeaders(), cache: 'no-store', credentials: 'same-origin' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const event = await response.json();
       title.textContent = event.title || `Task ${event.task_id}`;
@@ -612,9 +802,13 @@
     description.textContent = `${zoneCopy[1]} · Object ID: ${currentObject?.objectId || `zone:${currentZone}`}`;
     const metrics = summary?.metrics || {};
     if (currentObject?.objectType === 'workstation') {
+      if (!ownerAdminKey()) {
+        data.innerHTML = '<strong>Chưa xác minh phân công</strong><small>Nhập khóa quản trị qua HTTPS trong Trung tâm vận hành để đọc assignment và task.</small>';
+        return;
+      }
       data.textContent = 'Đang kiểm tra workstation assignment với backend…';
       try {
-        const response = await fetch('/api/employees', { cache: 'no-store' });
+        const response = await fetch('/api/employees', { headers: ownerHeaders(), cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const result = await response.json();
         if (sequence !== zoneUpdateSequence || !zonePanelOpen) return;
@@ -637,8 +831,12 @@
       return;
     }
     if (currentZone === 'agents') {
+      if (!ownerAdminKey()) {
+        data.textContent = 'Trạng thái agent cần xác thực chủ sở hữu qua HTTPS.';
+        return;
+      }
       try {
-        const response = await fetch('/api/employees', { cache: 'no-store' });
+        const response = await fetch('/api/employees', { headers: ownerHeaders(), cache: 'no-store' });
         if (!response.ok) throw new Error();
         const result = await response.json();
         if (sequence !== zoneUpdateSequence || !zonePanelOpen) return;
@@ -671,6 +869,7 @@
       const active = button.dataset.apTab === tab;
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', String(active));
+      button.tabIndex = active ? 0 : -1;
     });
     const stage = document.getElementById('apCommandCenter');
     if (stage) stage.dataset.view = tab;
@@ -697,8 +896,10 @@
     }
 
     syncShellState();
+    if (view !== 'overview') window.refreshAllData?.(false);
     const scrollTarget = view === 'overview' ? document.getElementById('apReferenceDashboard') || section : section;
-    window.requestAnimationFrame(() => scrollTarget.scrollIntoView?.({ behavior: 'smooth', block: 'start' }));
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    window.requestAnimationFrame(() => scrollTarget.scrollIntoView?.({ behavior, block: 'start' }));
     return true;
   }
 

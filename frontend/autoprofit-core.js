@@ -84,7 +84,7 @@
 
     const DEFAULT_TUNNEL_URL = window.location && window.location.origin ? window.location.origin : '';
 
-    const LOCAL_BACKEND_URL = 'http://127.0.0.1:8000';
+    const LOCAL_BACKEND_URL = 'http://127.0.0.1:8450';
 
 
 
@@ -107,7 +107,7 @@
 
     (async function autoProbeLocalBackendForUnifiedSync() {
 
-      if (!window.__IS_LOCAL_OWNER_ENV__ || API_BASE === LOCAL_BACKEND_URL) return;
+      if (!window.__IS_LOCAL_OWNER_ENV__ || API_BASE === LOCAL_BACKEND_URL || document.body?.classList.contains('ap-reference-ui')) return;
 
       try {
 
@@ -983,7 +983,7 @@
 
         ['Chi phí vận hành chu kỳ =', 'Cycle operating cost ='],
 
-        ['Chưa ghi nhận doanh thu thực tế ($0.00). Đề xuất Chủ sở hữu duyệt gửi', 'Verified revenue is currently $0.00. Recommend Owner review and approve'],
+        ['Chưa có doanh thu xác minh. Đề xuất Chủ sở hữu duyệt gửi', 'No verified revenue is recorded. Recommend Owner review and approve'],
 
         ['báo cáo kiểm toán website miễn phí để tạo chuyển đổi đầu tiên.', 'free website audit reports to generate the first paid conversion.'],
 
@@ -1181,9 +1181,9 @@
 
       document.title = CURRENT_LANG === 'en'
 
-        ? 'AUTOProfit AI — 3D Nine-Agent Autonomous Business System'
+        ? 'AUTOProfit AI — 3D Operations Center'
 
-        : 'AUTOProfit AI — Căn Cứ Nhân Sự AI Đang Hoạt Động 3D & Kinh Doanh Tự Hành';
+        : 'AUTOProfit AI — Trung Tâm Vận Hành 3D';
 
 
 
@@ -2059,7 +2059,7 @@ function renderAllViews() {
 
         ? `AI_PROVIDER: ${rawAiMode}`
 
-        : `AI: ${rawAiMode.includes('MOCK') ? 'MÔ PHỎNG CỤC BỘ ($0)' : rawAiMode}`;
+        : `AI: ${rawAiMode.includes('MOCK') ? 'Demo · mẫu cục bộ' : rawAiMode}`;
 
       aiBadge.className = sys.ai_provider_verified === true ? 'chip success' : 'chip warn';
 
@@ -2260,9 +2260,9 @@ function renderAllViews() {
 
         alertItems.push(t(
 
-          `<li><span class="chip warn">CHẾ ĐỘ CỤC BỘ</span> Đang bật thuật toán kiểm toán Python nội bộ (Chi phí API = $0.00), không giả mạo gọi mô hình AI trả phí bên ngoài.</li>`,
+          `<li><span class="chip warn">CHẾ ĐỘ CỤC BỘ</span> Đang dùng kiểm toán Python nội bộ; không có lượt gọi provider trả phí được ghi nhận. Điện và chi phí máy local chưa được đo.</li>`,
 
-          `<li><span class="chip warn">LOCAL ENGINE</span> Local deterministic Python audit engine is active (API Cost = $0.00); never fakes external paid LLM calls.</li>`
+          `<li><span class="chip warn">LOCAL ENGINE</span> Using the local Python audit path; no paid-provider call is recorded. Electricity and local compute costs are unmeasured.</li>`
 
         ));
 
@@ -2904,9 +2904,9 @@ function renderAllViews() {
 
           rule: t(
 
-            'Chi phí token thực tế gọi API mô hình AI ($0.0000 khi chạy thuật toán nội bộ).',
+            'Chi phí token chỉ hiển thị khi ledger nhà cung cấp ghi nhận; chi phí máy local chưa được đo.',
 
-            'Actual token expenses for external LLM API calls ($0.0000 in local deterministic mode).'
+            'Token cost appears only when reported by the provider ledger; local compute cost is unmeasured.'
 
           )
 
@@ -3312,9 +3312,7 @@ function renderAllViews() {
 
     let GITHUB_WEBAPPS_VISIBLE_LIMIT = 6;
 
-    let LIVE_REAL_WORK_SPEECH_QUEUE = [];
 
-    const SPOKEN_TURN_SIGNATURES = new Set();
 
 
 
@@ -3866,36 +3864,8 @@ function renderAllViews() {
 
 
     function downloadCompiledGithubWebAppHtml(slug) {
-
-      const catalogItems = (GITHUB_WEB_FACTORY_CACHE && GITHUB_WEB_FACTORY_CACHE.items) || [];
-
-      const foundApp = catalogItems.find(x => x.slug === slug) || { slug };
-
-      if (IS_GITHUB_WEB_FACTORY_BACKEND_LIVE) {
-
-        window.open(`${API_BASE}/api/github-web-factory/apps/${encodeURIComponent(slug)}/download`, '_blank');
-
-        return;
-
-      }
-
-      const htmlDoc = buildClientSideMonetizedWebAppHtml(foundApp);
-
-      const blob = new Blob([htmlDoc], { type: 'text/html;charset=utf-8' });
-
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-
-      a.href = url;
-
-      a.download = `${slug}-monetized-webapp.html`;
-
-      document.body.appendChild(a);
-
-      a.click();
-
-      document.body.removeChild(a);
+      const safeSlug = String(slug || '').replace(/[^a-z0-9-]/gi, '');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(safeSlug)}`);
 
     }
 
@@ -4022,7 +3992,7 @@ function renderAllViews() {
 
         const liveUrl = `${API_BASE}/api/github-web-factory/apps/${encodeURIComponent(resolvedSlug)}/live`;
 
-        const dlUrl = `${API_BASE}/api/github-web-factory/apps/${encodeURIComponent(resolvedSlug)}/download`;
+        const dlUrl = `/checkout.html?product=${encodeURIComponent(resolvedSlug)}`;
 
         iframe.removeAttribute('srcdoc');
 
@@ -4044,7 +4014,7 @@ function renderAllViews() {
 
         if (openBtn) openBtn.href = blobUrl;
 
-        if (dlBtn) { dlBtn.href = blobUrl; dlBtn.setAttribute('download', `${slug}-monetized-webapp.html`); }
+        if (dlBtn) { dlBtn.href = `/checkout.html?product=${encodeURIComponent(resolvedSlug)}`; dlBtn.removeAttribute('download'); }
 
       }
 
@@ -4395,7 +4365,7 @@ function renderAllViews() {
 
       // 3. Public Supporter Donations
 
-      const donData = STATE.donations || { items: [], verified_donations_usd: 0 };
+      const donData = STATE.donations || { items: [], verified_donations_usd: null };
 
       const donItems = donData.items || [];
 
@@ -4403,7 +4373,12 @@ function renderAllViews() {
 
       if (donChip) {
 
-        donChip.textContent = t(`$${Number(donData.verified_donations_usd || 0).toFixed(2)} Đã xác minh`, `$${Number(donData.verified_donations_usd || 0).toFixed(2)} Verified`);
+        const verifiedDonations = donData.verified_donations_usd;
+        const hasVerifiedDonationTotal = verifiedDonations !== null && verifiedDonations !== undefined && Number.isFinite(Number(verifiedDonations));
+        donChip.dataset.status = hasVerifiedDonationTotal ? 'observed' : 'no_verified_data';
+        donChip.textContent = hasVerifiedDonationTotal
+          ? t(`$${Number(verifiedDonations).toFixed(2)} Đã xác minh`, `$${Number(verifiedDonations).toFixed(2)} Verified`)
+          : t('— Chưa có dữ liệu xác minh', '— No verified data');
 
       }
 
@@ -4759,7 +4734,7 @@ function renderAllViews() {
 
         });
 
-        showToast(t('Đã gửi yêu cầu đặt quảng cáo tài trợ (Trạng thái: Chờ xác minh thanh toán — $0.00 doanh thu xác minh).', 'Submitted advertising inquiry (Status: Pending payment verification — $0.00 verified revenue).'));
+        showToast(t('Đã gửi yêu cầu quảng cáo tài trợ. Chưa tính doanh thu cho tới khi xác minh thanh toán.', 'Advertising request saved. Revenue is not counted until payment is verified.'));
 
         await refreshAllData(false);
 
@@ -5100,70 +5075,9 @@ function renderAllViews() {
 
 
     async function submitVisitorQuickCheckoutOrder() {
-
-      const email = (document.getElementById('checkoutBuyerEmail')?.value || '').trim();
-
-      const txRef = (document.getElementById('checkoutTxProofInput')?.value || '').trim();
-
-      const status = document.getElementById('checkoutOrderStatus');
-      const button = document.querySelector('#visitorBuyCheckoutModal [data-submit-checkout]');
-      const setStatus = (message, isError = false) => {
-        if (!status) return;
-        status.textContent = message;
-        status.style.color = isError ? '#fca5a5' : '#86efac';
-        status.style.display = 'block';
-      };
-
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setStatus(t('Nhập email hợp lệ để chủ cửa hàng có thể bàn giao mã nguồn.', 'Enter a valid email for the seller to deliver the source code.'), true);
-        document.getElementById('checkoutBuyerEmail')?.focus();
-        return;
-      }
-
-      if (!txRef || txRef.length < 4) {
-
-        setStatus(t('Nhập mã giao dịch ngân hàng hoặc TxHash (ít nhất 4 ký tự) để gửi đối soát.', 'Enter a bank transaction reference or TxHash (at least 4 characters) for review.'), true);
-
-        return;
-
-      }
-
-      const paymentMethod = document.getElementById('checkoutModalCryptoBox')?.style.display === 'none'
-        ? 'BANK_TRANSFER'
-        : 'BINANCE_PAY';
-      if (button) { button.disabled = true; button.textContent = t('Đang gửi yêu cầu…', 'Sending request…'); }
-      setStatus(t('Đang gửi yêu cầu đối soát lên máy chủ…', 'Sending the payment review request…'));
-      try {
-        const result = await apiFetch('/api/public/payment-reports', {
-          method: 'POST',
-          body: JSON.stringify({
-            product_slug: CURRENT_CHECKOUT_ITEM.slug,
-            payment_method: paymentMethod,
-            customer_email: email,
-            reference: txRef
-          })
-        });
-        if (!result?.accepted || !result.report_id) throw new Error(result?.detail || t('Máy chủ chưa xác nhận đã lưu yêu cầu.', 'The server did not confirm that the request was saved.'));
-        setStatus(t(
-          `Đã gửi yêu cầu ${result.report_id}. Trạng thái: chờ chủ cửa hàng đối soát; chưa xác nhận thanh toán và chưa bàn giao mã nguồn.`,
-          `Request ${result.report_id} was saved. Status: waiting for seller review; payment is not verified and source code has not been delivered.`
-        ));
-        if (status) {
-          status.innerHTML = `${escapeHtml(t(
-            `Đã gửi yêu cầu ${result.report_id}. Trạng thái: chờ chủ cửa hàng đối soát; chưa xác nhận thanh toán và chưa bàn giao mã nguồn.`,
-            `Request ${result.report_id} was saved. Status: waiting for seller review; payment is not verified and source code has not been delivered.`
-          ))} <button type="button" class="btn btn-sm" onclick="checkPublicPaymentReportStatus('${escapeHtml(result.report_id)}')">${escapeHtml(t('Kiểm tra trạng thái', 'Check status'))}</button>`;
-        }
-        showToast(t('Đã gửi yêu cầu đối soát. Mã nguồn chỉ được bàn giao sau khi xác nhận thanh toán.', 'Payment review request sent. Source code is delivered only after payment is verified.'));
-      } catch (err) {
-        setStatus(`${t('Không gửi được yêu cầu; chưa có đơn nào được ghi nhận.', 'The request was not sent; no order was recorded.')}${err?.message ? ` ${err.message}` : ''}`, true);
-        showToast(t('Không gửi được yêu cầu đối soát. Hãy kiểm tra kết nối rồi thử lại.', 'Could not send the payment review request. Check the connection and try again.'), true);
-      } finally {
-        if (button) { button.disabled = false; button.textContent = t('Gửi yêu cầu đối soát thanh toán', 'Send payment review request'); }
-      }
-
+      const slug = String(CURRENT_CHECKOUT_ITEM?.slug || '').replace(/[^a-z0-9-]/gi, '');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(slug)}`);
     }
-
 
 
     async function checkPublicPaymentReportStatus(reportId) {
@@ -5441,47 +5355,12 @@ function renderAllViews() {
 
     // =========================================================================
 
-    // CONTINUOUS 9-AI BACK-AND-FORTH DIALOGUE ENGINE & LIVE TRAFFIC + A-ADS HUB
+    // Event-only activity display; legacy synthetic dialogue and heartbeat loops are retired.
 
     // =========================================================================
 
-    let CONTINUOUS_CHAT_INDEX = 0;
-
     let CONTINUOUS_CHAT_TIMER = null;
-
     let TRAFFIC_HEARTBEAT_TIMER = null;
-
-    let CURRENT_VISITOR_SESSION_ID = localStorage.getItem('autoprofit_visitor_sid') || '';
-
-    if (!CURRENT_VISITOR_SESSION_ID) {
-
-      CURRENT_VISITOR_SESSION_ID = 'vis_' + Math.random().toString(36).slice(2, 11) + '_' + Date.now().toString(36);
-
-      try { localStorage.setItem('autoprofit_visitor_sid', CURRENT_VISITOR_SESSION_ID); } catch (_) {}
-
-    }
-
-
-
-    const BROWSER_GITHUB_SEARCH_TOPICS = [
-
-      'ai-agent', 'prompt-engineering', 'seo-audit', 'json-schema', 'markdown-editor',
-
-      'qrcode-generator', 'crypto-dashboard', 'css-generator', 'regex-tester', 'jwt-debugger',
-
-      'cron-expression', 'password-generator', 'csv-to-json', 'sql-formatter', 'svg-optimizer',
-
-      'landing-page', 'pomodoro-timer', 'invoice-generator', 'roi-calculator', 'utm-builder',
-
-      'open-graph', 'meta-tag', 'webhook-tester', 'api-client', 'color-palette',
-
-      'html-minifier', 'base64-tool', 'uuid-generator', 'saas-starter', 'chatbot-ui'
-
-    ];
-
-    let DYNAMIC_ACTIVITY_CURSOR = 0;
-
-
 
     async function runAutonomousUnlimitedGithubHarvestStep() {
       const ticker = document.getElementById('githubHarvesterLiveTicker');
@@ -5491,353 +5370,15 @@ function renderAllViews() {
     }
 
 
-    function generateNextRealActivityDialogueTurn() {
-
-      // 1. First priority: Any live event just triggered by the GitHub harvester, lead scanner, or user interaction
-
-      if (LIVE_REAL_WORK_SPEECH_QUEUE.length > 0) {
-
-        return LIVE_REAL_WORK_SPEECH_QUEUE.shift();
-
-      }
-
-
-
-      const apps = (GITHUB_WEB_FACTORY_CACHE && GITHUB_WEB_FACTORY_CACHE.items) || [];
-
-      const leads = STATE.leads || [];
-
-      const tasks = STATE.tasks || [];
-
-      const opps = STATE.opportunities || [];
-
-      const msgs = (STATE.agentMessages || []).filter(m => !m.is_demo && m.message_content);
-
-
-
-      // Build a large pool of real work items currently in the system
-
-      const pool = [];
-
-
-
-      // Pool A: Every real packaged GitHub Web App (33 - 500+ items, each produces distinct technical/commercial dialogue)
-
-      apps.forEach((app, i) => {
-
-        const stars = 'No verified rating';
-
-        const price = Number(app.sale_price_usd || 2.99).toFixed(2);
-
-        const views = getRealWebAppViewCount(app.slug, app.views_count);
-
-        if (i % 3 === 0) {
-
-          pool.push({
-
-            sig: `gh_build_${app.slug}_${views}`,
-
-            sender: 'RESEARCH_AGENT',
-
-            receiver: 'CODING_AGENT',
-
-            msg: `Vũ Khoa, repo GitHub "${app.github_repo}" (danh mục ${app.category}) mình vừa tải mã nguồn MIT về. Tiến độ đóng gói Web gắn A-Ads tới đâu rồi?`,
-
-            reply: `Đã hoàn tất 100% nhé Lê Minh! Mình đã đóng gói "${app.app_name_vi}" kèm 2 khung quảng cáo A-Ads và nút mua mã nguồn White-Label giá $${price} USD (Hiện có ${views} lượt mở thật).`
-
-          });
-
-        } else if (i % 3 === 1) {
-
-          pool.push({
-
-            sig: `gh_price_${app.slug}`,
-
-            sender: 'PRODUCT_AGENT',
-
-            receiver: 'OPTIMIZATION_AGENT',
-
-            msg: `Khánh Linh ơi, gói mã nguồn Web dựng từ repo "${app.github_repo}" (chưa có đánh giá xác minh) mình đang niêm yết giá bán đứt $${price} USD. Biên lợi nhuận ròng có đạt mục tiêu không?`,
-
-            reply: `Chuẩn xác Hoàng Bách ạ! Vì mã nguồn gốc "${app.github_repo}" theo giấy phép MIT chi phí bản quyền $0, giá bán $${price} USD mang lại biên lợi nhuận gộp 91.4% và còn thu thêm tiền hiển thị A-Ads!`
-
-          });
-
-        } else {
-
-          pool.push({
-
-            sig: `gh_mkt_${app.slug}`,
-
-            sender: 'MARKETING_AGENT',
-
-            receiver: 'FINANCE_AGENT',
-
-            msg: `Chị Bảo Trâm ơi, em vừa tạo thẻ Schema.org JSON-LD và chiến dịch SEO kéo khách vào dùng miễn phí công cụ "${app.app_name_vi}" (repo ${app.github_repo}) để ăn tiền quảng cáo A-Ads.`,
-
-            reply: `Tốt lắm Phạm Thảo! Cổng thanh toán tự động trong trang "${app.github_repo}" đã cấu hình ẩn bảo mật, chỉ hiển thị tài khoản ngân hàng hoặc ví Binance khi khách bấm Mua hàng hoặc Donate trị giá $${price} USD.`
-
-          });
-
-        }
-
-      });
-
-
-
-      // Pool B: Every real audited Lead (58+ websites with real domain, country, language, and SEO defects)
-
-      leads.slice(0, 40).forEach((ld) => {
-
-        const domain = ld.target_url || ld.business_name || 'startup-client.io';
-
-        const country = ld.country || 'US';
-
-        const langMap = { VN: 'Tiếng Việt', JP: 'Tiếng Nhật', KR: 'Tiếng Hàn', DE: 'Tiếng Đức', FR: 'Tiếng Pháp', ES: 'Tiếng Tây Ban Nha', CN: 'Tiếng Trung' };
-
-        const langName = langMap[country] || 'Tiếng Anh (English)';
-
-        const score = ld.overall_health_score ?? 62;
-
-        const price = Number(ld.quoted_price_usd || 39).toFixed(0);
-
-        pool.push({
-
-          sig: `lead_${ld.id || domain}_${country}`,
-
-          sender: 'SALES_AGENT',
-
-          receiver: 'SECURITY_AGENT',
-
-          msg: `Anh Trần Phong, hệ thống vừa tự động phê duyệt khách hàng "${ld.business_name || domain}" (Quốc gia: ${country}, điểm SEO: ${score}/100). Em đang gửi báo giá $${price} USD bằng ${langName}.`,
-
-          reply: `Đã kiểm duyệt nhé Đặng Quân! Bộ lọc ngôn ngữ xác nhận khách "${domain}" ở mã vùng [${country}] -> Bắt buộc đồng bộ 100% ${langName}, tuyệt đối không gửi nhầm tiếng Việt cho khách ngoại quốc!`
-
-        });
-
-      });
-
-
-
-      // Pool C: Real Backend AgentTasks & Orchestrator Messages
-
-      tasks.slice(0, 25).forEach((tk) => {
-
-        pool.push({
-
-          sig: `task_${tk.id}_${tk.status}`,
-
-          sender: tk.agent_role || 'CODING_AGENT',
-
-          receiver: 'CUSTOMER_SUPPORT_AGENT',
-
-          msg: `Ngô Mai ơi, mình đang xử lý tác vụ thực tế #${String(tk.id).slice(0, 6)}: "${tk.title}" (Mục tiêu: ${(tk.objective || tk.action_type || '').slice(0, 75)}) — Trạng thái: ${tk.status}.`,
-
-          reply: `Em đã ghi nhận vào Sổ tay nhật ký rồi! Ngay khi tác vụ "${tk.title}" hoàn tất, em sẽ cập nhật thông báo bàn giao cho khách hàng trên cổng trực tuyến.`
-
-        });
-
-      });
-
-
-
-      msgs.slice(0, 20).forEach((m) => {
-
-        pool.push({
-
-          sig: `bmsg_${m.message_id}`,
-
-          sender: m.sender_agent_id || 'RESEARCH_AGENT',
-
-          receiver: m.receiver_agent_id || 'PRODUCT_AGENT',
-
-          msg: m.message_content.slice(0, 145),
-
-          reply: `Đã tiếp nhận dữ liệu từ ${formatAgentShort(m.sender_agent_id)}! Mình đang đồng bộ kết quả trực tiếp vào kho ${apps.length} Web App GitHub và bảng báo giá động.`
-
-        });
-
-      });
-
-
-
-      if (pool.length === 0) {
-
-        return {
-
-          sender: 'RESEARCH_AGENT',
-
-          receiver: 'CODING_AGENT',
-
-          msg: `Vũ Khoa ơi, mình đang quét trực tiếp api.github.com để săn thêm các kho ứng dụng AI và Web Tool mã nguồn mở MIT về đóng gói bán tiếp!`,
-
-          reply: `Sẵn sàng Lê Minh! Cứ phát hiện repo nào hữu ích là mình đóng gói thành Web HTML5 gắn quảng cáo A-Ads và đăng lên kệ bán ngay lập tức!`
-
-        };
-
-      }
-
-
-
-      // Pick the next unspoken item so the AIs NEVER repeat a short loop!
-
-      for (let attempt = 0; attempt < pool.length; attempt++) {
-
-        const candidate = pool[(DYNAMIC_ACTIVITY_CURSOR + attempt) % pool.length];
-
-        if (!SPOKEN_TURN_SIGNATURES.has(candidate.sig)) {
-
-          SPOKEN_TURN_SIGNATURES.add(candidate.sig);
-
-          DYNAMIC_ACTIVITY_CURSOR = (DYNAMIC_ACTIVITY_CURSOR + attempt + 1) % pool.length;
-
-          if (SPOKEN_TURN_SIGNATURES.size >= pool.length) {
-
-            SPOKEN_TURN_SIGNATURES.clear();
-
-          }
-
-          return candidate;
-
-        }
-
-      }
-
-      const fallback = pool[DYNAMIC_ACTIVITY_CURSOR % pool.length];
-
-      DYNAMIC_ACTIVITY_CURSOR += 1;
-
-      return fallback;
-
-    }
-
-
-
     function triggerNextContinuousAiConversationTurn() {
-
-      // Speech bubbles must come from backend events, never synthetic browser dialogue.
+      // Office speech is rendered only from the authenticated backend event feed.
       return;
-
-      if (!WORLD_3D.initialized) return;
-
-      SHOW_3D_SPEECH_BUBBLES = true;
-
-      const turn = generateNextRealActivityDialogueTurn();
-
-      CONTINUOUS_CHAT_INDEX += 1;
-
-
-
-      const msgObj = {
-
-        message_id: 'live_chat_' + Date.now() + '_' + CONTINUOUS_CHAT_INDEX,
-
-        sender_agent_id: turn.sender,
-
-        receiver_agent_id: turn.receiver,
-
-        message_type: 'AGENT_GENERATED',
-
-        message_content: turn.msg,
-
-        created_at: new Date().toISOString()
-
-      };
-
-
-
-      activateSpeechBubbleIn3D(msgObj);
-
-      if (CURRENT_ACTIVE_SPEECH) {
-
-        CURRENT_ACTIVE_SPEECH.expiresAt = Date.now() + 5600;
-
-        CURRENT_ACTIVE_SPEECH.replyText = turn.reply;
-
-        CURRENT_ACTIVE_SPEECH.replyShowAt = Date.now() + 650;
-
-      }
-
-
-
-      const replyEl = WORLD_3D.overlayReplyBubbleEl;
-
-      if (replyEl) {
-
-        const styleRec = ROLE_OUTFIT_STYLES[turn.receiver] || {};
-
-        replyEl.innerHTML = `
-
-          <div class="speech-meta-header">
-
-            <span><strong>💬 ${escapeHtml(formatAgentShort(turn.receiver))}</strong> ↩ <strong>${escapeHtml(formatAgentShort(turn.sender))}</strong></span>
-
-            <span class="speech-origin-badge">${escapeHtml(styleRec.outfitNameVi || 'Phản hồi công việc thật')}</span>
-
-          </div>
-
-          <div style="max-height:72px; overflow:hidden; text-overflow:ellipsis;">"${escapeHtml(turn.reply)}"</div>
-
-        `;
-
-        replyEl.onclick = (e) => {
-
-          e.stopPropagation();
-
-          selectCharacterIn3DWorld(turn.receiver, true);
-
-        };
-
-      }
-
     }
-
-
-
-    let GITHUB_UNLIMITED_HARVESTER_TIMER = null;
-
-
 
     function startContinuous3DAiOfficeDialogueLoop() {
-
       if (CONTINUOUS_CHAT_TIMER) clearInterval(CONTINUOUS_CHAT_TIMER);
-
       CONTINUOUS_CHAT_TIMER = null;
-
-      // The former timer fabricated dialogue and collaboration walks.
-      return;
-
-      setTimeout(() => {
-
-        triggerNextContinuousAiConversationTurn();
-
-      }, 900);
-
-      CONTINUOUS_CHAT_TIMER = setInterval(() => {
-
-        triggerNextContinuousAiConversationTurn();
-
-        if (CONTINUOUS_CHAT_INDEX % 2 === 0 && typeof triggerAutonomousCollaborationWalkNow === 'function') {
-
-          const savedSpeech = CURRENT_ACTIVE_SPEECH;
-
-          CURRENT_ACTIVE_SPEECH = null;
-
-          triggerAutonomousCollaborationWalkNow();
-
-          CURRENT_ACTIVE_SPEECH = savedSpeech;
-
-        }
-
-      }, 5200);
-
-
-
-      // Disabled synthetic 18s harvester inflation — strictly display real files on server
-
     }
-
-
 
     function getLocalPersistentTrafficCounter() {
       return {
@@ -6491,7 +6032,7 @@ function renderAllViews() {
 
       }
 
-      window.open(`${API_BASE}/api/products/${encodeURIComponent(prod.id)}/download`, '_blank');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(prod.id)}`);
 
     }
 
@@ -8890,7 +8431,7 @@ function renderAllViews() {
 
         POLLING_TIMER = setInterval(() => {
 
-          refreshAllData(false);
+          if (!isReferenceOverviewActive()) refreshAllData(false);
 
         }, 15000);
 
@@ -8920,6 +8461,11 @@ function renderAllViews() {
 
       }
 
+    }
+
+    function isReferenceOverviewActive() {
+      return Boolean(document.body?.classList.contains('ap-reference-ui') &&
+        document.querySelector('.view-section.active')?.id === 'view-overview');
     }
 
 

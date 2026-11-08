@@ -958,7 +958,7 @@ class LLMGateway:
                                   request_quota=self.router.config.request_quota if not provider.local else None)
 
     def run(self, task_kind: str, payload: Mapping[str, Any], *, trace_id: Optional[str] = None,
-            use_cache: bool = True) -> LLMResult:
+            use_cache: bool = True, max_output_tokens: Optional[int] = None) -> LLMResult:
         data = _validate_input(task_kind, payload)
         trace = trace_id or str(uuid.uuid4())
         provider = self.router.select(health_check=True)
@@ -968,14 +968,18 @@ class LLMGateway:
         messages = _messages(task_kind, data)
         prompt_text = messages[0]["content"] + messages[1]["content"]
         prompt_tokens = _token_estimate(prompt_text)
-        output_tokens = TASK_OUTPUT_TOKENS[task_kind]
+        task_output_cap = TASK_OUTPUT_TOKENS[task_kind]
+        if max_output_tokens is not None and (isinstance(max_output_tokens, bool) or not isinstance(max_output_tokens, int)
+                                              or max_output_tokens < 1):
+            raise ValueError("max_output_tokens must be a positive integer")
+        output_tokens = min(task_output_cap, max_output_tokens) if max_output_tokens is not None else task_output_cap
         context_limit = min(MAX_CONTEXT_TOKENS, provider.context_tokens)
         if prompt_tokens + output_tokens > context_limit:
             raise LLMError("context_limit_exceeded", "Prompt exceeds the configured per-task context budget")
         input_digest = hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest()
         schema = OUTPUT_MODELS[task_kind].model_json_schema()
         schema_digest = hashlib.sha256(json.dumps(schema, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
-        cache_key = hashlib.sha256(f"{task_kind}:{provider.name}:{provider.model}:{schema_digest}:{input_digest}".encode()).hexdigest()
+        cache_key = hashlib.sha256(f"{task_kind}:{provider.name}:{provider.model}:{schema_digest}:{input_digest}:{output_tokens}".encode()).hexdigest()
         cache_allowed = use_cache and task_kind != "proposal_personalization" and provider.kind != "template"
         if cache_allowed:
             cached = self.store.get_cache(cache_key)

@@ -32,12 +32,13 @@ from pydantic import BaseModel, Field
 
 from config import CONFIG, APPS_DIR
 from database import consume_rate_limit, get_connection, init_db
-from apps_library import TOOL_DEFINITIONS, build_all_tools
+from apps_library import TOOL_DEFINITIONS, requires_owner_quote
 from dashboard_data import (
     CORE_DB_PATH,
     active_agent_ids,
     current_max_event_id,
     dashboard_summary,
+    dashboard_operations_summary,
     events_after,
     list_core_tasks,
     list_activity,
@@ -71,7 +72,6 @@ except Exception:
 
 init_db()
 ensure_schema()
-build_all_tools()
 
 app = FastAPI(
     title="AUTOProfit AI Enterprise Engine",
@@ -86,6 +86,14 @@ from workflow_api import router as workflow_router, _audit as audit_workflow_eve
 app.include_router(workflow_router)
 from business_api import router as business_engine_router
 app.include_router(business_engine_router)
+from product_studio_api import router as product_studio_router
+app.include_router(product_studio_router)
+from gtm_api import router as gtm_router
+app.include_router(gtm_router)
+from order_cash import router as order_cash_router
+app.include_router(order_cash_router)
+from optimization_api import router as optimization_router
+app.include_router(optimization_router)
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
@@ -155,6 +163,11 @@ _PUBLIC_RATE_LIMITS = {
     "/api/opportunities/analyze-freelance-job": (10, 60),
     "/api/internet/live-scan": (3, 60),
     "/api/products/live-audit-demo": (10, 60),
+    "/api/gtm/events": (30, 60),
+    "/api/gtm/leads": (3, 3600),
+    "/api/gtm/opt-out": (10, 3600),
+    "/api/cash/leads": (5, 3600),
+    "/api/cash/orders": (30, 60),
     "/api/admin/auth/verify": (10, 300),
 }
 
@@ -177,6 +190,14 @@ async def enforce_same_origin_and_rate_limits(request: Request, call_next):
         policy = (120, 60)
     if request.url.path.startswith("/api/admin/") and request.url.path != "/api/admin/auth/verify":
         policy = (30, 60)
+    if request.url.path.startswith("/api/gtm/admin/"):
+        policy = (30, 60)
+    if request.url.path.startswith("/api/cash/admin/"):
+        policy = (30, 60)
+    elif request.url.path.startswith("/api/cash/orders/") and request.url.path.endswith("/claims"):
+        policy = (5, 3600)
+    elif request.url.path.startswith("/api/cash/quotes/") and request.url.path.endswith("/accept"):
+        policy = (10, 3600)
     if policy and request.method in {"POST", "PUT", "PATCH", "DELETE"}:
         client_host = request.client.host if request.client else "unknown"
         if client_host in {"127.0.0.1", "::1", "testclient"}:
@@ -212,6 +233,43 @@ def api_health():
         "database": "SQLite Persistent WAL (ONLINE)",
         "timestamp": datetime.now().isoformat()
     }
+
+
+@app.get("/api/ready")
+def api_ready():
+    """Read-only readiness probe with no database paths or secret values."""
+    checks: dict[str, str] = {"database": "unavailable", "migrations": "unavailable"}
+    try:
+        conn = get_connection()
+        try:
+            integrity = str(conn.execute("PRAGMA quick_check").fetchone()[0])
+            version_row = conn.execute("SELECT COALESCE(MAX(version),0) FROM schema_migrations").fetchone()
+            version = int(version_row[0]) if version_row else 0
+            checks["database"] = "ready" if integrity == "ok" else "integrity_check_failed"
+            checks["migrations"] = "current" if version >= 13 else "outdated"
+            checks["schema_version"] = str(version)
+        finally:
+            conn.close()
+    except (sqlite3.Error, OSError, TypeError, ValueError):
+        checks["database"] = "unavailable"
+    ready = checks["database"] == "ready" and checks["migrations"] == "current"
+    checks["internal_worker"] = "enabled" if runtime_enabled() else "disabled_by_config"
+    provider = os.getenv("AUTOPROFIT_LLM_PROVIDER", "auto").strip().lower()
+    if provider == "template":
+        checks["model_provider"] = "degraded_mode"
+    elif provider == "auto":
+        checks["model_provider"] = "not_health_checked_optional"
+    elif provider == "openai_compatible":
+        remote_fields = ("AUTOPROFIT_LLM_ENDPOINT", "AUTOPROFIT_LLM_MODEL", "AUTOPROFIT_LLM_API_KEY")
+        checks["model_provider"] = ("configured_not_health_checked"
+                                     if all(os.getenv(name, "").strip() for name in remote_fields)
+                                     else "unavailable_missing_config")
+    elif provider in {"ollama", "llamacpp"}:
+        checks["model_provider"] = "configured_not_health_checked"
+    else:
+        checks["model_provider"] = "invalid_config"
+    return JSONResponse(status_code=200 if ready else 503,
+                        content={"status": "ready" if ready else "not_ready", "checks": checks})
 
 
 @app.post("/api/telemetry/pageview", status_code=202)
@@ -271,6 +329,7 @@ def api_telemetry_heartbeat(payload: TelemetryPayload, request: Request):
 @app.post("/api/public/payment-reports", status_code=202)
 def api_public_payment_report(payload: PaymentReportPayload, request: Request):
     """Record a payment claim for manual review without marking it as paid."""
+    raise HTTPException(status_code=410, detail="Legacy checkout is retired. Create a consented buyer order and claim through /checkout.html; a reference, QR, or screenshot is not payment proof.")
     origin = request.headers.get("origin")
     if origin:
         origin_parts = urlparse(origin)
@@ -315,6 +374,11 @@ def api_public_payment_report(payload: PaymentReportPayload, request: Request):
                 }
         if product is None:
             raise HTTPException(status_code=404, detail="This product is not available for checkout")
+        if requires_owner_quote(product):
+            raise HTTPException(
+                status_code=409,
+                detail="This is a free demo. Customization, installation, or licensing requires an owner-reviewed quote after scope and an actual order.",
+            )
 
         conn.execute(
             """INSERT INTO payment_reports
@@ -354,6 +418,7 @@ def api_admin_payment_reports(request: Request, limit: int = Query(default=100, 
 def api_admin_verify_payment_report(report_id: str, request: Request, payload: Dict[str, Any] = Body(default={} )):
     if not _is_admin(request):
         raise HTTPException(status_code=403, detail="Admin API key required")
+    raise HTTPException(status_code=410, detail="Legacy payment claims cannot create settled revenue. Review and verify a Phase 07 cash claim against the receiving-account statement.")
 
     conn = get_connection()
     try:
@@ -461,10 +526,10 @@ def api_public_payment_report_status(payload: Dict[str, Any]):
         ).fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="Không tìm thấy yêu cầu khớp với email này.")
-        result = dict(row)
-        if result["status"] == "PAID_VERIFIED":
-            result["download_url"] = f"/api/products/{result['product_slug']}/download"
-        return result
+        return {"id": row["id"], "product_slug": row["product_slug"], "status": row["status"],
+                "created_at": row["created_at"], "verified_at": row["verified_at"],
+                "delivery_available": False,
+                "message": "Legacy payment reports are retained for history and do not authorize downloads."}
     finally:
         conn.close()
 
@@ -478,6 +543,16 @@ def api_dashboard_summary(request: Request, window: str = Query(default="today",
         if "revenue_usd" in metrics:
             metrics["revenue_usd"] = {"value_usd": None, "status": "owner_auth_required"}
     return snapshot
+
+
+@app.get("/api/dashboard/operations")
+def api_dashboard_operations(request: Request):
+    if not _is_admin(request):
+        raise HTTPException(status_code=403, detail="Owner admin key required over HTTPS")
+    return JSONResponse(
+        content=dashboard_operations_summary(),
+        headers={"Cache-Control": "private, no-store", "Pragma": "no-cache"},
+    )
 
 
 @app.get("/api/dashboard/activity")
@@ -562,7 +637,7 @@ def api_dashboard(request: Request):
     agents = metrics.get("active_agents", {}).get("value")
     pageviews = metrics.get("pageviews_today", {}).get("value")
     session_count = metrics.get("sessions_today", {}).get("value")
-    return {
+    response = {
         "system": {**SYSTEM_STATE, **workflow_system, "backend_health": "ONLINE" if snapshot.get("status") == "ok" else "DEGRADED"},
         "kpis_real_verified": {
             "verified_revenue_usd": revenue,
@@ -613,6 +688,14 @@ def api_dashboard(request: Request):
         },
         "dashboard_data": snapshot,
     }
+    # Every dashboard gets lease-backed executor readiness/state. Public users
+    # receive no task names, ids, timestamps, diagnostics, or event details.
+    from core.agent_runtime import dashboard_agent_registry
+    response["agents_registry"] = dashboard_agent_registry(include_details=is_owner)
+    if is_owner:
+        from core.agent_runtime import runtime_profile
+        response["agent_runtime"] = runtime_profile()
+    return response
 
 @app.get("/api/pricing/catalog")
 def api_pricing_catalog():
@@ -775,9 +858,9 @@ def api_factory_download(slug: str):
         "github-css-glassmorphism-landing-builder": "css-glassmorphism-card-builder",
     }.get(slug, slug.removeprefix("github-"))
     file_path = APPS_DIR / f"{slug}.html"
-    if file_path.exists():
-        return FileResponse(file_path, filename=f"{slug}.html", media_type="text/html")
-    raise HTTPException(status_code=404, detail="Web app file not found")
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Web app file not found")
+    raise HTTPException(status_code=410, detail="Direct source downloads are disabled. Paid delivery requires a Phase 07 expiring authorization.")
 
 @app.post("/api/github-web-factory/scan-and-build")
 def api_scan_and_build(request: Request, payload: Dict[str, Any] = Body(default={} )):
