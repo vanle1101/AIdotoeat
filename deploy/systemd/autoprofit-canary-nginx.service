@@ -1,0 +1,43 @@
+[Unit]
+Description=AUTOProfit isolated loopback canary web proxy
+Requires=autoprofit-canary.service
+After=autoprofit-canary.service
+ConditionPathIsDirectory=/var/www/autoprofit-canary/current
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=autoprofit-canary
+Group=autoprofit-canary
+WorkingDirectory=/var/www/autoprofit-canary/current
+RuntimeDirectory=autoprofit-canary-nginx
+RuntimeDirectoryMode=0750
+ExecStartPre=/usr/sbin/nginx -p /var/www/autoprofit-canary/current/ -c /var/www/autoprofit-canary/current/deploy/nginx/autoprofit-canary-isolated.conf -t
+ExecStart=/usr/sbin/nginx -p /var/www/autoprofit-canary/current/ -c /var/www/autoprofit-canary/current/deploy/nginx/autoprofit-canary-isolated.conf -g "daemon off;"
+Restart=on-failure
+RestartSec=3
+TimeoutStartSec=15
+TimeoutStopSec=15
+KillSignal=SIGQUIT
+UMask=0077
+StandardOutput=journal
+StandardError=journal
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+SystemCallArchitectures=native
+ReadWritePaths=/run/autoprofit-canary-nginx
+
+[Install]
+WantedBy=multi-user.target

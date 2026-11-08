@@ -2,6 +2,8 @@
 Description=AUTOProfit AI isolated canary API
 After=network.target
 ConditionPathIsDirectory=/var/www/autoprofit-canary/current
+StartLimitIntervalSec=60
+StartLimitBurst=3
 
 [Service]
 Type=simple
@@ -28,10 +30,8 @@ KillSignal=SIGTERM
 UMask=0077
 StateDirectory=autoprofit-canary
 StateDirectoryMode=0700
-LogsDirectory=autoprofit-canary
-LogsDirectoryMode=0750
-StandardOutput=append:/var/log/autoprofit-canary/app.log
-StandardError=append:/var/log/autoprofit-canary/app.log
+StandardOutput=journal
+StandardError=journal
 NoNewPrivileges=true
 PrivateTmp=true
 PrivateDevices=true
@@ -46,7 +46,7 @@ RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 IPAddressDeny=any
 IPAddressAllow=localhost
 SystemCallArchitectures=native
-ReadWritePaths=/var/lib/autoprofit-canary /var/log/autoprofit-canary
+ReadWritePaths=/var/lib/autoprofit-canary
 
 [Install]
 WantedBy=multi-user.target

@@ -1,5 +1,7 @@
 # Phase 09 production readiness
 
+> This is the Phase 09 baseline snapshot. Its VPS and canary rows were superseded by the Phase 10 host verification in [the Phase 10 report](PHASE10_VPS_REPORT.md) and [machine-readable evidence](evidence/phase10/report.json).
+
 This report distinguishes local evidence from VPS verification. The current production host was not contacted or changed. No production deploy, merge, or public post was performed.
 
 ## Verification status
@@ -15,7 +17,7 @@ This report distinguishes local evidence from VPS verification. The current prod
 | Security smoke tests | **PASS** | E2E checks HTTPS-only owner auth, cross-origin mutation rejection, no permissive CORS, SQL-injection-like catalog input, private-address SSRF denial, artifact path traversal, secret redaction, and the hard stop. Existing Phase 00 tests cover public-form rate limiting and protected admin routes; Phase 05 tests cover escaped output, inert imports, and formula injection. |
 | Performance smoke | **PASS** | E2E measures 20 in-process readiness probes and records median/p95/max. This is a local smoke threshold, not a production load test, browser FPS measurement, or GPU benchmark. VPS CPU/RAM/disk and external provider quota remain unverified. |
 | Terms of service | **PARTIAL** | [Source terms audit](evidence/phase09/tos-audit.md): Stack Exchange attribution requirements were checked; official HN API terms and Stack Exchange quota documentation were unavailable or returned 504/404 during this audit. Existing low fetch caps/backoff remain mandatory. |
-| Canary deployment | **NOT RUN** | [Canary systemd](../deploy/systemd/autoprofit-canary.service), [Nginx](../deploy/nginx/autoprofit-canary.conf), and [log rotation](../deploy/logrotate/autoprofit-canary) are separate from the live vhost and use loopback ports 8451/8889. The Windows workspace cannot validate Debian syntax or host permissions. |
+| Canary deployment | **NOT RUN in Phase 09** | [Canary systemd](../deploy/systemd/autoprofit-canary.service) and [Nginx](../deploy/nginx/autoprofit-canary.conf) were prepared but not deployed in this Phase 09 snapshot. Phase 10 results are linked above. |
 | HTTPS / browser check on VPS | **NOT RUN** | Current host TLS/VHost ownership was not inspected in this Phase 09 run. Reuse a certificate and TLS termination already controlled by the owner, or add the hostname to the existing ACME webroot flow after confirming that host’s port 80/443 routing. No paid domain is required for a free Let’s Encrypt certificate, but no certificate issuance or listener change was attempted. Do not expose owner routes through the canary’s HTTP-only loopback listener. |
 | External publishing and real money | **NOT RUN by design** | No public post, outreach, bank transfer, or live payment was made. TEST records are excluded from summaries and the E2E evidence confirms zero test cash in real totals. |
 
@@ -41,37 +43,29 @@ The install script requires Python 3.12, installs only from `requirements-dev.lo
 
 ## Debian canary procedure
 
-The canary is additive and binds only to loopback. It does not use or reload ports 8888, 80, 443, 8000, or the current live service.
+The canary uses `/var/www/autoprofit-canary`, `/var/lib/autoprofit-canary`, API port 8451, and loopback-only web port 8889. Its standalone Nginx instance reads only the canary config; it does not reload the host Nginx service or touch listeners 8888, 80, 443, or 8000. It runs with a separate system account and empty payment/LLM credentials, worker disabled, both kill switches enabled, and TEST mode disabled.
 
-1. Prepare a separate checkout at `/var/www/autoprofit-canary/releases/<commit-sha>`, create the `.venv` with `bash scripts/manage.sh install --with-browser`, install Chromium runtime libraries according to the Debian release, and point `/var/www/autoprofit-canary/current` to that release. The Chromium download exceeds 100 MB. Do not replace the current live checkout.
-   The screenshot renderer can use the pre-installed Chromium path when an operator sets `AUTOPROFIT_CHROMIUM_EXECUTABLE`; the process does not download browser weights at runtime.
-2. Create a dedicated `autoprofit-canary` system account and `/etc/autoprofit-canary.env` with mode `0640`, owned by `root:autoprofit-canary`. Keep secrets out of the checkout. Leave payment settings empty, the LLM disabled, worker disabled, hard kill switch enabled, and TEST mode disabled. Install Chromium under the service state directory as that account:
-
-   ```sh
-   install -d -o autoprofit-canary -g autoprofit-canary -m 0700 /var/lib/autoprofit-canary/ms-playwright
-   sudo -u autoprofit-canary env PLAYWRIGHT_BROWSERS_PATH=/var/lib/autoprofit-canary/ms-playwright /var/www/autoprofit-canary/current/.venv/bin/python -m playwright install chromium
-   ```
-3. Install only new, previously absent config names. Check every destination before writing:
+1. Extract the exact, checksum-verified release to `/var/www/autoprofit-canary/releases/<commit-sha>`; never replace the live checkout. Create the Python 3.12 venv and install `requirements-dev.lock.txt` with `--require-hashes`. A browser binary is not needed on the VPS: run `scripts/phase10_browser.py` from a workstation through an SSH tunnel. Installing Playwright Chromium downloads more than 100 MB and is optional.
+2. Create a dedicated `autoprofit-canary` system account and `/etc/autoprofit-canary.env` with mode `0640`, owned by `root:autoprofit-canary`. Leave payment destinations, order-token secret, remote LLM credentials, and TEST-mode key empty. Do not put credentials in the release directory.
+3. Before writing, verify both unit files and environment file are new. Install only these canary-specific units:
 
    ```sh
-   id autoprofit-canary || adduser --system --group --no-create-home autoprofit-canary
    test ! -e /etc/systemd/system/autoprofit-canary.service
+   test ! -e /etc/systemd/system/autoprofit-canary-nginx.service
+   test ! -e /etc/autoprofit-canary.env
    install -o root -g root -m 0644 deploy/systemd/autoprofit-canary.service /etc/systemd/system/autoprofit-canary.service
-   test ! -e /etc/nginx/sites-available/autoprofit-canary.conf
-   install -o root -g root -m 0644 deploy/nginx/autoprofit-canary.conf /etc/nginx/sites-available/autoprofit-canary.conf
-   test ! -e /etc/logrotate.d/autoprofit-canary
-   install -o root -g root -m 0644 deploy/logrotate/autoprofit-canary /etc/logrotate.d/autoprofit-canary
-   ln -s /etc/nginx/sites-available/autoprofit-canary.conf /etc/nginx/sites-enabled/autoprofit-canary.conf
-   nginx -t
+   install -o root -g root -m 0644 deploy/systemd/autoprofit-canary-nginx.service /etc/systemd/system/autoprofit-canary-nginx.service
+   systemd-analyze verify /etc/systemd/system/autoprofit-canary.service /etc/systemd/system/autoprofit-canary-nginx.service
    systemctl daemon-reload
-   systemctl enable --now autoprofit-canary
-   systemctl reload nginx
+   systemctl start autoprofit-canary.service autoprofit-canary-nginx.service
+   curl --fail http://127.0.0.1:8451/api/ready
    curl --fail http://127.0.0.1:8889/api/ready
    ```
 
-   If any `test ! -e` fails, stop and inspect the existing file. Do not overwrite it. Confirm that the host’s Nginx `sites-enabled` directory is included before adding the symlink.
-4. To review the page from a browser, use an owner-controlled existing TLS reverse proxy or SSH access to the machine. The provided loopback listener is deliberately HTTP-only, so protected owner routes reject it. Do not open a public plain-HTTP canary or change another site’s TLS vhost as part of this procedure.
-5. For a future authorized code release, keep the prior release directory and use `python scripts/ops.py rollback --releases-root /var/www/autoprofit-canary/releases --current-link /var/www/autoprofit-canary/current --target <previous-release-name>` to atomically switch the canary symlink. Restart its service after switching. Database rollback is separate: restore a verified backup to a new path, verify it, then explicitly update the canary environment file.
+   Nginx validates the standalone config in `ExecStartPre`; its `listen` is bound to `127.0.0.1`. Do not enable the units at boot for a temporary test. If any destination already exists, stop and inspect it instead of overwriting it.
+4. Run `ssh -N -L 18889:127.0.0.1:8889 root@<host>` from the workstation, then use `python scripts/phase10_browser.py --url http://127.0.0.1:18889/ --output-dir <new-evidence-directory>`. Owner routes correctly reject HTTP, even through the encrypted SSH tunnel; exercise authenticated HTTPS owner routes in the HTTPS integration tests, not by weakening this canary boundary.
+5. Application and proxy output goes to systemd journal, which follows the host’s journald retention/rotation settings: `journalctl -u autoprofit-canary -u autoprofit-canary-nginx`. Check `journalctl --disk-usage` and the host’s `journald.conf` before extending log retention.
+6. Roll back by stopping both units, restoring a verified SQLite backup to a new path if needed, and using `python scripts/ops.py rollback --releases-root /var/www/autoprofit-canary/releases --current-link /var/www/autoprofit-canary/current --target <previous-release-name>` to switch code. Never point canary at production databases. For a one-release verification, stop the canary and remove only the new canary units/config/state after collecting evidence; production files and services are not part of rollback.
 
 The optional weekly optimizer units are [service](../deploy/systemd/autoprofit-weekly-optimizer.service) and [timer](../deploy/systemd/autoprofit-weekly-optimizer.timer). The job reads only first-party aggregate metrics, stores at most one review proposal per experiment slot, applies no public changes, and returns without writing if the hard kill switch is active. Do not enable it until its service account has only the required database access.
 
