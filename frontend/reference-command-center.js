@@ -1836,6 +1836,19 @@
 
     function buildAdNetwork() {
       const group = registerZone('ads', zoneOrigins.ads);
+      // Give the named Ad Network hologram a precise, invisible pick target so
+      // selecting this feature does not fall back to the whole zone or cover
+      // the individual workstation hit proxies.
+      addLandmarkTarget(
+        group,
+        new THREE.SphereGeometry(1.08, 16, 12),
+        'ads',
+        'ad-network',
+        'Ad Network',
+        [0, 3.7, 2.92],
+        [zoneOrigins.ads[0], 3.7, zoneOrigins.ads[2] + 2.92],
+        0
+      );
       const frame = standard(0x1c2d4c, 0x0c4771, 0.36, 0.76, 0.22);
       const glass = architecturalGlass(0x121426, 0x24123c, 0.14);
       buildDistrictPad(group, 'ads', 4.45, 0xb169ff);

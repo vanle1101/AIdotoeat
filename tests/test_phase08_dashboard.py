@@ -143,6 +143,14 @@ class Phase08DashboardTests(unittest.TestCase):
         self.assertIn("if ((!reducedMotion && activeTaskCount > 0) || cameraTransition) requestRender()", command_center)
         self.assertNotIn("animated.push({ kind: 'beacon'", command_center)
 
+    def test_scene_has_keyboard_tablist_and_ad_network_object_id(self):
+        dashboard = (ROOT / "frontend" / "reference-dashboard.js").read_text(encoding="utf-8")
+        command_center = (ROOT / "frontend" / "reference-command-center.js").read_text(encoding="utf-8")
+        self.assertIn('id="apSceneTabs" role="tablist"', dashboard)
+        self.assertIn("document.getElementById('apSceneTabs')?.addEventListener('keydown'", dashboard)
+        self.assertIn("'ad-network'", command_center)
+        self.assertIn("'Ad Network'", command_center)
+
 
 
 if __name__ == "__main__":

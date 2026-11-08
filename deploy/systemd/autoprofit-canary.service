@@ -43,6 +43,8 @@ ProtectControlGroups=true
 RestrictSUIDSGID=true
 LockPersonality=true
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
 SystemCallArchitectures=native
 ReadWritePaths=/var/lib/autoprofit-canary /var/log/autoprofit-canary
 

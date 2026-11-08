@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import os
+import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -132,6 +134,33 @@ class Phase09ProductionTests(unittest.TestCase):
                 order_cash._test_mode_requested(request, True)
             self.assertEqual(denied.exception.status_code, 403)
 
+    def test_ops_migrate_cli_imports_core_from_a_repository_checkout(self):
+        data_dir = Path(self.temp.name) / "migration-data"
+        data_dir.mkdir()
+        source_db = data_dir / "company.db"
+        database.init_db(source_db)
+        backup_path = Path(self.temp.name) / "before-migration.sqlite"
+        env = os.environ.copy()
+        env.update({
+            "AUTOPROFIT_DATA_DIR": str(data_dir),
+            "AUTOPROFIT_CORE_DATA_DIR": str(Path(self.temp.name) / "core-data"),
+            "AUTOPROFIT_OUTPUTS_DIR": str(Path(self.temp.name) / "outputs"),
+            "AUTOPROFIT_ENGINE_WORKER": "false",
+            "AUTOPROFIT_ENGINE_KILL_SWITCH": "true",
+            "AUTOPROFIT_BUDGET_KILL_SWITCH": "true",
+            "AUTOPROFIT_TEST_MODE_ENABLED": "false",
+        })
+        completed = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "ops.py"), "migrate", "--backup", str(backup_path)],
+            cwd=ROOT, env=env, capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr or completed.stdout)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["status"], "migrated")
+        self.assertEqual(result["schema_version"], 13)
+        self.assertEqual(result["integrity"], "ok")
+        self.assertTrue(backup_path.is_file())
+
     def test_canary_configs_are_loopback_only_and_side_effects_default_off(self):
         service = (ROOT / "deploy/systemd/autoprofit-canary.service").read_text(encoding="utf-8")
         nginx = (ROOT / "deploy/nginx/autoprofit-canary.conf").read_text(encoding="utf-8")
@@ -140,6 +169,8 @@ class Phase09ProductionTests(unittest.TestCase):
         self.assertIn("AUTOPROFIT_ENGINE_KILL_SWITCH=true", service)
         self.assertIn("AUTOPROFIT_BUDGET_KILL_SWITCH=true", service)
         self.assertIn("AUTOPROFIT_TEST_MODE_ENABLED=false", service)
+        self.assertIn("IPAddressDeny=any", service)
+        self.assertIn("IPAddressAllow=localhost", service)
         self.assertIn("listen 127.0.0.1:8889", nginx)
         self.assertIn("proxy_pass http://127.0.0.1:8451", nginx)
         self.assertNotRegex(nginx, r"listen\s+(?:[^;]*:)?(?:80|443|8888)\b")
