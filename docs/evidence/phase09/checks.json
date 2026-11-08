@@ -1,5 +1,5 @@
 {
-  "verified_at_utc": "2026-11-08T11:30:23Z",
+  "verified_at_utc": "2026-11-08T11:45:33Z",
   "platform": "Windows 11 10.0.26200; Python 3.12.10",
   "dependency_install": {
     "command": "python -m pip install --require-hashes -r requirements-dev.lock.txt",
@@ -23,7 +23,7 @@
     "passed": 139,
     "skipped": 1,
     "subtests_passed": 70,
-    "skipped_case": "Linux/POSIX release-symlink rollback unit test; Windows cannot create the equivalent managed service symlink. Ubuntu CI is configured to run it, pending workflow result.",
+    "skipped_case": "Linux/POSIX release-symlink rollback unit test; Windows cannot create the equivalent managed service symlink. Covered by passing Ubuntu CI run 42477007668.",
     "warning": "Starlette TestClient emits a deprecation warning recommending httpx2; no test failures"
   },
   "phase09_e2e": {
@@ -47,6 +47,12 @@
     "version_or_license_metadata_findings": 0,
     "human_license_review_still_required": true,
     "evidence_file": "docs/evidence/phase09/licenses.json"
+  },
+  "github_actions_ci": {
+    "status": "PASS",
+    "run_id": 42477007668,
+    "url": "https://github.com/vanle1101/AIdotoeat/actions/runs/42477007668",
+    "covered": ["Ubuntu test suite", "POSIX rollback", "dependency vulnerability audit", "license metadata audit", "isolated production-readiness E2E"]
   },
   "deployment_status": {
     "canary_service_installed": false,
