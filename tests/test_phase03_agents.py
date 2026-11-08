@@ -64,12 +64,36 @@ class RegistryTests(AgentRuntimeTestCase):
 
 
 class WorkflowTests(AgentRuntimeTestCase):
+    def test_redaction_preserves_opaque_artifact_ids_and_hashes(self):
+        artifact_id = "77272893-5541-530f-a9dd-e6d69190c5e7"
+        digest = "0950d93b116ceb9c2befc05c634d6d68c6d0010a650cfc55a484ea8924c06d70"
+        from core.redaction import redact_long_numbers_preserving_ids
+
+        self.assertEqual(redact_long_numbers_preserving_ids(f"/artifacts/{artifact_id}"),
+                         f"/artifacts/{artifact_id}")
+        self.assertEqual(redact_long_numbers_preserving_ids(digest), digest)
+        self.assertEqual(redact_long_numbers_preserving_ids("Account 1234567890"),
+                         "Account [REDACTED_NUMBER]")
+        sanitized = engine.redact({
+            "artifact_id": artifact_id,
+            "artifact_uri": f"db://agent_artifacts/{artifact_id}",
+            "content_sha256": digest,
+            "note": "Account 1234567890",
+        })
+        self.assertEqual(sanitized["artifact_id"], artifact_id)
+        self.assertEqual(sanitized["artifact_uri"], f"db://agent_artifacts/{artifact_id}")
+        self.assertEqual(sanitized["content_sha256"], digest)
+        self.assertIn("[REDACTED_NUMBER]", sanitized["note"])
+
     def test_five_cross_department_agents_build_a_tested_public_problem_draft(self):
         five_roles = ("MKT_TREND_SCOUT", "MKT_COMPETITOR_ANALYST", "DEV_SOLUTION_ARCHITECT",
                       "DEV_PYTHON_ENGINEER", "EXEC_QA_DIRECTOR")
         result = agent_runtime.run_public_problem_to_completion(self.issue_request(), role_ids=five_roles,
                                                                  path=self.db_path)
-        self.assertEqual(result["status"], "DONE")
+        self.assertEqual(result["status"], "DONE", json.dumps(
+            {"steps": result["steps"], "execution_outcomes": result["execution_outcomes"]},
+            ensure_ascii=False,
+        ))
         self.assertEqual(len(result["steps"]), 5)
         self.assertTrue(all(step["state"] == "DONE" for step in result["steps"]))
         by_role = {step["result"].get("role_id"): step["result"] for step in result["steps"]}

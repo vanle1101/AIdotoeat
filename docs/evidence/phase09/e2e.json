@@ -24,7 +24,7 @@
     "publication_sent": false
   },
   "environment": "isolated local staging; temporary backend/core databases; no production paths used",
-  "generated_at_utc": "2026-11-08T11:30:23Z",
+  "generated_at_utc": "2026-11-08T12:08:37Z",
   "hard_kill_switch": {
     "external_publish_tool_status": "BLOCKED",
     "optimizer_run_count_unchanged": true,
@@ -46,9 +46,9 @@
   "network_requests_during_e2e": 0,
   "performance_smoke": {
     "interpretation": "In-process smoke only; not a production capacity or GPU benchmark.",
-    "max_ms": 7.83,
-    "median_ms": 6.17,
-    "p95_ms": 6.77,
+    "max_ms": 6.05,
+    "median_ms": 4.12,
+    "p95_ms": 5.39,
     "request": "local TestClient GET /api/ready",
     "sample_count": 20,
     "status": "PASS",
@@ -61,9 +61,10 @@
     "bytes": 9777,
     "external_publish": false,
     "license_ip_review": "PROJECT_AUTHORED_CODE_WITH_SOURCE_LINKED_EVIDENCE",
-    "path": "outputs\\phase09\\staging\\csv-workflow-pack-adea58f5a564-v1.0.0.zip",
+    "path": "csv-workflow-pack-adea58f5a564-v1.0.0.zip",
     "quality_score": 100.0,
     "sha256": "6ede8add614e1fa3c5469dffa64d44515eabd95763a1981f885b3eed678026e9",
+    "staging_root": "<output_dir>/staging",
     "status": "PASS"
   },
   "provider_degrade": {

@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Optional
 
 import database as backend_database
+from core.redaction import redact_long_numbers_preserving_ids
 from domain_models import TaskSpec, TaskState
 
 
@@ -254,7 +255,7 @@ def redact(value: Any, depth: int = 0) -> Any:
             r"\1=[REDACTED]", value,
         )
         value = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", value)
-        value = re.sub(r"(?<!\d)\d{8,18}(?!\d)", "[REDACTED_NUMBER]", value)
+        value = redact_long_numbers_preserving_ids(value)
         return value[:1000]
     return value if value is None or isinstance(value, (bool, int, float)) else redact(str(value), depth + 1)
 
