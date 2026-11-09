@@ -2,6 +2,8 @@
 
 **Release decision: NO-GO for production.** Milestone 1 is complete: live preflight, code/config patches, an authorized online SQLite backup with isolated restore verification, and dry-run checks. The production traffic worker and backend remain untouched. Milestone 2 requires one explicit owner approval before any production service, filesystem permission, Nginx, or deployment change.
 
+Phase 11 implementation commit: `0cd8d36c2bfde50212449bb627a37b50d5f5ad22` on PR #1. Both required `verify` CI jobs passed on this commit: [job 1](https://github.com/vanle1101/AIdotoeat/actions/runs/42665753947/job/129328827811) and [job 2](https://github.com/vanle1101/AIdotoeat/actions/runs/42665761253/job/129328850403). The report/evidence finalization commit contains no runtime code changes.
+
 Evidence is in [vps-preflight.json](evidence/phase11/vps-preflight.json). The Phase 10 baseline is [PHASE10_VPS_REPORT.md](PHASE10_VPS_REPORT.md). This report never includes bank/account identifiers, admin keys, or secret values.
 
 ## A. Fresh preflight
@@ -82,7 +84,7 @@ Changes prepared on the PR branch:
 - [autoprofit-core.js](../frontend/autoprofit-core.js): accurate distribution-role readiness and behavior.
 - [test_phase00_safety.py](../tests/test_phase00_safety.py) and [test_phase11_security.py](../tests/test_phase11_security.py): CORS regression, retired traffic paths, artifact permissions, service policy, and backup/restore.
 
-The final local full suite passed: **153 passed, 1 skipped, 70 subtests passed**. The sole skip is the POSIX-only systemd release-symlink rollback test on Windows. `py_compile`, `git diff --check`, the systemd template dry-run, and Nginx syntax check passed; see [test-output.txt](evidence/phase11/test-output.txt). PR CI will run on the pushed Phase 11 commit. No tests create ad impressions or use paid APIs.
+The final local full suite passed: **153 passed, 1 skipped, 70 subtests passed**. The sole skip is the POSIX-only systemd release-symlink rollback test on Windows. `py_compile`, `git diff --check`, the systemd template dry-run, Nginx syntax check, and both PR CI jobs passed; see [test-output.txt](evidence/phase11/test-output.txt). No tests create ad impressions or use paid APIs.
 
 ## J. Acceptance and decision
 
@@ -98,6 +100,6 @@ The final local full suite passed: **153 passed, 1 skipped, 70 subtests passed**
 | Admin protected | Anonymous route returns 403; owner auth not configured/verified; CORS reflects arbitrary origin | **FAIL release gate** |
 | Production payment/revenue truth | Legacy deploy has hardcoded payee values; production semantics not verified | **FAIL / unverified** |
 | No data loss / no side effects during audit | Source DB unchanged; no service, Nginx, payment, ad, or firewall change | **PASS** |
-| Test and code checks | Full suite and local dry-runs pass; CI will run on final commit | **LOCAL PASS / CI PENDING** |
+| Test and code checks | Full suite and local dry-runs pass; both PR verify jobs pass on implementation commit | **PASS** |
 
 **Production remains NO-GO.** Only Milestone 2 maintenance approval is outstanding. The owner must explicitly approve the one controlled change set described above: stop/disable/mask the legacy traffic unit, migrate the backend to the dedicated service user and protected state directories, and add a separate HTTPS vhost after a covering certificate is available. Until that approval arrives, production remains as observed and no service, database permission, Nginx, firewall, merge, or deploy action will be taken.
