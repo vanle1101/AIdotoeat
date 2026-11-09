@@ -613,33 +613,33 @@
 
       VIRAL_TRAFFIC_AGENT: {
 
-        titleVi: 'Gia Huy — AI Chuyên Gia Kéo Traffic Quốc Tế (Reddit/Pinterest/Dev.to)',
+        titleVi: 'Gia Huy — Soạn Bản Nháp Phân Phối Nội Dung',
 
-        titleEn: 'Gia Huy — Global Viral Traffic & Syndication Specialist',
+        titleEn: 'Gia Huy — Distribution Draft Editor',
 
         shortVi: 'Gia Huy (Traffic)',
 
         shortEn: 'Gia Huy (Traffic)',
 
-        zoneVi: '14. Bàn Kéo Traffic Tự Nhiên Quốc Tế (Gia Huy)',
+        zoneVi: '14. Bàn Soạn Nháp Phân Phối Nội Dung',
 
-        zoneEn: '14. Global Organic Traffic & Syndication Desk',
+        zoneEn: '14. Owner-Reviewed Distribution Drafts',
 
-        subVi: 'Phân Phối Link Affiliate & Web Tool Lên Mạng Quốc Tế',
+        subVi: 'Bản Nháp Affiliate & Web Tool Chờ Chủ Sở Hữu Duyệt',
 
-        subEn: 'Global SEO Syndication to Telegra.ph, Dev.to, Reddit & Pinterest',
+        subEn: 'Affiliate and web-tool drafts; no automatic posting',
 
-        equipVi: 'Hệ thống phân phối nội dung đa kênh & IndexNow Ping tự động',
+        equipVi: 'Bản thảo nội dung và danh sách kiểm tra quy tắc cộng đồng',
 
-        equipEn: 'Multi-Channel Content Syndicator & Instant IndexNow Pinger',
+        equipEn: 'Content drafts and community-rule checklist',
 
-        stepVi: 'Trực chiến 24/7',
+        stepVi: 'Chờ chủ sở hữu duyệt',
 
-        stepEn: '24/7 Active',
+        stepEn: 'Owner review required',
 
-        dutyVi: 'Tự động phát tán các bài Review Affiliate Amazon/Shopify và link 493+ Web Tool miễn phí lên các cộng đồng quốc tế để kéo lượt xem quảng cáo A-Ads và khách mua hàng.',
+        dutyVi: 'Chuẩn bị bản nháp nội dung affiliate và công cụ web để chủ sở hữu tự rà soát, phê duyệt và chia sẻ theo quy định từng cộng đồng. Không tự đăng bài hoặc tạo lượt hiển thị quảng cáo.',
 
-        dutyEn: 'Syndicates English affiliate comparison articles and free web utilities across global platforms to drive A-Ads impressions and affiliate conversions.'
+        dutyEn: 'Prepares affiliate and web-tool content drafts for owner review and policy-compliant sharing. It does not publish automatically or generate ad impressions.'
 
       },
 

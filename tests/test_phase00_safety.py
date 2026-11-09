@@ -199,6 +199,30 @@ class TestProtectedApiAndAbuseControls(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
+    def test_untrusted_cors_preflight_is_not_reflected(self):
+        response = self.https_client.options(
+            "/api/public/payment-reports",
+            headers={
+                "Origin": "https://untrusted.example",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "content-type,x-admin-key",
+            },
+        )
+        self.assertNotIn("access-control-allow-origin", response.headers)
+        self.assertNotIn("access-control-allow-credentials", response.headers)
+
+    def test_generated_static_apps_are_public_readable_but_not_world_writable(self):
+        with tempfile.TemporaryDirectory(prefix="autoprofit-public-apps-") as temp_dir:
+            output_dir = Path(temp_dir) / "apps"
+            with mock.patch.object(apps_library, "APPS_DIR", output_dir):
+                apps_library.build_all_tools()
+            generated = list(output_dir.glob("*.html"))
+            self.assertTrue(generated)
+            if os.name == "posix":
+                import stat
+
+                self.assertTrue(all(stat.S_IMODE(path.stat().st_mode) == 0o644 for path in generated))
+
     def test_public_form_rate_limit_is_enforced(self):
         responses = [
             self.https_client.post("/api/public/notebook/interact", json={"question": "hello"})

@@ -1,0 +1,200 @@
+{
+  "phase": 11,
+  "evidence_version": 1,
+  "status": "NO_GO_PRODUCTION",
+  "observed_at_utc": "2026-11-09T16:50:25Z",
+  "host": "160.22.107.108",
+  "scope": "read-only production preflight, authorized online SQLite backup, local tests, and systemd dry-run; no production service/config/database changes",
+  "repository": {
+    "pull_request": 1,
+    "branch": "codex/autoprofit-phase-09-production-readiness",
+    "preflight_head": "49c815d514a0659fb368ce3a9ddb403d2652096b",
+    "base_branch": "main",
+    "pr_state": "OPEN"
+  },
+  "production": {
+    "os": "Ubuntu 24.04 LTS",
+    "cpu_count": 6,
+    "memory_total_bytes": 6212489216,
+    "memory_available_bytes": 1810866176,
+    "swap_total_bytes": 4294963200,
+    "swap_used_bytes": 3574321152,
+    "root_disk_total_bytes": 84423864320,
+    "root_disk_available_bytes": 36486529024,
+    "cpu_sampling": "vmstat, 3 one-second intervals; observational only, no synthetic load",
+    "public_http_entrypoint": "http://160.22.107.108:8888/",
+    "api_health_status": 200,
+    "api_ready_status": 404,
+    "api_admin_payment_reports_anonymous_status": 403,
+    "admin_key_environment_present": false,
+    "owner_authentication_verified": false,
+    "untrusted_cors_origin_reflected": true,
+    "cors_allow_credentials": true,
+    "production_backend": {
+      "active": true,
+      "enabled_at_boot": true,
+      "user": "root",
+      "group": "root",
+      "listen": "127.0.0.1:8450",
+      "workers": 2,
+      "restart_policy": "always",
+      "umask": "0022"
+    },
+    "legacy_traffic_service": {
+      "active": true,
+      "enabled_at_boot": true,
+      "user": "root",
+      "restart_policy": "unmodified; service remains active",
+      "process": "/usr/bin/python3.12",
+      "deployed_worker_bytes": 2501,
+      "deployed_worker_sha256": "7d874ab9aeebbad4d0eaffa3ff07c8e0ddcd15e6834215cf664dfb3682635e91",
+      "repo_worker_sha256": "b541f663be3287df9a9c3c49345b5d07cfdabb0fbaf674e057a7f716f1a7671b",
+      "deployed_worker_matches_repo": false,
+      "static_signature_counts": {
+        "user_agent_or_randomization": 6,
+        "external_url_literals": 2,
+        "browser_binary_markers": 2,
+        "ad_or_video_term_matches": 13
+      },
+      "traffic_or_impression_test_performed": false
+    },
+    "legacy_autosurf_page": {
+      "deployed_bytes": 4997,
+      "static_signature_counts": {
+        "iframe_tags": 2,
+        "timer_functions": 1,
+        "ad_network_markers": 1,
+        "automatic_navigation_pattern_matches": 0
+      },
+      "behavior_executed": false
+    },
+    "production_database": {
+      "path": "/var/www/autoprofit/backend/data/company.db",
+      "owner": "root:root",
+      "mode": "0666",
+      "bytes": 786432,
+      "journal_mode": "wal",
+      "integrity": "ok",
+      "table_count": 9,
+      "core_database": {
+        "expected_default_path": "/var/www/autoprofit/data/company.db",
+        "status": "NOT_PRESENT"
+      }
+    },
+    "payment_runtime": {
+      "admin_key_configured": false,
+      "order_secret_configured": false,
+      "payment_flag_configured": false,
+      "bank_environment_fields_configured": false,
+      "binance_pay_environment_field_configured": false,
+      "legacy_production_config_contains_payout_identifiers": true,
+      "payment_or_transfer_action_performed": false
+    },
+    "worker_and_kill_switch_environment": {
+      "engine_worker_flag_present": false,
+      "engine_kill_switch_present": false,
+      "budget_kill_switch_present": false,
+      "test_mode_flag_present": false
+    },
+    "canary": {
+      "backend_active": true,
+      "nginx_active": true,
+      "enabled_at_boot": false,
+      "backend_user": "autoprofit-canary",
+      "backend_listen": "127.0.0.1:8451",
+      "nginx_listen": "127.0.0.1:8889",
+      "api_ready_status": 200,
+      "engine_worker": false,
+      "engine_kill_switch": true,
+      "budget_kill_switch": true,
+      "untrusted_cors_origin_reflected": false
+    },
+    "https": {
+      "user_entrypoint_tls": false,
+      "http_port_8888": true,
+      "https_on_port_8888": false,
+      "sslip_io_hostname_tls": "unrecognized_name",
+      "gpt_vorte_me_certificate_valid": true,
+      "gpt_vorte_me_certificate_san": ["gpt.vorte.me"],
+      "gpt_vorte_me_upstream": "127.0.0.1:3000",
+      "gpt_vorte_me_is_autoprofit": false,
+      "shared_nginx_vhosts_modified": false
+    },
+    "nginx": {
+      "config_test": "PASS",
+      "preexisting_shared_tls_option_warnings": true,
+      "reload_performed": false
+    },
+    "firewall": {
+      "ufw_installed": false,
+      "iptables_input_policy": "ACCEPT",
+      "provider_firewall_verified": false
+    },
+    "systemd_and_logging": {
+      "backend_stdout": "journal",
+      "backend_stderr": "inherit",
+      "journald_disk_usage": "311.9M",
+      "journald_system_max_use": "300M",
+      "autoprofit_user_exists": false,
+      "autoprofit_group_exists": false,
+      "autoprofit_state_directory_exists": false,
+      "systemd_template_dry_run": "PASS",
+      "unrelated_existing_unit_warning": "/etc/systemd/system/codex-lb.service has invalid syntax; not modified"
+    },
+    "local_llm": {
+      "ollama_runtime_found": false,
+      "llama_cpp_runtime_found": false,
+      "model_files_found_in_checked_locations": false,
+      "installation_or_download_performed": false
+    }
+  },
+  "backup": {
+    "created_at_utc": "2026-11-09T16:57:17Z",
+    "path": "/var/backups/autoprofit-phase11-20261109T165717Z",
+    "method": "sqlite3.Connection.backup online snapshot from live WAL database",
+    "services_stopped": false,
+    "source_database_mutated": false,
+    "directory_mode": "0700",
+    "database_file_mode": "0600",
+    "manifest_file_mode": "0600",
+    "database_file": "backend-company.db",
+    "database_sha256": "79ff557f6a5eeb653768e337db86ad7406c07cd4448b1c6e5e56aab95db3d778",
+    "manifest_sha256": "4253bf27a320cceca05dc9ad1130fb4f2b1be9fb5b291aca06eb7e6178dfe712",
+    "backup_integrity": "ok",
+    "restore_copy_integrity": "ok",
+    "restore_copy_mode": "0600",
+    "restore_test": "PASS",
+    "live_vs_backup_table_row_counts_match_at_recheck": true,
+    "core_database": "NOT_PRESENT; no empty DB created",
+    "offsite_copy": false
+  },
+  "history_scan": {
+    "refs_scanned": ["main", "origin/main", "codex/autoprofit-phase-00-safety", "codex/autoprofit-phase-01-engine", "codex/autoprofit-phase-02-llm-runtime", "codex/autoprofit-phase-03-agents", "codex/autoprofit-phase-07-order-to-cash", "codex/autoprofit-phase-09-production-readiness"],
+    "text_blobs_scanned": 208,
+    "high_confidence_auth_secret_matches": 0,
+    "historical_payout_identifier_assignments": 18,
+    "historical_payout_config_commit": "1424d3355616",
+    "classification": "bank/payee and referral identifiers, not private keys, API credentials, or access tokens; values intentionally omitted"
+  },
+  "tests_before_commit": {
+    "full_pytest": "153 passed, 1 skipped, 70 subtests passed",
+    "skip_reason": "POSIX-only systemd release symlink rollback test on Windows",
+    "targeted_phase00_phase11": "38 passed, 50 subtests passed",
+    "py_compile": "PASS",
+    "git_diff_check": "PASS with line-ending normalization warnings only"
+  },
+  "ci_before_changes": {
+    "preflight_head": "49c815d514a0659fb368ce3a9ddb403d2652096b",
+    "jobs": ["verify: PASS", "verify: PASS"]
+  },
+  "cost_vnd": 0,
+  "production_changes": {
+    "service_state_changed": false,
+    "production_unit_changed": false,
+    "nginx_changed": false,
+    "firewall_changed": false,
+    "application_deployed": false,
+    "git_history_rewritten": false,
+    "traffic_impression_created_for_test": false
+  }
+}

@@ -938,6 +938,9 @@ def build_all_tools():
         file_path = APPS_DIR / f"{tool['slug']}.html"
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
+        # These files are public static pages served by Nginx. The service
+        # runs with UMask=0077, so opt in to read-only public mode explicitly.
+        file_path.chmod(0o644)
     print(f"Generated {len(TOOL_DEFINITIONS)} web apps successfully in {APPS_DIR}.")
 
 if __name__ == "__main__":

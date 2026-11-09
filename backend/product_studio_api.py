@@ -12,10 +12,11 @@ from fastapi import APIRouter, Body, HTTPException, Request
 from fastapi.responses import FileResponse
 
 from database import get_connection
+from core.config import OUTPUTS_DIR
 from modules.product_builder import ProductBuilder, ProductBuildError
 
 router = APIRouter()
-STAGING_DIR = Path(__file__).resolve().parents[1] / "outputs" / "staging"
+STAGING_DIR = OUTPUTS_DIR / "staging"
 
 
 def _load_opportunity(opportunity_id: str) -> dict[str, Any]:
