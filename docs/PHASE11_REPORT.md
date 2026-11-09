@@ -1,6 +1,6 @@
 # PHASE 11 — Production Security Remediation and Safe Release
 
-**Release decision: NO-GO for production.** Milestone 1 is complete: live preflight, code/config patches, an authorized online SQLite backup with isolated restore verification, and dry-run checks. The production traffic worker and backend remain untouched. Milestone 2 requires one explicit owner approval before any production service, filesystem permission, Nginx, or deployment change.
+**Release decision: NO-GO for production. Milestone 2 status: `BLOCKED_FOR_APPROVAL`.** Milestone 1 is complete: live preflight, code/config patches, an authorized online SQLite backup with isolated restore verification, and dry-run checks. The production traffic worker and backend remain untouched. Milestone 2 requires one explicit owner approval before any production service, filesystem permission, Nginx, or deployment change.
 
 Phase 11 implementation commit: `0cd8d36c2bfde50212449bb627a37b50d5f5ad22` on PR #1. Both required `verify` CI jobs passed on this commit: [job 1](https://github.com/vanle1101/AIdotoeat/actions/runs/42665753947/job/129328827811) and [job 2](https://github.com/vanle1101/AIdotoeat/actions/runs/42665761253/job/129328850403). The report/evidence finalization commit contains no runtime code changes.
 
