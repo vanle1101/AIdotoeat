@@ -1,0 +1,1634 @@
+{
+  "url": "http://127.0.0.1:18889/",
+  "created_at_utc": "2026-11-09T00:30:41Z",
+  "policy": "same-origin requests only; all third-party network access blocked",
+  "renderer_mode": "browser-default-gpu",
+  "browser_channel": "chrome",
+  "views": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "device": "desktop-1920x1080"
+      },
+      "console_errors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+      ],
+      "page_errors": [],
+      "failed_requests": [
+        {
+          "url": "https://ipwho.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://ipapi.co/json/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://www.cloudflare.com/cdn-cgi/trace",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://www.cloudflare.com/cdn-cgi/trace",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "http_errors": [
+        {
+          "status": 503,
+          "url": "http://127.0.0.1:18889/api/optimization/admin/proposals"
+        },
+        {
+          "status": 503,
+          "url": "http://127.0.0.1:18889/api/cash/admin/orders"
+        }
+      ],
+      "blocked_external_requests": [
+        "https://ipwho.is/",
+        "https://api.country.is/",
+        "https://ipapi.co/json/",
+        "https://api.country.is/",
+        "https://www.cloudflare.com/cdn-cgi/trace",
+        "https://api.country.is/",
+        "https://www.cloudflare.com/cdn-cgi/trace",
+        "https://api.country.is/"
+      ],
+      "checks": {
+        "dashboard_loaded": true,
+        "health_api": true,
+        "readiness_api": true,
+        "anonymous_admin_denied": true,
+        "anonymous_cash_admin_denied": true,
+        "live_payment_destination_disabled": true,
+        "command_center_present": true,
+        "scene_canvas_present": true,
+        "three_scene_initialized": true,
+        "webgl_context_healthy": true,
+        "camera_rotate_90": true,
+        "camera_rotate_180": true,
+        "zoom_in": true,
+        "camera_presets": true,
+        "ad_network_object_click": true,
+        "agents_camera_near_target": true,
+        "workstation_object_click": true,
+        "reset_to_panorama": true,
+        "fps_probe_rendered": true,
+        "fps_interactive_24_plus": true,
+        "keyboard_camera_tabs": true,
+        "no_horizontal_overflow": true
+      },
+      "http_status": 200,
+      "api_smoke": {
+        "health": {
+          "status": 200
+        },
+        "readiness": {
+          "status": 200
+        },
+        "anonymous_admin": {
+          "status": 503
+        },
+        "anonymous_cash_admin": {
+          "status": 503
+        },
+        "cash_catalog": {
+          "status": 200,
+          "payment_configured": false
+        }
+      },
+      "scene_initial": {
+        "state": {
+          "camera": {
+            "x": 6.264962321053573,
+            "y": 14.61746252423472,
+            "z": 34.42863403613906
+          },
+          "target": {
+            "x": 0,
+            "y": 2.6,
+            "z": 0
+          },
+          "cameraRadius": 37,
+          "visibleCommandOrbits": 3,
+          "selectedZone": "command",
+          "selectedObjectId": "zone:command",
+          "inspectionZone": null,
+          "inspectionCutawayZone": null,
+          "visibleZones": [
+            "command",
+            "agents",
+            "ads",
+            "products",
+            "live",
+            "global",
+            "revenue"
+          ],
+          "highlightedWorkstationId": null,
+          "activeTaskCount": null,
+          "zones": [
+            "command",
+            "agents",
+            "ads",
+            "products",
+            "live",
+            "global",
+            "revenue"
+          ],
+          "pickableMeshes": 18,
+          "zonePickMeshes": 212,
+          "workstations": [
+            {
+              "objectId": "agents-workstation-01",
+              "name": "AI Agent Workstation 01",
+              "zone": "agents",
+              "worldPosition": [
+                -10.399999999999999,
+                1.48,
+                -8.4
+              ],
+              "screenPosition": {
+                "x": 673.0916336851355,
+                "y": 619.0271433596904,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-02",
+              "name": "AI Agent Workstation 02",
+              "zone": "agents",
+              "worldPosition": [
+                -8.2,
+                1.48,
+                -7.050000000000001
+              ],
+              "screenPosition": {
+                "x": 704.4471283019905,
+                "y": 627.9854027199876,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-03",
+              "name": "AI Agent Workstation 03",
+              "zone": "agents",
+              "worldPosition": [
+                -5.999999999999999,
+                1.48,
+                -8.4
+              ],
+              "screenPosition": {
+                "x": 752.8679458925624,
+                "y": 623.0456295356671,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-04",
+              "name": "AI Agent Workstation 04",
+              "zone": "agents",
+              "worldPosition": [
+                -10.399999999999999,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 665.4172634484054,
+                "y": 588.8003566663208,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-05",
+              "name": "AI Agent Workstation 05",
+              "zone": "agents",
+              "worldPosition": [
+                -8.2,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 706.1072090427389,
+                "y": 590.6011271542363,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-06",
+              "name": "AI Agent Workstation 06",
+              "zone": "agents",
+              "worldPosition": [
+                -5.999999999999999,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 747.4815512541908,
+                "y": 592.4321862358605,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-01",
+              "name": "Ad Campaign Workstation 01",
+              "zone": "ads",
+              "worldPosition": [
+                6.6,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 996.3411906882232,
+                "y": 640.1643160890268,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-02",
+              "name": "Ad Campaign Workstation 02",
+              "zone": "ads",
+              "worldPosition": [
+                8.2,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 1029.9236154792113,
+                "y": 641.887218420631,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-03",
+              "name": "Ad Campaign Workstation 03",
+              "zone": "ads",
+              "worldPosition": [
+                9.799999999999999,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 1063.9417815320417,
+                "y": 643.6324758871215,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-01",
+              "name": "Web App Builder Workstation 01",
+              "zone": "products",
+              "worldPosition": [
+                -10.9,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 508.48234954401687,
+                "y": 724.1593257432846,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-02",
+              "name": "Web App Builder Workstation 02",
+              "zone": "products",
+              "worldPosition": [
+                -9.1,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 554.0738258466583,
+                "y": 727.5509551066731,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-03",
+              "name": "Web App Builder Workstation 03",
+              "zone": "products",
+              "worldPosition": [
+                -7.3,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 600.5542495460147,
+                "y": 731.0087148158568,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-01",
+              "name": "Affiliate Workstation 01",
+              "zone": "revenue",
+              "worldPosition": [
+                7.6,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 1023.2484355413567,
+                "y": 771.6514734494043,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-02",
+              "name": "Affiliate Workstation 02",
+              "zone": "revenue",
+              "worldPosition": [
+                9.1,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 1070.6615991940953,
+                "y": 775.2618957906848,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-03",
+              "name": "Affiliate Workstation 03",
+              "zone": "revenue",
+              "worldPosition": [
+                10.6,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 1118.941139472494,
+                "y": 778.9382910661519,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            }
+          ],
+          "landmarks": [
+            {
+              "objectId": "ai-core",
+              "name": "AI Core",
+              "zone": "command",
+              "worldPosition": [
+                0,
+                8.42,
+                -3.2
+              ],
+              "screenPosition": {
+                "x": 850.9440584330154,
+                "y": 522.4806840849385,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            },
+            {
+              "objectId": "ad-network",
+              "name": "Ad Network",
+              "zone": "ads",
+              "worldPosition": [
+                8.2,
+                3.7,
+                -4.48
+              ],
+              "screenPosition": {
+                "x": 1033.4645301533242,
+                "y": 627.4922342463669,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            },
+            {
+              "objectId": "traffic-globe",
+              "name": "Global Traffic Globe",
+              "zone": "global",
+              "worldPosition": [
+                0,
+                3.55,
+                9.1
+              ],
+              "screenPosition": {
+                "x": 787.6839138727697,
+                "y": 733.4095465752259,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            }
+          ],
+          "render": {
+            "calls": 265,
+            "triangles": 240176,
+            "hasRenderedFrame": true,
+            "frames": 3,
+            "measuredFps": 0
+          },
+          "staticBatching": {
+            "sourceMeshes": 70,
+            "mergedMeshes": 11,
+            "pickMeshes": 9,
+            "holoScreenBatching": {
+              "sourceMeshes": 21,
+              "mergedMeshes": 6
+            },
+            "instanceBatching": {
+              "sourceMeshes": 27,
+              "mergedMeshes": 12,
+              "bakedInstances": 619,
+              "pickMeshes": 10,
+              "diagnostics": {
+                "candidates": 109,
+                "eligible": 94,
+                "skippedAnimated": 1,
+                "skippedTransparent": 13,
+                "skippedAttributes": 1,
+                "bakedInstanceColorMeshes": 0
+              }
+            }
+          },
+          "memory": {
+            "geometries": 223,
+            "textures": 9
+          },
+          "renderer": true,
+          "projection": true
+        },
+        "webgl": {
+          "contextLost": false,
+          "error": 0,
+          "maxTextureSize": 16384,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        },
+        "statusText": "WEBGL 3D · ĐANG HOẠT ĐỘNG"
+      },
+      "camera_rotation_degrees": {
+        "initial_yaw": 10.31324031235482,
+        "after_first_drag": -79.7557250822106,
+        "first_delta": -90.06896539456542,
+        "after_second_drag": -169.82469047677603,
+        "second_delta": -90.06896539456542,
+        "total_from_start": 179.86206921086915
+      },
+      "zoom": {
+        "before_radius": 37,
+        "after_radius": 21.997260274897194
+      },
+      "camera_presets": {
+        "agents": {
+          "selected_zone": "agents",
+          "selected_object_id": "zone:agents",
+          "camera_radius": 4.865074977617385,
+          "camera_near_target": true
+        },
+        "ads": {
+          "selected_zone": "ads",
+          "selected_object_id": "zone:ads",
+          "camera_radius": 11.914491704683863,
+          "camera_near_target": true
+        },
+        "products": {
+          "selected_zone": "products",
+          "selected_object_id": "zone:products",
+          "camera_radius": 14.143751254830484,
+          "camera_near_target": true
+        },
+        "live": {
+          "selected_zone": "live",
+          "selected_object_id": "zone:live",
+          "camera_radius": 11.787249753736559,
+          "camera_near_target": true
+        },
+        "revenue": {
+          "selected_zone": "revenue",
+          "selected_object_id": "zone:revenue",
+          "camera_radius": 11.9797122405452,
+          "camera_near_target": true
+        },
+        "panorama": {
+          "selected_zone": "command",
+          "selected_object_id": "zone:command",
+          "camera_radius": 33.567357563334774,
+          "camera_near_target": true
+        }
+      },
+      "ad_network_click": {
+        "target_object_id": "ad-network",
+        "target_name": "Ad Network",
+        "assignment_status": "not_applicable",
+        "screen_position": {
+          "x": 933.5570025737144,
+          "y": 641.9281515427135,
+          "inView": true
+        },
+        "selected_object_id": "ad-network",
+        "selected_zone": "ads"
+      },
+      "workstation_click": {
+        "target_object_id": "agents-workstation-01",
+        "target_name": "AI Agent Workstation 01",
+        "assignment_status": "unassigned",
+        "screen_position": {
+          "x": 541.6788418864217,
+          "y": 701.4990232061309,
+          "depth": 13.0678183789039,
+          "ndcX": -0.5064198367489685,
+          "ndcY": -0.09478364362126653,
+          "inside": true
+        },
+        "selected_object_id": "agents-workstation-01",
+        "highlighted_workstation_id": "agents-workstation-01"
+      },
+      "fps_probe": {
+        "elapsed_ms": 1504,
+        "frame_delta": 91,
+        "measured_fps": 60,
+        "sampled_fps": 61,
+        "draw_calls": 264,
+        "triangles": 239456,
+        "memory": {
+          "geometries": 224,
+          "textures": 10
+        }
+      },
+      "render_stats": {
+        "calls": 264,
+        "triangles": 239456,
+        "hasRenderedFrame": true,
+        "frames": 483,
+        "measuredFps": 60
+      },
+      "renderer_memory": {
+        "geometries": 224,
+        "textures": 10
+      },
+      "static_batching": {
+        "sourceMeshes": 70,
+        "mergedMeshes": 11,
+        "pickMeshes": 9,
+        "holoScreenBatching": {
+          "sourceMeshes": 21,
+          "mergedMeshes": 6
+        },
+        "instanceBatching": {
+          "sourceMeshes": 27,
+          "mergedMeshes": 12,
+          "bakedInstances": 619,
+          "pickMeshes": 10,
+          "diagnostics": {
+            "candidates": 109,
+            "eligible": 94,
+            "skippedAnimated": 1,
+            "skippedTransparent": 13,
+            "skippedAttributes": 1,
+            "bakedInstanceColorMeshes": 0
+          }
+        }
+      },
+      "layout": {
+        "viewportWidth": 1920,
+        "documentWidth": 1920,
+        "horizontalOverflow": false,
+        "reducedMotion": false,
+        "webglStatus": "WEBGL 3D · ĐANG HOẠT ĐỘNG",
+        "sceneRect": {
+          "width": 1171.734375,
+          "height": 635,
+          "top": 354,
+          "bottom": 989
+        }
+      },
+      "elapsed_seconds": 27.38
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900,
+        "device": "desktop-1440x900"
+      },
+      "console_errors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+      ],
+      "page_errors": [],
+      "failed_requests": [
+        {
+          "url": "https://ipwho.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://ipapi.co/json/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://www.cloudflare.com/cdn-cgi/trace",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://www.cloudflare.com/cdn-cgi/trace",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "http_errors": [
+        {
+          "status": 503,
+          "url": "http://127.0.0.1:18889/api/optimization/admin/proposals"
+        },
+        {
+          "status": 503,
+          "url": "http://127.0.0.1:18889/api/cash/admin/orders"
+        }
+      ],
+      "blocked_external_requests": [
+        "https://ipwho.is/",
+        "https://api.country.is/",
+        "https://ipapi.co/json/",
+        "https://api.country.is/",
+        "https://www.cloudflare.com/cdn-cgi/trace",
+        "https://api.country.is/",
+        "https://www.cloudflare.com/cdn-cgi/trace",
+        "https://api.country.is/"
+      ],
+      "checks": {
+        "dashboard_loaded": true,
+        "health_api": true,
+        "readiness_api": true,
+        "anonymous_admin_denied": true,
+        "anonymous_cash_admin_denied": true,
+        "live_payment_destination_disabled": true,
+        "command_center_present": true,
+        "scene_canvas_present": true,
+        "three_scene_initialized": true,
+        "webgl_context_healthy": true,
+        "no_horizontal_overflow": true
+      },
+      "http_status": 200,
+      "api_smoke": {
+        "health": {
+          "status": 200
+        },
+        "readiness": {
+          "status": 200
+        },
+        "anonymous_admin": {
+          "status": 503
+        },
+        "anonymous_cash_admin": {
+          "status": 503
+        },
+        "cash_catalog": {
+          "status": 200,
+          "payment_configured": false
+        }
+      },
+      "scene_initial": {
+        "state": {
+          "camera": {
+            "x": 6.264962321053573,
+            "y": 14.61746252423472,
+            "z": 34.42863403613906
+          },
+          "target": {
+            "x": 0,
+            "y": 2.6,
+            "z": 0
+          },
+          "cameraRadius": 37,
+          "visibleCommandOrbits": 3,
+          "selectedZone": "command",
+          "selectedObjectId": "zone:command",
+          "inspectionZone": null,
+          "inspectionCutawayZone": null,
+          "visibleZones": [
+            "command",
+            "agents",
+            "ads",
+            "products",
+            "live",
+            "global",
+            "revenue"
+          ],
+          "highlightedWorkstationId": null,
+          "activeTaskCount": null,
+          "zones": [
+            "command",
+            "agents",
+            "ads",
+            "products",
+            "live",
+            "global",
+            "revenue"
+          ],
+          "pickableMeshes": 18,
+          "zonePickMeshes": 212,
+          "workstations": [
+            {
+              "objectId": "agents-workstation-01",
+              "name": "AI Agent Workstation 01",
+              "zone": "agents",
+              "worldPosition": [
+                -10.399999999999999,
+                1.48,
+                -8.4
+              ],
+              "screenPosition": {
+                "x": 549.5029715192899,
+                "y": 543.9483348213898,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-02",
+              "name": "AI Agent Workstation 02",
+              "zone": "agents",
+              "worldPosition": [
+                -8.2,
+                1.48,
+                -7.050000000000001
+              ],
+              "screenPosition": {
+                "x": 571.9434999988426,
+                "y": 550.3592218517447,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-03",
+              "name": "AI Agent Workstation 03",
+              "zone": "agents",
+              "worldPosition": [
+                -5.999999999999999,
+                1.48,
+                -8.4
+              ],
+              "screenPosition": {
+                "x": 606.5973541134692,
+                "y": 546.8241235065675,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-04",
+              "name": "AI Agent Workstation 04",
+              "zone": "agents",
+              "worldPosition": [
+                -10.399999999999999,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 544.0105713526091,
+                "y": 522.3168429223433,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-05",
+              "name": "AI Agent Workstation 05",
+              "zone": "agents",
+              "worldPosition": [
+                -8.2,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 573.1315880706886,
+                "y": 523.6055459729369,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-06",
+              "name": "AI Agent Workstation 06",
+              "zone": "agents",
+              "worldPosition": [
+                -5.999999999999999,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 602.7424143728756,
+                "y": 524.9159247469902,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-01",
+              "name": "Ad Campaign Workstation 01",
+              "zone": "ads",
+              "worldPosition": [
+                6.6,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 780.8465040825206,
+                "y": 559.0749371063652,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-02",
+              "name": "Ad Campaign Workstation 02",
+              "zone": "ads",
+              "worldPosition": [
+                8.2,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 804.8808039442589,
+                "y": 560.3079146043378,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-03",
+              "name": "Ad Campaign Workstation 03",
+              "zone": "ads",
+              "worldPosition": [
+                9.799999999999999,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 829.2269555026635,
+                "y": 561.5568903268025,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-01",
+              "name": "Web App Builder Workstation 01",
+              "zone": "products",
+              "worldPosition": [
+                -10.9,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 431.6952515676512,
+                "y": 619.1851098921136,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-02",
+              "name": "Web App Builder Workstation 02",
+              "zone": "products",
+              "worldPosition": [
+                -9.1,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 464.3242001744552,
+                "y": 621.612294886766,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-03",
+              "name": "Web App Builder Workstation 03",
+              "zone": "products",
+              "worldPosition": [
+                -7.3,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 497.58935145057,
+                "y": 624.0868053895467,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-01",
+              "name": "Affiliate Workstation 01",
+              "zone": "revenue",
+              "worldPosition": [
+                7.6,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 800.1035051858764,
+                "y": 653.1723814732704,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-02",
+              "name": "Affiliate Workstation 02",
+              "zone": "revenue",
+              "worldPosition": [
+                9.1,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 834.0362006274927,
+                "y": 655.7561434331441,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-03",
+              "name": "Affiliate Workstation 03",
+              "zone": "revenue",
+              "worldPosition": [
+                10.6,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 868.5889452687692,
+                "y": 658.3871182511324,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            }
+          ],
+          "landmarks": [
+            {
+              "objectId": "ai-core",
+              "name": "AI Core",
+              "zone": "command",
+              "worldPosition": [
+                0,
+                8.42,
+                -3.2
+              ],
+              "screenPosition": {
+                "x": 676.788554205232,
+                "y": 474.85584500865264,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            },
+            {
+              "objectId": "ad-network",
+              "name": "Ad Network",
+              "zone": "ads",
+              "worldPosition": [
+                8.2,
+                3.7,
+                -4.48
+              ],
+              "screenPosition": {
+                "x": 807.4149689306207,
+                "y": 550.0062908587745,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            },
+            {
+              "objectId": "traffic-globe",
+              "name": "Global Traffic Globe",
+              "zone": "global",
+              "worldPosition": [
+                0,
+                3.55,
+                9.1
+              ],
+              "screenPosition": {
+                "x": 631.5144772700296,
+                "y": 625.8049361746878,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            }
+          ],
+          "render": {
+            "calls": 265,
+            "triangles": 240176,
+            "hasRenderedFrame": true,
+            "frames": 3,
+            "measuredFps": null
+          },
+          "staticBatching": {
+            "sourceMeshes": 70,
+            "mergedMeshes": 11,
+            "pickMeshes": 9,
+            "holoScreenBatching": {
+              "sourceMeshes": 21,
+              "mergedMeshes": 6
+            },
+            "instanceBatching": {
+              "sourceMeshes": 27,
+              "mergedMeshes": 12,
+              "bakedInstances": 619,
+              "pickMeshes": 10,
+              "diagnostics": {
+                "candidates": 109,
+                "eligible": 94,
+                "skippedAnimated": 1,
+                "skippedTransparent": 13,
+                "skippedAttributes": 1,
+                "bakedInstanceColorMeshes": 0
+              }
+            }
+          },
+          "memory": {
+            "geometries": 223,
+            "textures": 9
+          },
+          "renderer": true,
+          "projection": true
+        },
+        "webgl": {
+          "contextLost": false,
+          "error": 0,
+          "maxTextureSize": 16384,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        },
+        "statusText": "WEBGL 3D · ĐANG HOẠT ĐỘNG"
+      },
+      "layout": {
+        "viewportWidth": 1440,
+        "documentWidth": 1440,
+        "horizontalOverflow": false,
+        "reducedMotion": false,
+        "webglStatus": "WEBGL 3D · ĐANG HOẠT ĐỘNG",
+        "sceneRect": {
+          "width": 830.859375,
+          "height": 455,
+          "top": 354,
+          "bottom": 809
+        }
+      },
+      "elapsed_seconds": 32.75
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "device": "mobile-390x844"
+      },
+      "console_errors": [
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+        "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+      ],
+      "page_errors": [],
+      "failed_requests": [
+        {
+          "url": "https://ipwho.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://ipapi.co/json/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://www.cloudflare.com/cdn-cgi/trace",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://www.cloudflare.com/cdn-cgi/trace",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        },
+        {
+          "url": "https://api.country.is/",
+          "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+        }
+      ],
+      "http_errors": [
+        {
+          "status": 503,
+          "url": "http://127.0.0.1:18889/api/optimization/admin/proposals"
+        },
+        {
+          "status": 503,
+          "url": "http://127.0.0.1:18889/api/cash/admin/orders"
+        }
+      ],
+      "blocked_external_requests": [
+        "https://ipwho.is/",
+        "https://api.country.is/",
+        "https://ipapi.co/json/",
+        "https://api.country.is/",
+        "https://www.cloudflare.com/cdn-cgi/trace",
+        "https://api.country.is/",
+        "https://www.cloudflare.com/cdn-cgi/trace",
+        "https://api.country.is/"
+      ],
+      "checks": {
+        "dashboard_loaded": true,
+        "health_api": true,
+        "readiness_api": true,
+        "anonymous_admin_denied": true,
+        "anonymous_cash_admin_denied": true,
+        "live_payment_destination_disabled": true,
+        "command_center_present": true,
+        "scene_canvas_present": true,
+        "three_scene_initialized": true,
+        "webgl_context_healthy": true,
+        "no_horizontal_overflow": true
+      },
+      "http_status": 200,
+      "api_smoke": {
+        "health": {
+          "status": 200
+        },
+        "readiness": {
+          "status": 200
+        },
+        "anonymous_admin": {
+          "status": 503
+        },
+        "anonymous_cash_admin": {
+          "status": 503
+        },
+        "cash_catalog": {
+          "status": 200,
+          "payment_configured": false
+        }
+      },
+      "scene_initial": {
+        "state": {
+          "camera": {
+            "x": 6.264962321053573,
+            "y": 14.61746252423472,
+            "z": 34.42863403613906
+          },
+          "target": {
+            "x": 0,
+            "y": 2.6,
+            "z": 0
+          },
+          "cameraRadius": 37,
+          "visibleCommandOrbits": 3,
+          "selectedZone": "command",
+          "selectedObjectId": "zone:command",
+          "inspectionZone": null,
+          "inspectionCutawayZone": null,
+          "visibleZones": [
+            "command",
+            "agents",
+            "ads",
+            "products",
+            "live",
+            "global",
+            "revenue"
+          ],
+          "highlightedWorkstationId": null,
+          "activeTaskCount": null,
+          "zones": [
+            "command",
+            "agents",
+            "ads",
+            "products",
+            "live",
+            "global",
+            "revenue"
+          ],
+          "pickableMeshes": 18,
+          "zonePickMeshes": 212,
+          "workstations": [
+            {
+              "objectId": "agents-workstation-01",
+              "name": "AI Agent Workstation 01",
+              "zone": "agents",
+              "worldPosition": [
+                -10.399999999999999,
+                1.48,
+                -8.4
+              ],
+              "screenPosition": {
+                "x": 101.78824056604329,
+                "y": 288.3234080928423,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-02",
+              "name": "AI Agent Workstation 02",
+              "zone": "agents",
+              "worldPosition": [
+                -8.2,
+                1.48,
+                -7.050000000000001
+              ],
+              "screenPosition": {
+                "x": 119.52570679506195,
+                "y": 293.3898486157276,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-03",
+              "name": "AI Agent Workstation 03",
+              "zone": "agents",
+              "worldPosition": [
+                -5.999999999999999,
+                1.48,
+                -8.4
+              ],
+              "screenPosition": {
+                "x": 146.9168427758213,
+                "y": 290.5961064356538,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-04",
+              "name": "AI Agent Workstation 04",
+              "zone": "agents",
+              "worldPosition": [
+                -10.399999999999999,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 97.44693182362548,
+                "y": 271.2283217796885,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-05",
+              "name": "AI Agent Workstation 05",
+              "zone": "agents",
+              "worldPosition": [
+                -8.2,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 120.46479662401464,
+                "y": 272.24676701614,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "agents-workstation-06",
+              "name": "AI Agent Workstation 06",
+              "zone": "agents",
+              "worldPosition": [
+                -5.999999999999999,
+                3.3200000000000003,
+                -7.6000000000000005
+              ],
+              "screenPosition": {
+                "x": 143.86981723335305,
+                "y": 273.2823422945309,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-01",
+              "name": "Ad Campaign Workstation 01",
+              "zone": "ads",
+              "worldPosition": [
+                6.6,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 284.6470399869728,
+                "y": 300.2777648655159,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-02",
+              "name": "Ad Campaign Workstation 02",
+              "zone": "ads",
+              "worldPosition": [
+                8.2,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 303.6442566757033,
+                "y": 301.2521709235165,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "ads-workstation-03",
+              "name": "Ad Campaign Workstation 03",
+              "zone": "ads",
+              "worldPosition": [
+                9.799999999999999,
+                1.6,
+                -7.15
+              ],
+              "screenPosition": {
+                "x": 322.8879675119813,
+                "y": 302.23922016996755,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-01",
+              "name": "Web App Builder Workstation 01",
+              "zone": "products",
+              "worldPosition": [
+                -10.9,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 8.67053809910348,
+                "y": 347.78205152621786,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-02",
+              "name": "Web App Builder Workstation 02",
+              "zone": "products",
+              "worldPosition": [
+                -9.1,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 34.4611461290756,
+                "y": 349.7002242151484,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "products-workstation-03",
+              "name": "Web App Builder Workstation 03",
+              "zone": "products",
+              "worldPosition": [
+                -7.3,
+                1.72,
+                7.2
+              ],
+              "screenPosition": {
+                "x": 60.754622145066705,
+                "y": 351.65579763677204,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-01",
+              "name": "Affiliate Workstation 01",
+              "zone": "revenue",
+              "worldPosition": [
+                7.6,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 299.86817914393066,
+                "y": 374.6417495969775,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-02",
+              "name": "Affiliate Workstation 02",
+              "zone": "revenue",
+              "worldPosition": [
+                9.1,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 326.6892961244717,
+                "y": 376.68366302221983,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            },
+            {
+              "objectId": "revenue-workstation-03",
+              "name": "Affiliate Workstation 03",
+              "zone": "revenue",
+              "worldPosition": [
+                10.6,
+                1.62,
+                7.7
+              ],
+              "screenPosition": {
+                "x": 354.0005130484844,
+                "y": 378.76288815431656,
+                "inView": true
+              },
+              "assignmentStatus": "unassigned"
+            }
+          ],
+          "landmarks": [
+            {
+              "objectId": "ai-core",
+              "name": "AI Core",
+              "zone": "command",
+              "worldPosition": [
+                0,
+                8.42,
+                -3.2
+              ],
+              "screenPosition": {
+                "x": 202.39744530870556,
+                "y": 233.72051327394624,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            },
+            {
+              "objectId": "ad-network",
+              "name": "Ad Network",
+              "zone": "ads",
+              "worldPosition": [
+                8.2,
+                3.7,
+                -4.48
+              ],
+              "screenPosition": {
+                "x": 305.6473140415453,
+                "y": 293.1109318486562,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            },
+            {
+              "objectId": "traffic-globe",
+              "name": "Global Traffic Globe",
+              "zone": "global",
+              "worldPosition": [
+                0,
+                3.55,
+                9.1
+              ],
+              "screenPosition": {
+                "x": 166.6118615859397,
+                "y": 353.01361401884816,
+                "inView": true
+              },
+              "assignmentStatus": "not_applicable"
+            }
+          ],
+          "render": {
+            "calls": 262,
+            "triangles": 240012,
+            "hasRenderedFrame": true,
+            "frames": 3,
+            "measuredFps": null
+          },
+          "staticBatching": {
+            "sourceMeshes": 70,
+            "mergedMeshes": 11,
+            "pickMeshes": 9,
+            "holoScreenBatching": {
+              "sourceMeshes": 21,
+              "mergedMeshes": 6
+            },
+            "instanceBatching": {
+              "sourceMeshes": 27,
+              "mergedMeshes": 12,
+              "bakedInstances": 619,
+              "pickMeshes": 10,
+              "diagnostics": {
+                "candidates": 109,
+                "eligible": 94,
+                "skippedAnimated": 1,
+                "skippedTransparent": 13,
+                "skippedAttributes": 1,
+                "bakedInstanceColorMeshes": 0
+              }
+            }
+          },
+          "memory": {
+            "geometries": 223,
+            "textures": 9
+          },
+          "renderer": true,
+          "projection": true
+        },
+        "webgl": {
+          "contextLost": false,
+          "error": 0,
+          "maxTextureSize": 16384,
+          "renderer": "ANGLE (Intel, Intel(R) UHD Graphics (0x0000A7A8) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        },
+        "statusText": "WEBGL 3D · ĐANG HOẠT ĐỘNG"
+      },
+      "layout": {
+        "viewportWidth": 390,
+        "documentWidth": 390,
+        "horizontalOverflow": false,
+        "reducedMotion": false,
+        "webglStatus": "WEBGL 3D · ĐANG HOẠT ĐỘNG",
+        "sceneRect": {
+          "width": 378,
+          "height": 360,
+          "top": 138,
+          "bottom": 498
+        }
+      },
+      "elapsed_seconds": 34.99
+    }
+  ]
+}

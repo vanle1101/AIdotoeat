@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import math
 import time
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -29,6 +30,16 @@ def _safe_url(url: str) -> str:
     if parsed.port:
         host += f":{parsed.port}"
     return f"{parsed.scheme}://{host}{parsed.path[:220]}"
+
+
+def _camera_yaw_degrees(state: dict) -> float:
+    camera = state["camera"]
+    target = state["target"]
+    return math.degrees(math.atan2(camera["x"] - target["x"], camera["z"] - target["z"]))
+
+
+def _angle_delta_degrees(after: float, before: float) -> float:
+    return (after - before + 180.0) % 360.0 - 180.0
 
 
 async def _wait_for_camera(page, preset: str, timeout_ms: int = 12000) -> None:
@@ -82,7 +93,8 @@ async def _project_world(page, world: list[float]) -> dict | None:
 
 
 async def _check_view(browser, url: str, label: str, width: int, height: int,
-                      output_dir: Path, *, run_interactions: bool) -> dict:
+                      output_dir: Path, *, run_interactions: bool,
+                      navigation_timeout_ms: int) -> dict:
     context = await browser.new_context(
         viewport={"width": width, "height": height},
         device_scale_factor=1,
@@ -123,17 +135,23 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
 
     started = time.monotonic()
     try:
-        response = await page.goto(url, wait_until="domcontentloaded", timeout=25000)
+        response = await page.goto(url, wait_until="domcontentloaded", timeout=navigation_timeout_ms)
         evidence["http_status"] = response.status if response else None
         await page.wait_for_timeout(1400)
         evidence["checks"]["dashboard_loaded"] = bool(response and response.ok)
         evidence["api_smoke"] = await page.evaluate("""async () => {
           const checks = {};
           for (const [name,path] of [['health','/api/health'],['readiness','/api/ready'],
-                                     ['anonymous_admin','/api/optimization/admin/proposals']]) {
+                                     ['anonymous_admin','/api/optimization/admin/proposals'],
+                                     ['anonymous_cash_admin','/api/cash/admin/orders'],
+                                     ['cash_catalog','/api/cash/catalog']]) {
             try {
               const response = await fetch(path,{method:'GET',credentials:'omit',cache:'no-store'});
               checks[name] = {status:response.status};
+              if (name === 'cash_catalog' && response.ok) {
+                const body = await response.json();
+                checks[name].payment_configured = body.payment_configured === true;
+              }
             } catch (_) { checks[name] = {status:null}; }
           }
           return checks;
@@ -141,6 +159,11 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
         evidence["checks"]["health_api"] = evidence["api_smoke"]["health"]["status"] == 200
         evidence["checks"]["readiness_api"] = evidence["api_smoke"]["readiness"]["status"] == 200
         evidence["checks"]["anonymous_admin_denied"] = evidence["api_smoke"]["anonymous_admin"]["status"] in (401, 403, 503)
+        evidence["checks"]["anonymous_cash_admin_denied"] = evidence["api_smoke"]["anonymous_cash_admin"]["status"] in (401, 403, 503)
+        evidence["checks"]["live_payment_destination_disabled"] = (
+            evidence["api_smoke"]["cash_catalog"]["status"] == 200
+            and evidence["api_smoke"]["cash_catalog"].get("payment_configured") is False
+        )
         await page.screenshot(path=str(output_dir / f"{label}-dashboard.png"), full_page=False)
 
         command_center = page.locator("#apCommandCenter")
@@ -156,12 +179,14 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
               const state = api.getDebugState();
               const canvas = document.querySelector('#apSceneCanvas');
               let gl = canvas && (canvas.getContext('webgl2') || canvas.getContext('webgl'));
+              const debugRenderer = gl && gl.getExtension('WEBGL_debug_renderer_info');
               return {
                 state,
                 webgl: gl ? {
                   contextLost: gl.isContextLost(),
                   error: gl.getError(),
-                  maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE)
+                  maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
+                  renderer: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_RENDERER_WEBGL) : 'not exposed'
                 } : null,
                 statusText: document.querySelector('#apSceneDataState')?.textContent || null
               };
@@ -179,7 +204,11 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
 
             if run_interactions and evidence["checks"]["three_scene_initialized"]:
                 bounds = await canvas.bounding_box()
-                before = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().camera")
+                before = await page.evaluate("""() => {
+                  const s = window.__AUTOProfitCommandCenter.getDebugState();
+                  return {camera:s.camera,target:s.target};
+                }""")
+                yaw_before = _camera_yaw_degrees(before)
                 if bounds:
                     x0, y0 = bounds["x"] + bounds["width"] * 0.5, bounds["y"] + bounds["height"] * 0.5
                     await page.mouse.move(x0, y0)
@@ -187,17 +216,35 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
                     await page.mouse.move(x0 + 262, y0, steps=12)
                     await page.mouse.up()
                     await page.wait_for_timeout(350)
-                    after90 = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().camera")
-                    evidence["checks"]["camera_rotate_90"] = sum(abs(after90[k] - before[k]) for k in ("x", "y", "z")) > 2
+                    after90 = await page.evaluate("""() => {
+                      const s = window.__AUTOProfitCommandCenter.getDebugState();
+                      return {camera:s.camera,target:s.target};
+                    }""")
+                    yaw_after90 = _camera_yaw_degrees(after90)
+                    delta90 = _angle_delta_degrees(yaw_after90, yaw_before)
+                    evidence["camera_rotation_degrees"] = {"initial_yaw": yaw_before, "after_first_drag": yaw_after90,
+                                                            "first_delta": delta90}
+                    evidence["checks"]["camera_rotate_90"] = 85 <= abs(delta90) <= 95
                     await command_center.screenshot(path=str(output_dir / f"{label}-scene-rotate-90.png"))
 
                     await page.mouse.move(x0, y0)
                     await page.mouse.down()
-                    await page.mouse.move(x0 + 524, y0, steps=16)
+                    await page.mouse.move(x0 + 262, y0, steps=12)
                     await page.mouse.up()
                     await page.wait_for_timeout(350)
-                    after180 = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().camera")
-                    evidence["checks"]["camera_rotate_180"] = sum(abs(after180[k] - after90[k]) for k in ("x", "y", "z")) > 2
+                    after180 = await page.evaluate("""() => {
+                      const s = window.__AUTOProfitCommandCenter.getDebugState();
+                      return {camera:s.camera,target:s.target};
+                    }""")
+                    yaw_after180 = _camera_yaw_degrees(after180)
+                    delta_to_back = _angle_delta_degrees(yaw_after180, yaw_after90)
+                    delta_from_start = _angle_delta_degrees(yaw_after180, yaw_before)
+                    evidence["camera_rotation_degrees"].update({"after_second_drag": yaw_after180,
+                                                                "second_delta": delta_to_back,
+                                                                "total_from_start": delta_from_start})
+                    evidence["checks"]["camera_rotate_180"] = (
+                        85 <= abs(delta_to_back) <= 95 and abs(abs(delta_from_start) - 180) <= 10
+                    )
                     await command_center.screenshot(path=str(output_dir / f"{label}-scene-rotate-180.png"))
 
                     radius_before_zoom = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().cameraRadius")
@@ -330,6 +377,9 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
                   });
                 }""")
                 evidence["checks"]["fps_probe_rendered"] = bool(evidence["fps_probe"] and evidence["fps_probe"].get("frame_delta", 0) > 0)
+                evidence["checks"]["fps_interactive_24_plus"] = bool(
+                    evidence["fps_probe"] and evidence["fps_probe"].get("sampled_fps", 0) >= 24
+                )
                 evidence["render_stats"] = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().render")
                 evidence["renderer_memory"] = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().memory")
                 evidence["static_batching"] = await page.evaluate("window.__AUTOProfitCommandCenter.getDebugState().staticBatching")
@@ -371,26 +421,33 @@ async def _check_view(browser, url: str, label: str, width: int, height: int,
     return evidence
 
 
-async def run(url: str, output_dir: Path) -> dict:
+async def run(url: str, output_dir: Path, *, software_rendering: bool = False,
+              navigation_timeout_ms: int = 60000,
+              browser_channel: str | None = None) -> dict:
     if output_dir.exists() and any(output_dir.iterdir()):
         raise FileExistsError(f"refusing to overwrite existing evidence directory: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
     async with async_playwright() as playwright:
-        browser = await playwright.chromium.launch(headless=True, args=[
-            "--enable-webgl", "--ignore-gpu-blocklist", "--use-angle=swiftshader"
-        ])
+        launch_args = ["--enable-webgl", "--ignore-gpu-blocklist"]
+        if software_rendering:
+            launch_args.append("--use-angle=swiftshader")
+        if browser_channel == "chrome" and not software_rendering:
+            launch_args.extend(["--enable-gpu", "--disable-software-rasterizer", "--use-angle=d3d11"])
+        browser = await playwright.chromium.launch(channel=browser_channel, headless=True, args=launch_args)
         results = []
         results.append(await _check_view(browser, url, "desktop-1920x1080", 1920, 1080, output_dir,
-                                         run_interactions=True))
+                                         run_interactions=True, navigation_timeout_ms=navigation_timeout_ms))
         results.append(await _check_view(browser, url, "desktop-1440x900", 1440, 900, output_dir,
-                                         run_interactions=False))
+                                         run_interactions=False, navigation_timeout_ms=navigation_timeout_ms))
         results.append(await _check_view(browser, url, "mobile-390x844", 390, 844, output_dir,
-                                         run_interactions=False))
+                                         run_interactions=False, navigation_timeout_ms=navigation_timeout_ms))
         await browser.close()
     report = {
         "url": url,
         "created_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "policy": "same-origin requests only; all third-party network access blocked",
+        "renderer_mode": "swiftshader" if software_rendering else "browser-default-gpu",
+        "browser_channel": browser_channel or "playwright-chromium",
         "views": results,
     }
     path = output_dir / "browser-evidence.json"
@@ -404,14 +461,24 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--url", required=True, help="dashboard URL to inspect")
     parser.add_argument("--output-dir", required=True, type=Path, help="new or empty evidence folder")
+    parser.add_argument("--software-rendering", action="store_true",
+                        help="force SwiftShader; use only when hardware WebGL is unavailable")
+    parser.add_argument("--browser-channel", choices=("chrome",),
+                        help="use installed Chrome with hardware GPU flags when available")
+    parser.add_argument("--navigation-timeout-ms", type=int, default=60000,
+                        help="page navigation timeout for shader compilation and slow hosts (default: 60000)")
     args = parser.parse_args()
-    report = asyncio.run(run(args.url, args.output_dir))
+    if not 1000 <= args.navigation_timeout_ms <= 180000:
+        parser.error("--navigation-timeout-ms must be between 1000 and 180000")
+    report = asyncio.run(run(args.url, args.output_dir, software_rendering=args.software_rendering,
+                             navigation_timeout_ms=args.navigation_timeout_ms,
+                             browser_channel=args.browser_channel))
     print(json.dumps({
         "evidence": str(args.output_dir.resolve() / "browser-evidence.json"),
         "views": len(report["views"]),
         "exceptions": sum(bool(view.get("exception")) for view in report["views"]),
         "failed_checks": sum(value is False for view in report["views"] for value in view.get("checks", {}).values()),
-    }, ensure_ascii=False))
+    }, ensure_ascii=True))
     failed = any(view.get("exception") for view in report["views"]) or any(
         value is False for view in report["views"] for value in view.get("checks", {}).values()
     )
