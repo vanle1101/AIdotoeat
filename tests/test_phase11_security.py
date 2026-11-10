@@ -94,7 +94,9 @@ class Phase11ReleaseSafetyTests(unittest.TestCase):
         self.assertRegex(unit, r"(?m)^ProtectSystem=strict$")
         self.assertRegex(unit, r"(?m)^NoNewPrivileges=true$")
         self.assertRegex(unit, r"(?m)^ReadWritePaths=/var/lib/autoprofit$")
-        self.assertRegex(unit, r"(?m)^ReadWritePaths=/var/www/autoprofit/frontend/apps$")
+        self.assertRegex(unit, r"(?m)^StateDirectoryMode=0711$")
+        self.assertRegex(unit, r"(?m)^IPAddressDeny=any$")
+        self.assertRegex(unit, r"(?m)^IPAddressAllow=localhost$")
         self.assertRegex(unit, r"(?m)^Environment=AUTOPROFIT_ENGINE_WORKER=false$")
         self.assertRegex(unit, r"(?m)^Environment=AUTOPROFIT_ENGINE_KILL_SWITCH=true$")
         self.assertRegex(unit, r"(?m)^Environment=AUTOPROFIT_BUDGET_KILL_SWITCH=true$")
@@ -104,7 +106,8 @@ class Phase11ReleaseSafetyTests(unittest.TestCase):
         self.assertIn("/var/lib/autoprofit/backend-data", unit)
         self.assertIn("/var/lib/autoprofit/core-data", unit)
         self.assertIn("/var/lib/autoprofit/outputs", unit)
-        self.assertIn("AUTOPROFIT_APPS_DIR=/var/www/autoprofit/frontend/apps", unit)
+        self.assertIn("AUTOPROFIT_APPS_DIR=/var/lib/autoprofit/apps", unit)
+        self.assertIn("/var/www/autoprofit/current/.venv/bin/uvicorn", unit)
 
     def test_mutable_outputs_use_state_directory_and_public_html_is_read_only(self):
         root = Path(__file__).resolve().parents[1]
@@ -126,6 +129,29 @@ class Phase11ReleaseSafetyTests(unittest.TestCase):
         self.assertNotRegex(autosurf, r"<iframe|setinterval\s*\(|location\.(?:href|replace)\s*=")
         youtube = (root / "frontend/youtube-booster.html").read_text(encoding="utf-8").lower()
         self.assertNotRegex(youtube, r"youtube\.com/embed|autoplay|watch-and-earn|startyoutube")
+
+    def test_frontend_does_not_send_visitor_ip_to_geo_services_or_guess_ad_region(self):
+        root = Path(__file__).resolve().parents[1]
+        three_d = (root / "frontend/autoprofit-3d.js").read_text(encoding="utf-8").lower()
+        core = (root / "frontend/autoprofit-core.js").read_text(encoding="utf-8").lower()
+        for endpoint in ("ipwho.is", "api.country.is", "ipapi.co", "cdn-cgi/trace"):
+            self.assertNotIn(endpoint, three_d)
+            self.assertNotIn(endpoint, core)
+        ad_region = three_d.split("window.initgeoipmonetagforeignonlycontroller", 1)[1].split(
+            "function bootallrealtelemetrynow", 1
+        )[0]
+        self.assertIn("visitorcountry === 'unknown'", ad_region)
+        self.assertIn("không bật quảng cáo", ad_region)
+
+    def test_production_nginx_template_is_project_scoped_and_https_only(self):
+        config = (Path(__file__).resolve().parents[1] /
+                  "deploy/nginx/autoprofit-phase11-production.conf").read_text(encoding="utf-8")
+        self.assertIn("server_name autoprofit.160.22.107.108.sslip.io;", config)
+        self.assertIn("ssl_certificate /etc/letsencrypt/live/autoprofit-phase11-sslip/fullchain.pem;", config)
+        self.assertIn("proxy_pass http://127.0.0.1:8450;", config)
+        self.assertIn("alias /var/lib/autoprofit/apps/;", config)
+        self.assertIn("return 301 https://autoprofit.160.22.107.108.sslip.io$request_uri;", config)
+        self.assertNotIn("listen 8000", config)
 
     def test_distribution_role_is_a_reviewable_draft_not_a_fake_live_agent(self):
         source = (Path(__file__).resolve().parents[1] /

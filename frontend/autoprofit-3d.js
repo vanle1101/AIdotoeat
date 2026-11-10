@@ -3212,8 +3212,8 @@ function init3DAIBaseWorld() {
     window.SPOKEN_3D_DIALOGUE_HASHES = window.SPOKEN_3D_DIALOGUE_HASHES || new Set();
     window.NATURAL_3D_TURN_COUNTER = 0;
     window.DIARY_TASK_SEQ_COUNTER = 0;
-    window.DETECTED_VISITOR_COUNTRY = localStorage.getItem('autoprofit_visitor_country_code') || '';
-    window.DETECTED_VISITOR_COUNTRY_NAME = localStorage.getItem('autoprofit_visitor_country_name') || '';
+    window.DETECTED_VISITOR_COUNTRY = 'UNVERIFIED';
+    window.DETECTED_VISITOR_COUNTRY_NAME = 'Unverified';
 
     function persistBilingualDiaryAnd3DState() {
       // Client-generated diary entries are disabled. Task history comes from backend events.
@@ -3467,7 +3467,7 @@ function init3DAIBaseWorld() {
     };
 
     // ============================================================================
-    // AUTOMATIC VISITOR IP GEOLOCATION LANGUAGE DETECTION
+    // Choose language from browser settings without sending visitor IP to geo services.
     // ============================================================================
     window.detectVisitorIpAndAutoSetLanguage = async function() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -3477,56 +3477,12 @@ function init3DAIBaseWorld() {
         return;
       }
 
-      let countryCode = '';
-      let countryName = '';
-
-      const geoEndpoints = [
-        { url: 'https://ipwho.is/', parse: d => ({ code: d.country_code, name: d.country }) },
-        { url: 'https://api.country.is/', parse: d => ({ code: d.country, name: d.country }) },
-        { url: 'https://ipapi.co/json/', parse: d => ({ code: d.country_code, name: d.country_name }) }
-      ];
-
-      for (const ep of geoEndpoints) {
-        try {
-          const ctrl = new AbortController();
-          const tId = setTimeout(() => ctrl.abort(), 3500);
-          const r = await fetch(ep.url, { signal: ctrl.signal });
-          clearTimeout(tId);
-          if (r.ok) {
-            const data = await r.json();
-            const parsed = ep.parse(data || {});
-            if (parsed && parsed.code && String(parsed.code).length === 2) {
-              countryCode = String(parsed.code).toUpperCase();
-              countryName = String(parsed.name || countryCode);
-              break;
-            }
-          }
-        } catch (_) {}
-      }
-
-      if (!countryCode) {
-        try {
-          const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-          const navLang = (navigator.language || '').toLowerCase();
-          if (tz.includes('Saigon') || tz.includes('Ho_Chi_Minh') || (tz.includes('Bangkok') && navLang.startsWith('vi'))) {
-            countryCode = 'VN';
-            countryName = 'Vietnam';
-          } else if (!navLang.startsWith('vi')) {
-            countryCode = 'US';
-            countryName = 'International';
-          } else {
-            countryCode = 'VN';
-            countryName = 'Vietnam';
-          }
-        } catch (_) {
-          countryCode = 'VN';
-        }
-      }
-
-      window.DETECTED_VISITOR_COUNTRY = countryCode;
-      window.DETECTED_VISITOR_COUNTRY_NAME = countryName;
-      localStorage.setItem('autoprofit_visitor_country_code', countryCode);
-      localStorage.setItem('autoprofit_visitor_country_name', countryName);
+      const timezone = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
+      const deviceLanguage = (navigator.language || '').toLowerCase();
+      const prefersVietnamese = deviceLanguage.startsWith('vi') || timezone.includes('ho_chi_minh') || timezone.includes('saigon');
+      const preferredLanguage = prefersVietnamese ? 'vi' : 'en';
+      window.DETECTED_VISITOR_COUNTRY = 'UNVERIFIED';
+      window.DETECTED_VISITOR_COUNTRY_NAME = 'Unverified';
 
       const btnEn = document.getElementById('btnLangEn');
       if (btnEn && btnEn.parentElement) {
@@ -3537,23 +3493,16 @@ function init3DAIBaseWorld() {
           geoBadge.style.cssText = 'font-size:10px; font-family:var(--font-mono); padding:2px 6px; border-radius:4px; background:rgba(16,185,129,0.16); color:#6ee7b7; border:1px solid rgba(16,185,129,0.35); margin-right:4px; white-space:nowrap;';
           btnEn.parentElement.insertBefore(geoBadge, btnEn.parentElement.firstChild);
         }
-        geoBadge.textContent = countryCode === 'VN'
-          ? `🇻🇳 IP: Vietnam (Auto-VI)`
-          : `🌍 IP: ${countryCode} (Auto-EN)`;
+        geoBadge.textContent = prefersVietnamese
+          ? 'Locale: Tiếng Việt (thiết lập thiết bị)'
+          : 'Locale: English (device setting)';
       }
 
       const manualOverride = localStorage.getItem('autoprofit_lang_manual_override');
-      if (countryCode !== 'VN') {
-        if (manualOverride !== 'vi') {
-          window.setAppLanguage('en', true);
-        }
-      } else {
-        if (manualOverride === 'en') {
-          window.setAppLanguage('en', true);
-        } else {
-          window.setAppLanguage('vi', true);
-        }
-      }
+      window.setAppLanguage(
+        manualOverride === 'vi' || manualOverride === 'en' ? manualOverride : preferredLanguage,
+        manualOverride !== 'vi' && manualOverride !== 'en'
+      );
     };
 
     setTimeout(() => {
@@ -3996,34 +3945,27 @@ function init3DAIBaseWorld() {
         return window.runModalLiveLlmTest();
       };
       window.initGeoIpMonetagForeignOnlyController = async function() {
-        let visitorCountry = 'VN';
+        let visitorCountry = 'UNKNOWN';
         let monetagZone = '';
         try {
           const configResponse = await fetch('/api/public/aads-config', { cache: 'no-store' });
           if (configResponse.ok) monetagZone = String((await configResponse.json()).monetag_zone_id || '').trim();
         } catch (_) {}
-        try {
-          const rTrace = await fetch('https://www.cloudflare.com/cdn-cgi/trace', { cache: 'no-store' });
-          if (rTrace.ok) {
-            const txt = await rTrace.text();
-            const m = txt.match(/loc=([A-Z]{2})/);
-            if (m && m[1]) visitorCountry = m[1].toUpperCase();
-          }
-        } catch (_) {
-          try {
-            const r2 = await fetch('https://api.country.is/', { cache: 'no-store' });
-            if (r2.ok) {
-              const d2 = await r2.json();
-              if (d2 && d2.country) visitorCountry = String(d2.country).toUpperCase();
-            }
-          } catch (_2) {}
-        }
+        const timezone = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
+        if (timezone.includes('ho_chi_minh') || timezone.includes('saigon')) visitorCountry = 'VN';
 
         window.VISITOR_GEO_COUNTRY = visitorCountry;
         const badgeEl = document.getElementById('monetagGeoIpBadge');
         const multiAdBadge = document.getElementById('multiAdStatusBadge');
         if (!/^\d{3,12}$/.test(monetagZone)) {
           if (badgeEl) badgeEl.textContent = 'Monetag chưa được cấu hình';
+          const retiredTag = document.getElementById('monetagForeignMultitagScript');
+          if (retiredTag) retiredTag.remove();
+          return;
+        }
+
+        if (visitorCountry === 'UNKNOWN') {
+          if (badgeEl) badgeEl.textContent = 'Không bật quảng cáo: chưa có vị trí được xác minh';
           const retiredTag = document.getElementById('monetagForeignMultitagScript');
           if (retiredTag) retiredTag.remove();
           return;

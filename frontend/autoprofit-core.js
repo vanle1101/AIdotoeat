@@ -4785,9 +4785,9 @@ function renderAllViews() {
 
 
 
-    let VISITOR_IS_VIETNAM_IP = true;
+    let VISITOR_IS_VIETNAM_IP = false;
 
-    let VISITOR_COUNTRY_CODE = 'VN';
+    let VISITOR_COUNTRY_CODE = 'UNKNOWN';
 
     let VISITOR_GEO_DETECTED = false;
 
@@ -4814,36 +4814,9 @@ function renderAllViews() {
       try {
 
         const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
-
-        const tzIsVn = tz.includes('ho_chi_minh') || tz.includes('saigon') || tz.includes('bangkok');
-
-        let detectedCode = tzIsVn ? 'VN' : '';
-
-
-
-        try {
-
-          const r = await fetch('https://api.country.is/', { cache: 'no-store' });
-
-          if (r.ok) {
-
-            const j = await r.json();
-
-            if (j && j.country) detectedCode = String(j.country).toUpperCase();
-
-          }
-
-        } catch (_) {
-
-          if (STATE.donations && STATE.donations.visitor_geo && STATE.donations.visitor_geo.country_code) {
-
-            detectedCode = STATE.donations.visitor_geo.country_code;
-
-          }
-
-        }
-
-        if (!detectedCode) detectedCode = 'VN';
+        const deviceLanguage = (navigator.language || '').toLowerCase();
+        const deviceSuggestsVietnam = tz.includes('ho_chi_minh') || tz.includes('saigon') || deviceLanguage.startsWith('vi');
+        const detectedCode = deviceSuggestsVietnam ? 'VN' : 'UNKNOWN';
 
         VISITOR_COUNTRY_CODE = detectedCode;
 
@@ -4853,9 +4826,9 @@ function renderAllViews() {
 
       } catch (_) {
 
-        VISITOR_COUNTRY_CODE = 'VN';
+        VISITOR_COUNTRY_CODE = 'UNKNOWN';
 
-        VISITOR_IS_VIETNAM_IP = true;
+        VISITOR_IS_VIETNAM_IP = false;
 
       }
 
@@ -4879,9 +4852,9 @@ function renderAllViews() {
 
         VISITOR_IS_VIETNAM_IP
 
-          ? '🇻🇳 Đang hiển thị chế độ Khách IP Việt Nam: Mở chuyển khoản VPBank (2.000đ - 100.000đ).'
+          ? '🇻🇳 Đang xem trước giao diện Việt Nam theo thiết lập thiết bị.'
 
-          : '🌍 Đang hiển thị chế độ Khách IP Quốc tế: Đã ẩn tài khoản ngân hàng VN, chỉ mở USD (Min $1).'
+          : '🌍 Đang xem trước giao diện quốc tế/chưa xác minh.'
 
       );
 
@@ -5143,7 +5116,7 @@ function renderAllViews() {
 
         if (mbAccEl) mbAccEl.textContent = getDynamicMbbankAcc();
 
-        if (toggleBtn) toggleBtn.textContent = `🇻🇳 IP: Việt Nam (${VISITOR_COUNTRY_CODE})`;
+        if (toggleBtn) toggleBtn.textContent = `🇻🇳 Thiết lập thiết bị: Việt Nam (${VISITOR_COUNTRY_CODE})`;
 
         if (ruleDesc) ruleDesc.textContent = 'Cổng ủng hộ dành cho khách tại Việt Nam (Chuyển khoản VPBank từ 2.000đ – 100.000đ).';
 
@@ -5155,11 +5128,11 @@ function renderAllViews() {
 
         if (usdPanel) usdPanel.style.display = 'block';
 
-        if (mbAccEl) mbAccEl.textContent = 'HIDDEN_FOR_INTL_IP';
+        if (mbAccEl) mbAccEl.textContent = 'HIDDEN_FOR_UNVERIFIED_REGION';
 
         if (usdtWalEl) usdtWalEl.value = getDynamicUsdtWallet();
 
-        if (toggleBtn) toggleBtn.textContent = `🌍 IP: Quốc Tế (${VISITOR_COUNTRY_CODE})`;
+        if (toggleBtn) toggleBtn.textContent = `🌍 Khu vực chưa xác minh (${VISITOR_COUNTRY_CODE})`;
 
         if (ruleDesc) ruleDesc.textContent = 'International Supporter Portal: Supporting via Binance / USDT BEP20 (Min $1.00 USD).';
 
