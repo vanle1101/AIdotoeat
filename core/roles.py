@@ -75,8 +75,8 @@ ROLES: Dict[str, LogicalRole] = {
     ),
     "MKT_NICHE_EXPLORER": LogicalRole(
         "MKT_NICHE_EXPLORER", "Micro-Niche Explorer", "Research",
-        "Finds uncontested micro-niches with high intent to pay or tip.",
-        "Target specific tools like Shopee scrapers, VietQR invoicing, etc."
+        "Reviews source-backed problem signals and records payment intent as unverified unless a source explicitly supports it.",
+        "Rank bounded, legally permitted problems; return no niche when evidence is missing or stale."
     ),
     "MKT_KEYWORD_RESEARCHER": LogicalRole(
         "MKT_KEYWORD_RESEARCHER", "Zero-Cost SEO/Keyword Scout", "Research",

@@ -1,0 +1,52 @@
+{
+  "created_at_utc": "2026-11-08T14:44:21Z",
+  "source": "temporary SQLite backup of production data, read only; all mutation was on a second copy",
+  "source_snapshot_sha256": "efe854abed1b6f26f9f16bdf3a0a02922cdb9c4227595d93c79bc3ba2652a70c",
+  "source_quick_check": "ok",
+  "source_unchanged": true,
+  "pre_migration_backup": {
+    "sha256": "c5ebb83353e457a607510724a2af1118313064429648863b9758e3f5ec3c9174",
+    "bytes": 778240,
+    "schema_version": 0,
+    "integrity": "ok"
+  },
+  "migrated_copy": {
+    "sha256": "fcabef64b41404361e798fe0375745b084b1f95ddc4cffcc73614d6948358353",
+    "bytes": 1318912,
+    "schema_version": 13,
+    "integrity": "ok"
+  },
+  "idempotency_backup": {
+    "sha256": "e5a9a727074275803060e9ff963460aac3fab7558ec5e83ac1e8a4ac7a27e3da",
+    "bytes": 1318912,
+    "schema_version": 13,
+    "integrity": "ok"
+  },
+  "restored_copy": {
+    "sha256": "c5ebb83353e457a607510724a2af1118313064429648863b9758e3f5ec3c9174",
+    "bytes": 778240,
+    "schema_version": 0,
+    "integrity": "ok"
+  },
+  "first_migration_status": "migrated",
+  "second_migration_status": "migrated",
+  "idempotency": true,
+  "legacy_table_row_counts_preserved": true,
+  "legacy_table_count": 9,
+  "legacy_common_table_counts": {
+    "dashboard_meta": 1,
+    "leads": 0,
+    "live_tasks": 0,
+    "payment_reports": 0,
+    "products": 0,
+    "system_state": 0,
+    "telemetry_pageviews": 2973,
+    "telemetry_sessions": 296,
+    "transactions": 0
+  },
+  "rollback_restore_status": "restored_to_new_path",
+  "rollback_did_not_overwrite_source": true,
+  "all_integrity_checks_ok": true,
+  "production_database_mutated": false,
+  "production_service_restarted": false
+}

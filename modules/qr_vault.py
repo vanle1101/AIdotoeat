@@ -3,7 +3,6 @@ VietQR & Offline Payment Generator
 100% Zero-Cost: Runs locally via segno and standard VietQR specs.
 Direct payout to Owner's bank account (0% intermediary fees).
 """
-import segno
 from pathlib import Path
 from typing import Optional, Dict
 
@@ -53,6 +52,10 @@ class VietQRVault:
         """
         Generates QR code locally using segno (zero internet, zero API cost).
         """
+        try:
+            import segno
+        except ImportError as exc:
+            raise RuntimeError("QR image generation requires the optional 'segno' package") from exc
         output_path.parent.mkdir(parents=True, exist_ok=True)
         qr = segno.make_qr(content)
         qr.save(str(output_path), scale=5)

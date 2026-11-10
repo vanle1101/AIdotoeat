@@ -3,7 +3,6 @@ Zero-Cost Corp Management Console
 Interactive CLI & Dashboard for the Human Owner
 """
 import sys
-import os
 from pathlib import Path
 
 # Fix Windows console UTF-8 encoding
@@ -17,18 +16,20 @@ if sys.platform == "win32":
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env", override=False)
+
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt
 
-from core.config import POLICY, OUTPUTS_DIR
+from core.config import OUTPUTS_DIR
 from core.roles import list_all_roles
 from core.db import get_connection
 from core.orchestrator import ZeroCostOrchestrator
-from modules.qr_vault import VietQRVault
-from modules.product_builder import ProductBuilder
-from modules.proposal_crafter import ProposalCrafter
+from core.llm import LLMError
 
 console = Console()
 
@@ -76,40 +77,51 @@ def view_deliverables():
     console.print(f"[bold green]Thư mục chứa file đóng gói:[/bold green] {OUTPUTS_DIR}")
 
 def run_opportunity_cycle():
-    console.print("\n[bold yellow]>>> ĐANG KHỞI ĐỘNG CHU TRÌNH TẠO SẢN PHẨM & TÌM DOANH THU (0 VND)...[/bold yellow]")
-    
-    bank_code = Prompt.ask("Nhập mã ngân hàng của bạn (ví dụ: MB, VCB, TCB, ACB, VPB)", default="MB")
-    acc_no = Prompt.ask("Nhập số tài khoản ngân hàng của bạn", default="0000000000")
-    acc_name = Prompt.ask("Nhập tên chủ tài khoản (không dấu)", default="CHU TAI KHOAN")
-
+    console.print("\n[bold yellow]>>> PHÂN LOẠI NGUỒN NHU CẦU DO OWNER CUNG CẤP[/bold yellow]")
+    source_text = Prompt.ask("Dán nội dung nguồn thật (bài đăng, phỏng vấn hoặc dữ liệu đã thu thập)")
     orchestrator = ZeroCostOrchestrator()
     result = orchestrator.run_zero_cost_venture(
-        bank_code=bank_code,
-        account_no=acc_no,
-        account_name=acc_name
+        source_text=source_text,
+        source_id="owner_provided_source",
     )
-
+    if result["status"] != "ANALYSIS_ONLY":
+        console.print(Panel(f"{result['status']}: {result['message']}", title="CHƯA CÓ KẾT QUẢ AI"))
+        return
+    analysis = result["analysis"]
+    confidence = analysis.get("confidence_estimate")
+    confidence_text = (f"{confidence:.2f} (ước lượng chưa hiệu chuẩn)" if confidence is not None
+                       else "không có (DEGRADED_MODE hoặc model không báo estimate)")
     console.print(Panel(
-        f"[bold green]ĐÃ HOÀN THÀNH CHU TRÌNH VỚI CHI PHÍ: 0 VND![/bold green]\n\n"
-        f"1. Sản phẩm số 1: Chrome Data Exporter Extension -> [cyan]{result['deliverable_paths']['chrome_extension']}[/cyan]\n"
-        f"2. Sản phẩm số 2: E-Commerce Python Scraper -> [cyan]{result['deliverable_paths']['python_scraper']}[/cyan]\n"
-        f"3. Mã VietQR thanh toán -> [cyan]{result['deliverable_paths']['vietqr_image']}[/cyan]\n"
-        f"4. Link QR thanh toán trực tiếp: [link]{result['vietqr_payment_url']}[/link]\n\n"
-        f"[bold yellow]Kịch bản chào hàng dành cho Owner:[/bold yellow]\n"
-        f"{result['proposals']['short_pitch']}",
-        title="KẾT QUẢ TRIỂN KHAI"
+        f"Niche được phân loại: {analysis['niche']}\n\n"
+        f"Lý do: {analysis['rationale']}\n"
+        f"Confidence: {confidence_text}\n"
+        f"Provider/model: {result['provenance']['provider']} / {result['provenance']['model']}\n"
+        f"Bước tiếp: Owner xác minh bằng chứng. Chưa tạo giá, doanh thu hay sản phẩm.",
+        title="PHÂN TÍCH NGUỒN — CẦN OWNER DUYỆT"
     ))
 
 def solve_custom_gig():
-    console.print("\n[bold cyan]>>> GIẢI QUYẾT KÈO FREELANCE / YÊU CẦU TỪ KHÁCH HÀNG (0 VND)[/bold cyan]")
+    console.print("\n[bold cyan]>>> SOẠN NHÁP CÁ NHÂN HÓA QUA MODEL ĐÃ KIỂM TRA[/bold cyan]")
     client_request = Prompt.ask("Dán mô tả yêu cầu của khách hàng vào đây")
-    price = Prompt.ask("Mức giá bạn muốn báo khách (VND)", default="500000")
-    
-    proposals = ProposalCrafter.craft_proposal(client_request, int(price))
+    facts_raw = Prompt.ask("Nhập dữ kiện đã xác minh, phân cách bằng dấu | (để trống nếu chưa có)", default="")
+    verified_facts = [fact.strip() for fact in facts_raw.split("|") if fact.strip()]
+    try:
+        result = ZeroCostOrchestrator().personalize_proposal(client_request, verified_facts)
+    except LLMError as exc:
+        console.print(Panel(
+            f"Chưa tạo bản nháp AI. reason_code: {exc.code}\n"
+            "Không dùng template tĩnh để giả làm model. Kiểm tra `python -m core.llm doctor`.",
+            title="PROVIDER CHƯA SẴN SÀNG",
+        ))
+        return
+    proposals = result["output"]
     console.print(Panel(
-        f"[bold green]Kịch bản gửi báo giá nhanh:[/bold green]\n\n{proposals['short_pitch']}\n\n"
-        f"[bold blue]Kịch bản bàn giao & gửi STK sau khi xong việc:[/bold blue]\n\n{proposals['delivery_message']}",
-        title="KỊCH BẢN CHỐT ĐƠN 60 GIÂY"
+        f"{proposals['subject']}\n\n{proposals['proposal']}\n\n"
+        f"Dữ kiện được gắn nhãn đã xác minh: {', '.join(proposals['grounded_facts']) or 'không có'}\n"
+        f"Điểm cần xác nhận: {', '.join(proposals['unknowns']) or 'không có'}\n\n"
+        f"Provider/model: {result['provenance']['provider']} / {result['provenance']['model']}\n"
+        "Đây là bản nháp; kiểm tra thủ công trước khi gửi.",
+        title="DRAFT — OWNER REVIEW"
     ))
 
 def main_menu():
@@ -138,22 +150,7 @@ def main_menu():
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "--auto":
         display_banner()
-        console.print("[bold yellow]>>> CHẾ ĐỘ TỰ ĐỘNG KHỞI CHẠY (ZERO-TOUCH OWNER MODE)...[/bold yellow]")
-        orchestrator = ZeroCostOrchestrator()
-        result = orchestrator.run_zero_cost_venture(
-            bank_code="MB",
-            account_no="0000000000",
-            account_name="CHU TAI KHOAN"
-        )
-        console.print(Panel(
-            f"[bold green]ĐÃ TỰ ĐỘNG HOÀN THÀNH CHU TRÌNH VỚI CHI PHÍ: 0 VND![/bold green]\n\n"
-            f"1. Chrome Data Exporter Extension: [cyan]{result['deliverable_paths']['chrome_extension']}[/cyan]\n"
-            f"2. E-Commerce Python Scraper: [cyan]{result['deliverable_paths']['python_scraper']}[/cyan]\n"
-            f"3. Mã VietQR: [cyan]{result['deliverable_paths']['vietqr_image']}[/cyan]\n\n"
-            f"[bold yellow]Kịch bản chào hàng sẵn sàng giao:[/bold yellow]\n"
-            f"{result['proposals']['short_pitch']}",
-            title="KẾT QUẢ KHỞI CHẠY TỰ ĐỘNG"
-        ))
-        view_deliverables()
+        console.print("[bold yellow]Không tự chạy nghiên cứu hay tạo doanh thu bằng dữ liệu mẫu.[/bold yellow]")
+        console.print("Dùng menu owner để cung cấp nguồn thật, hoặc chạy `python -m core.llm doctor` để kiểm tra provider.")
     else:
         main_menu()

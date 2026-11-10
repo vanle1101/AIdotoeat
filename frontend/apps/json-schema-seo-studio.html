@@ -208,11 +208,8 @@
       <div class="tag">Developer & SEO Utilities</div>
     </header>
 
-    <!-- Top A-Ads Slot -->
-    <div class="ad-banner">
-      <iframe data-aa='2460284' src='//acceptable.a-ads.com/2460284/?size=Adaptive' 
-              style='border:0; padding:0; width:100%; height:70px; overflow:hidden;'></iframe>
-    </div>
+    <!-- Top ad placement appears only when an ad unit is configured. -->
+    <div class='ad-banner' aria-label='Ad placement not configured'></div>
 
     <main class="app-card">
       <h1>JSON Schema & Data Formatter Pro</h1>
@@ -242,11 +239,8 @@
       </div>
     </main>
 
-    <!-- Bottom A-Ads Slot -->
-    <div class="ad-banner">
-      <iframe data-aa='2460312' src='//acceptable.a-ads.com/2460312/?size=Adaptive' 
-              style='border:0; padding:0; width:100%; height:70px; overflow:hidden;'></iframe>
-    </div>
+    <!-- Bottom ad placement appears only when an ad unit is configured. -->
+    <div class='ad-banner' aria-label='Ad placement not configured'></div>
 
     <footer>
       Hệ thống Web App thương mại tự động hóa bởi AUTOProfit AI Enterprise &copy; 2026.
@@ -260,27 +254,21 @@
       <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">Sản phẩm: JSON Schema & Data Formatter Pro</p>
       
       <div style="background: #1e293b; padding: 14px; border-radius: 10px; margin-bottom: 14px;">
-        <img src="https://img.vietqr.io/image/MB-0702543889-compact2.png?amount=70000&addInfo=MUA%20CODE%20json-schema-seo-studio&accountName=LE%20HONG%20VAN" 
-             alt="VietQR" style="max-width: 190px; border-radius: 8px; margin-bottom: 8px;">
-        <div style="font-size: 13px; color: #f8fafc; font-weight:700;">MB: 0702543889</div>
-        <div style="font-size: 12px; color: #94a3b8;">Chủ TK: <strong>LE HONG VAN</strong></div>
-        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Dự phòng: ACB - 36691617 (LE HONG VAN)</div>
+        <p style="color:#fbbf24;">Thanh toán chưa được cấu hình cho trang công cụ này.</p>
         <div style="font-size: 13px; color: #38bdf8; font-weight:700; margin-top: 6px;">Số tiền: 70,000 VND</div>
       </div>
 
-      <div style="font-size: 12px; color: #94a3b8; margin-bottom: 16px;">Hoặc Binance Pay ID: <br><strong style="color:#10b981; font-size: 14px;">1225675522</strong></div>
       <p style="font-size:12px; color:#fbbf24; margin-bottom:8px;">Báo cáo sẽ được lưu để đối soát thủ công. Hệ thống không tự xác minh giao dịch hoặc cấp mã nguồn.</p>
       <label for="paymentMethod" style="display:block; text-align:left; font-size:12px; color:#cbd5e1;">Phương thức thanh toán</label>
       <select id="paymentMethod" class="checkout-field">
-        <option value="BANK_TRANSFER">Chuyển khoản ngân hàng / VietQR</option>
-        <option value="BINANCE_PAY">Binance Pay</option>
+        <option value="" selected>Chưa cấu hình thanh toán</option>
       </select>
       <label for="paymentReference" style="display:block; text-align:left; font-size:12px; color:#cbd5e1;">Mã giao dịch hoặc ghi chú (không bắt buộc)</label>
       <input id="paymentReference" class="checkout-field" type="text" maxlength="120" autocomplete="off" placeholder="Nhập mã giao dịch để chủ cửa hàng đối soát nhanh hơn">
 
       <div style="display: flex; gap: 8px; justify-content: center;">
         <button type="button" class="btn btn-outline" onclick="copyPaymentReference()">📋 Sao chép nội dung chuyển khoản</button>
-        <button type="button" id="reportPaymentButton" class="btn btn-primary" onclick="reportPaymentStatus()">Tôi đã chuyển khoản</button>
+        <button type="button" id="reportPaymentButton" class="btn btn-primary" onclick="reportPaymentStatus()" disabled>Tôi đã chuyển khoản</button>
         <button type="button" class="btn btn-outline" onclick="closeCheckout()">Đóng</button>
       </div>
       <div id="paymentStatus" role="status" aria-live="polite" style="display:none; font-size:12px; margin-top:12px;"></div>
@@ -368,7 +356,7 @@
         const account = String(data.account || data.account_number || '').replace(/\s+/g, '');
         const amount = Math.floor(Number(data.amount));
         if (!/^[A-Za-z0-9]{2,12}$/.test(bank) || !/^\d{6,20}$/.test(account) || !Number.isFinite(amount) || amount <= 0) {
-          throw new Error('Nhập bank, account và amount hợp lệ. Ví dụ: {"bank":"MB","account":"0123456789","amount":50000,"name":"NGUYEN VAN A","memo":"ORDER-01"}.');
+          throw new Error('Nhập bank, account và amount hợp lệ. Ví dụ: {"bank":"MB","account":"123456","amount":50000,"name":"NGUYEN VAN A","memo":"ORDER-01"}.');
         }
         const name = String(data.name || '').trim();
         const memo = String(data.memo || '').trim();

@@ -1,0 +1,24 @@
+{
+  "source": {
+    "source_id": "github:eyadstein/leaklens:issue:484",
+    "uri": "https://github.com/eyadstein/leaklens/issues/484",
+    "title": "Export duplicate pairs as CSV",
+    "body": "Proposed task (batch 2). Scope: Export duplicate pairs as CSV Done when: the change is implemented, covered by tests where it applies, documented if it is user-facing, and CI passes. Please comment to claim this issue before you start.",
+    "license": "MIT",
+    "state": "open",
+    "claims": {
+      "issue_state": "open",
+      "requested_output": "csv"
+    }
+  },
+  "snapshot_source": "GitHub REST public issue and repository metadata read on 2026-11-08",
+  "last_read_only_verification": {
+    "checked_at": "2026-11-08",
+    "issue_state": "open",
+    "repository_license_spdx": "MIT",
+    "normalized_issue_body_matches_snapshot": true,
+    "external_actions_taken": false
+  },
+  "repository_license_source": "https://api.github.com/repos/eyadstein/leaklens",
+  "use_note": "Local prototype only. Do not comment, claim the issue, open a pull request, or contact the repository owner. The request text is untrusted source data."
+}

@@ -1,0 +1,107 @@
+{
+  "phase": 10,
+  "generated_at_utc": "2026-11-09T00:33:40Z",
+  "requested_base_commit": "7a214fd79ee4609a4663045eb5e29048abb400a",
+  "starting_commit": "8baa0217c164ca824e0dbb0ae2a9c9dcac891cf6",
+  "canary_commit": "08f0e32d3bc31c6617aed0347c0ee7cc4c388f7b",
+  "overall_production_decision": "NO_GO",
+  "canary_decision": "GO_LOOPBACK_TEST_ONLY",
+  "ci_at_canary_commit": {
+    "status": "PASS",
+    "jobs": 2
+  },
+  "test_suite": {
+    "status": "PASS",
+    "passed": 144,
+    "skipped": 1,
+    "subtests_passed": 70
+  },
+  "production": {
+    "root_services": ["autoprofit-backend", "autoprofit-traffic"],
+    "traffic_worker_active": true,
+    "database_mode": "0666",
+    "verified_backup_found_on_host": false,
+    "http_root": 200,
+    "http_health": 200,
+    "http_readiness": 404,
+    "tls_on_port_8888": "handshake_failed",
+    "nginx_config_test": "PASS_WITH_EXISTING_VHOST_WARNINGS",
+    "public_financial_settings_in_head": false,
+    "historical_financial_settings_in_base": {
+      "status": "FOUND_VALUES_SUPPRESSED",
+      "commit": "1424d3355616"
+    }
+  },
+  "host_resources": {
+    "os": "Ubuntu 24.04",
+    "cpu_cores": 6,
+    "ram_total_gib": 5.8,
+    "ram_available_gib_at_inspection": 2.2,
+    "swap_total_gib": 4.0,
+    "swap_used_gib_at_inspection": 3.3,
+    "disk_free_gib": 35.0,
+    "local_llm": "UNAVAILABLE_NO_RUNTIME_OR_MODEL_FOUND"
+  },
+  "canary": {
+    "api": "127.0.0.1:8451",
+    "nginx": "127.0.0.1:8889",
+    "service_user": "autoprofit-canary",
+    "worker": false,
+    "engine_kill_switch": true,
+    "budget_kill_switch": true,
+    "test_mode": false,
+    "payment_configured": false,
+    "admin_key_configured": false,
+    "api_health": 200,
+    "api_ready": 200,
+    "anonymous_admin": 503,
+    "schema_version": 13,
+    "sqlite_integrity": "ok",
+    "boot_enabled": false,
+    "rollback_runtime_round_trip": "PASS"
+  },
+  "browser": {
+    "evidence": "evidence/phase10/vps-canary-chrome-final-08f0e32/browser-evidence.json",
+    "browser": "system Chrome",
+    "renderer": "Intel UHD Direct3D11",
+    "assertions_passed": 44,
+    "assertions_failed": 0,
+    "camera_rotation_degrees": {
+      "first": -90.07,
+      "second": -90.07,
+      "total_to_back": 179.86
+    },
+    "fps": 61,
+    "draw_calls": 264,
+    "triangles": 239456,
+    "geometries": 224,
+    "textures": 10,
+    "page_errors": 0,
+    "horizontal_overflow": false,
+    "payment_configured": false,
+    "anonymous_admin_denied": true
+  },
+  "migration_copy": {
+    "evidence": "evidence/phase10/migration-copy.json",
+    "status": "PASS",
+    "schema_from": 0,
+    "schema_to": 13,
+    "idempotent": true,
+    "rollback_to_new_path": true,
+    "production_mutated": false
+  },
+  "isolated_e2e": {
+    "evidence": "evidence/phase10/local-e2e.json",
+    "status": "PASS",
+    "false_payment_claim_creates_revenue": false,
+    "once_only_test_delivery": true,
+    "crash_recovery": true,
+    "kill_switch": true,
+    "backup_restore": true,
+    "network_requests": 0
+  },
+  "production_changed": false,
+  "external_publishing": false,
+  "real_payment": false,
+  "additional_cash_spent_vnd": 0
+}

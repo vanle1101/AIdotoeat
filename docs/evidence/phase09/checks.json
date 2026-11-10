@@ -1,0 +1,71 @@
+{
+  "verified_at_utc": "2026-11-08T12:14:19Z",
+  "platform": "Windows 11 10.0.26200; Python 3.12.10",
+  "dependency_install": {
+    "command": "python -m pip install --require-hashes -r requirements-dev.lock.txt",
+    "status": "PASS",
+    "clean_virtual_environment": true,
+    "playwright_browser": "Playwright Chromium 1248 installed in temporary task directory; 197.5 MiB Chrome plus 118.1 MiB headless shell and small support files; temporary install removed after validation"
+  },
+  "python_compile": {
+    "command": "python -m compileall -q backend core modules scripts tests",
+    "status": "PASS"
+  },
+  "local_scripts": {
+    "powershell_parser": "PASS",
+    "bash_n_scripts_manage_sh": "PASS",
+    "nginx_t": "NOT_RUN: nginx is unavailable on the Windows runner",
+    "systemd_analyze_verify": "NOT_RUN: systemd is unavailable on the Windows runner"
+  },
+  "test_suite": {
+    "command": "python -m pytest -q -p no:cacheprovider",
+    "status": "PASS",
+    "passed": 140,
+    "skipped": 1,
+    "subtests_passed": 70,
+    "skipped_case": "Linux/POSIX release-symlink rollback unit test; Windows cannot create the equivalent managed service symlink. Covered by passing Ubuntu CI run 42479142872.",
+    "warning": "Starlette TestClient emits a deprecation warning recommending httpx2; no test failures"
+  },
+  "phase09_e2e": {
+    "status": "PASS",
+    "evidence_file": "docs/evidence/phase09/e2e.json",
+    "product_file": "outputs/phase09/staging/csv-workflow-pack-adea58f5a564-v1.0.0.zip",
+    "sha256": "6ede8add614e1fa3c5469dffa64d44515eabd95763a1981f885b3eed678026e9",
+    "network_requests": 0
+  },
+  "workflow_regression_stress": {
+    "case": "five-agent public-problem-to-tested-draft workflow",
+    "repetitions": 20,
+    "failures": 0,
+    "status": "PASS",
+    "regression": "opaque UUID and digest values remain intact through redaction; account-like number runs remain masked"
+  },
+  "dependency_audit": {
+    "command": "pip-audit --requirement requirements-dev.lock.txt --format=json",
+    "status": "PASS",
+    "audited_distributions": 50,
+    "known_vulnerability_count": 0,
+    "pip_and_packaging_excluded_by_pip_audit_defaults": true,
+    "evidence_file": "docs/evidence/phase09/pip-audit.json"
+  },
+  "license_metadata_audit": {
+    "status": "PASS",
+    "locked_distributions": 52,
+    "version_or_license_metadata_findings": 0,
+    "human_license_review_still_required": true,
+    "evidence_file": "docs/evidence/phase09/licenses.json"
+  },
+  "github_actions_ci": {
+    "status": "PASS",
+    "run_id": 42479142872,
+    "url": "https://github.com/vanle1101/AIdotoeat/actions/runs/42479142872",
+    "head_sha": "d6a644f228b3a7d114d847f25d99b563ec707836",
+    "also_passing_push_run_id": 42479139873,
+    "covered": ["Ubuntu test suite", "POSIX rollback", "dependency vulnerability audit", "license metadata audit", "isolated production-readiness E2E"]
+  },
+  "deployment_status": {
+    "canary_service_installed": false,
+    "production_modified": false,
+    "reason": "Host-specific systemd/Nginx syntax, DNS, ACME/certificate ownership, paths, permissions, and available ports were not verified from this Windows workstation."
+  }
+}

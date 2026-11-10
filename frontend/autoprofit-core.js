@@ -84,7 +84,7 @@
 
     const DEFAULT_TUNNEL_URL = window.location && window.location.origin ? window.location.origin : '';
 
-    const LOCAL_BACKEND_URL = 'http://127.0.0.1:8000';
+    const LOCAL_BACKEND_URL = 'http://127.0.0.1:8450';
 
 
 
@@ -107,7 +107,7 @@
 
     (async function autoProbeLocalBackendForUnifiedSync() {
 
-      if (!window.__IS_LOCAL_OWNER_ENV__ || API_BASE === LOCAL_BACKEND_URL) return;
+      if (!window.__IS_LOCAL_OWNER_ENV__ || API_BASE === LOCAL_BACKEND_URL || document.body?.classList.contains('ap-reference-ui')) return;
 
       try {
 
@@ -613,33 +613,33 @@
 
       VIRAL_TRAFFIC_AGENT: {
 
-        titleVi: 'Gia Huy — AI Chuyên Gia Kéo Traffic Quốc Tế (Reddit/Pinterest/Dev.to)',
+        titleVi: 'Gia Huy — Soạn Bản Nháp Phân Phối Nội Dung',
 
-        titleEn: 'Gia Huy — Global Viral Traffic & Syndication Specialist',
+        titleEn: 'Gia Huy — Distribution Draft Editor',
 
         shortVi: 'Gia Huy (Traffic)',
 
         shortEn: 'Gia Huy (Traffic)',
 
-        zoneVi: '14. Bàn Kéo Traffic Tự Nhiên Quốc Tế (Gia Huy)',
+        zoneVi: '14. Bàn Soạn Nháp Phân Phối Nội Dung',
 
-        zoneEn: '14. Global Organic Traffic & Syndication Desk',
+        zoneEn: '14. Owner-Reviewed Distribution Drafts',
 
-        subVi: 'Phân Phối Link Affiliate & Web Tool Lên Mạng Quốc Tế',
+        subVi: 'Bản Nháp Affiliate & Web Tool Chờ Chủ Sở Hữu Duyệt',
 
-        subEn: 'Global SEO Syndication to Telegra.ph, Dev.to, Reddit & Pinterest',
+        subEn: 'Affiliate and web-tool drafts; no automatic posting',
 
-        equipVi: 'Hệ thống phân phối nội dung đa kênh & IndexNow Ping tự động',
+        equipVi: 'Bản thảo nội dung và danh sách kiểm tra quy tắc cộng đồng',
 
-        equipEn: 'Multi-Channel Content Syndicator & Instant IndexNow Pinger',
+        equipEn: 'Content drafts and community-rule checklist',
 
-        stepVi: 'Trực chiến 24/7',
+        stepVi: 'Chờ chủ sở hữu duyệt',
 
-        stepEn: '24/7 Active',
+        stepEn: 'Owner review required',
 
-        dutyVi: 'Tự động phát tán các bài Review Affiliate Amazon/Shopify và link 493+ Web Tool miễn phí lên các cộng đồng quốc tế để kéo lượt xem quảng cáo A-Ads và khách mua hàng.',
+        dutyVi: 'Chuẩn bị bản nháp nội dung affiliate và công cụ web để chủ sở hữu tự rà soát, phê duyệt và chia sẻ theo quy định từng cộng đồng. Không tự đăng bài hoặc tạo lượt hiển thị quảng cáo.',
 
-        dutyEn: 'Syndicates English affiliate comparison articles and free web utilities across global platforms to drive A-Ads impressions and affiliate conversions.'
+        dutyEn: 'Prepares affiliate and web-tool content drafts for owner review and policy-compliant sharing. It does not publish automatically or generate ad impressions.'
 
       },
 
@@ -893,9 +893,9 @@
 
           ['Single-Worker Lock: ACTIVE', 'Khóa Chống Chạy Trùng: BẬT'],
 
-          ['MOCK MODE (Local Deterministic Engine — No Paid LLM Key Configured)', 'TỰ HÀNH ĐÁM MÂY THỰC TẾ 24/7 (LIVE) (Thuật toán Python nội bộ — Chi phí API $0.00)'],
+          ['MOCK MODE (Local Deterministic Engine — No Paid LLM Key Configured)', 'BẢN MÔ PHỎNG CỤC BỘ — chưa kết nối nhà cung cấp AI'],
 
-          ['LIVE LLM (gpt-oss-20b • Real Token Stream)', 'TỰ HÀNH ĐÁM MÂY THỰC TẾ 24/7 (LIVE)'],
+          ['LLM PROVIDER STATUS', 'Trạng thái nhà cung cấp LLM'],
 
           ['GUARDED_AUTONOMY', 'TỰ HÀNH CÓ KIỂM SOÁT'],
 
@@ -983,7 +983,7 @@
 
         ['Chi phí vận hành chu kỳ =', 'Cycle operating cost ='],
 
-        ['Chưa ghi nhận doanh thu thực tế ($0.00). Đề xuất Chủ sở hữu duyệt gửi', 'Verified revenue is currently $0.00. Recommend Owner review and approve'],
+        ['Chưa có doanh thu xác minh. Đề xuất Chủ sở hữu duyệt gửi', 'No verified revenue is recorded. Recommend Owner review and approve'],
 
         ['báo cáo kiểm toán website miễn phí để tạo chuyển đổi đầu tiên.', 'free website audit reports to generate the first paid conversion.'],
 
@@ -1045,9 +1045,9 @@
 
         actor: 'COMMAND_CENTER_UI',
 
-        msgVi: 'Khởi tạo Trung Tâm Điều Hành Nhân Sự AI Đang Hoạt Động 3D — Đang đồng bộ trạng thái thực tế từ Máy chủ...',
+        msgVi: 'Đang chờ trạng thái thực tế từ máy chủ; chưa có hoạt động AI được xác minh.',
 
-        msgEn: 'Initialized 9-Agent 3D Command Center — Synchronizing real-time state from Backend API...'
+        msgEn: 'Waiting for backend status; no verified AI activity has been received.'
 
       }
 
@@ -1181,9 +1181,9 @@
 
       document.title = CURRENT_LANG === 'en'
 
-        ? 'AUTOProfit AI — 3D Nine-Agent Autonomous Business System'
+        ? 'AUTOProfit AI — 3D Operations Center'
 
-        : 'AUTOProfit AI — Căn Cứ Nhân Sự AI Đang Hoạt Động 3D & Kinh Doanh Tự Hành';
+        : 'AUTOProfit AI — Trung Tâm Vận Hành 3D';
 
 
 
@@ -1545,11 +1545,33 @@
 
 
 
-    function getAdminHeaders(hasBody = false, extra = {}) {
+    function isSecureAdminOrigin(targetBase = API_BASE) {
+
+      if (window.location.protocol !== 'https:') return false;
+
+      try {
+
+        const target = new URL(targetBase || window.location.origin, window.location.href);
+
+        return target.protocol === 'https:' && target.origin === window.location.origin;
+
+      } catch (_) {
+
+        return false;
+
+      }
+
+    }
+
+
+
+    function getAdminHeaders(hasBody = false, extra = {}, targetBase = API_BASE) {
 
       const headers = { ...extra };
 
       if (hasBody) headers['Content-Type'] = 'application/json';
+
+      if (!isSecureAdminOrigin(targetBase)) return headers;
 
       const key = sessionStorage.getItem('autoprofit_owner_admin_key');
 
@@ -1562,6 +1584,14 @@
 
 
     function promptOrGetAdminKey() {
+
+      if (!isSecureAdminOrigin()) {
+
+        showToast(t('Quản trị yêu cầu HTTPS; không nhập khóa trên kết nối HTTP.', 'Admin access requires HTTPS; do not enter the key over HTTP.'), true);
+
+        return null;
+
+      }
 
       let key = sessionStorage.getItem('autoprofit_owner_admin_key');
 
@@ -1661,7 +1691,7 @@
       try {
         res = await fetch(String(targetBase) + String(path), {
           ...options,
-          headers: getAdminHeaders(Boolean(options.body), options.headers || {}),
+          headers: getAdminHeaders(Boolean(options.body), options.headers || {}, targetBase),
           signal: controller.signal
         });
       } catch (error) {
@@ -1813,7 +1843,7 @@
 
         STATE.dashboard = dashboard;
 
-        STATE.finance = dashboard.finance_summary || STATE.finance || {};
+        STATE.finance = dashboard.finance_summary || {};
 
         STATE.opportunities = dashboard.opportunities_preview || STATE.opportunities || [];
 
@@ -1986,13 +2016,26 @@
       renderAllViews();
       if (typeof renderLiveActivityLog === 'function') renderLiveActivityLog(true, reason || '');
     }
+const financeValueOrNull = value => {
+  if (value === null || value === undefined || value === '') return null;
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+};
+
+const formatFinanceValue = (value, decimals = 2, unit = 'USD') => {
+  const numeric = financeValueOrNull(value);
+  if (numeric === null) return t('— / Chưa có dữ liệu đã xác minh', '— / No verified data');
+  const amount = unit === 'USD' ? `$${numeric.toFixed(decimals)}` : numeric.toFixed(decimals);
+  return `${amount} ${unit}`;
+};
+
 function renderAllViews() {
 
       const sys = STATE.dashboard?.system || {};
 
       const kpis = STATE.dashboard?.kpis_real_verified || {};
 
-      const nine = STATE.finance?.nine_bucket_accounting || {};
+      const nine = STATE.finance?.nine_bucket_accounting || STATE.dashboard?.nine_bucket_accounting || {};
 
       const localeCode = CURRENT_LANG === 'en' ? 'en-US' : 'vi-VN';
 
@@ -2008,7 +2051,7 @@ function renderAllViews() {
 
       // Topbar Badges
 
-      const rawAiMode = sys.ai_provider_mode || (sys.ai_provider === 'mock' ? 'LIVE LLM (gpt-oss-20b • Real Token Stream)' : (sys.ai_provider || 'LIVE LLM (gpt-oss-20b • Real Token Stream)'));
+      const rawAiMode = sys.ai_provider_mode || sys.ai_provider || 'NOT_CONNECTED';
 
       const aiBadge = document.getElementById('aiProviderBadge');
 
@@ -2016,9 +2059,9 @@ function renderAllViews() {
 
         ? `AI_PROVIDER: ${rawAiMode}`
 
-        : `AI: ${rawAiMode.includes('MOCK') ? 'MÔ PHỎNG CỤC BỘ ($0)' : rawAiMode}`;
+        : `AI: ${rawAiMode.includes('MOCK') ? 'Demo · mẫu cục bộ' : rawAiMode}`;
 
-      aiBadge.className = rawAiMode.includes('MOCK') ? 'chip warn' : 'chip success';
+      aiBadge.className = sys.ai_provider_verified === true ? 'chip success' : 'chip warn';
 
 
 
@@ -2032,7 +2075,7 @@ function renderAllViews() {
 
 
 
-      const rawSysStatus = sys.system_status || 'RUNNING';
+      const rawSysStatus = sys.system_status || 'UNKNOWN';
 
       const stBadge = document.getElementById('systemStatusBadge');
 
@@ -2080,63 +2123,50 @@ function renderAllViews() {
 
       // 1. OVERVIEW KPI CARDS
 
-      const verifiedRev = Number(kpis.verified_revenue_usd ?? 0);
-
-      const netProfit = Number(kpis.net_profit_usd ?? 0);
-
-      const paidOrders = Number(kpis.completed_orders_count ?? 0);
-
-      const qualOpps = Number(kpis.qualified_opportunities_count ?? STATE.opportunities.length ?? 0);
-
-      const convRate = Number(kpis.conversion_rate_pct ?? 0);
-
-      const opCosts = Number(kpis.actual_expenses_usd ?? 0);
-
-      const activeAgents = Number(kpis.active_agents_count ?? (rawSysStatus === 'RUNNING' ? 9 : 0));
+      const verifiedRev = kpis.verified_revenue_usd;
+      const netProfit = kpis.net_profit_usd;
+      const paidOrders = kpis.completed_orders_count;
+      const qualOpps = kpis.qualified_opportunities_count;
+      const convRate = kpis.conversion_rate_pct;
+      const opCosts = kpis.actual_expenses_usd;
 
 
 
       const setTxtOn = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
-      const aadsLive = window.AADS_USER_517750_LIVE_STATE || { total_estimated_daily_income_usd: 0.03, total_verified_usd: 0.0345, total_combined_impressions: 6727, total_paid_impressions: 1987 };
-
-      const aadsUsd = Number(aadsLive.total_estimated_daily_income_usd || 0.03);
-
-      const combinedVerifiedRev = Math.max(verifiedRev, aadsUsd);
-
-      const combinedNetProfit = Math.max(netProfit, Number(aadsLive.total_verified_usd || combinedVerifiedRev) - opCosts);
-
-      setTxtOn('kpi-verified-revenue', `$${combinedVerifiedRev.toFixed(2)}`);
-
-      setTxtOn('kpi-verified-revenue-sub', t('Đã tự động đồng bộ doanh thu thực tế', 'Real revenue automatically synced'));
-
-      setTxtOn('kpi-net-profit', `$${combinedNetProfit.toFixed(4)}`);
-
-      setTxtOn('kpi-net-profit-sub', t('Doanh thu xác minh trừ chi phí', 'Verified revenue minus expenses'));
+      setTxtOn('kpi-verified-revenue', verifiedRev == null ? '—' : `$${Number(verifiedRev).toFixed(2)}`);
+      setTxtOn('kpi-verified-revenue-sub', verifiedRev == null
+        ? t('Chưa có doanh thu đã xác minh.', 'No verified revenue data.')
+        : t('Nguồn: giao dịch đã xác minh.', 'Source: verified transactions.'));
+      setTxtOn('kpi-net-profit', netProfit == null ? '—' : `$${Number(netProfit).toFixed(2)}`);
+      setTxtOn('kpi-net-profit-sub', netProfit == null
+        ? t('Chưa có dữ liệu chi phí để tính lợi nhuận.', 'Verified cost data is required to calculate net profit.')
+        : t('Nguồn: sổ cái đã xác minh.', 'Source: verified ledger.'));
 
       if (typeof window.recalculateAndSyncTotalVerifiedRevenueUI === 'function') window.recalculateAndSyncTotalVerifiedRevenueUI();
 
       if (typeof window.syncAllLiveBranchCountersUI === 'function') window.syncAllLiveBranchCountersUI();
 
-      setTxtOn('kpi-paid-orders', String(paidOrders));
+      setTxtOn('kpi-paid-orders', paidOrders == null ? '—' : String(paidOrders));
 
       setTxtOn('kpi-paid-orders-sub', t('Xem chi tiết nguồn tiền tại Báo Cáo Kế Toán', 'See revenue breakdown in Financial Analytics'));
 
-setTxtOn('kpi-qualified-opps', String(qualOpps));
+      setTxtOn('kpi-qualified-opps', qualOpps == null ? '—' : String(qualOpps));
 
-      setTxtOn('kpi-conversion-rate', `${convRate.toFixed(2)}%`);
+      setTxtOn('kpi-conversion-rate', convRate == null ? '—' : `${Number(convRate).toFixed(2)}%`);
 
-      setTxtOn('kpi-operating-costs', `$${opCosts.toFixed(4)}`);
+      setTxtOn('kpi-operating-costs', opCosts == null ? '—' : `$${Number(opCosts).toFixed(4)}`);
 
-      setTxtOn('kpi-active-agents', (typeof ACTIVE_AI_WORKFORCE_TOTAL !== 'undefined' ? ACTIVE_AI_WORKFORCE_TOTAL : 15) + '+ AI LIVE');
+      setTxtOn('kpi-active-agents', 'Runtime not connected');
 
       const bhEl = document.getElementById('kpi-backend-health');
 
       if (bhEl) {
 
-        bhEl.textContent = t('TRỰC TUYẾN', 'ONLINE');
+        const backendOnline = STATE.online === true && sys.backend_health === 'ONLINE';
+        bhEl.textContent = backendOnline ? t('TRỰC TUYẾN', 'ONLINE') : t('CHƯA KẾT NỐI', 'NOT CONNECTED');
 
-        bhEl.style.color = 'var(--status-online)';
+        bhEl.style.color = backendOnline ? 'var(--status-online)' : 'var(--status-offline)';
 
       }
 
@@ -2178,35 +2208,27 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       // Overview Accounting Bars
 
-      const maxBarVal = Math.max(
-
-        1,
-
-        Number(nine['1_verified_revenue_usd'] || 0),
-
-        Number(nine['2_pending_payments_usd'] || 0),
-
-        Number(nine['3_estimated_revenue_usd'] || 0),
-
-        Number(nine['5_ai_costs_usd'] || 0)
-
-      );
+      const overviewValues = [
+        nine['1_verified_revenue_usd'], nine['2_pending_payments_usd'],
+        nine['3_estimated_revenue_usd'], nine['5_ai_costs_usd'], nine['6_hosting_costs_usd']
+      ].map(financeValueOrNull).filter(value => value !== null);
+      const maxBarVal = Math.max(1, ...overviewValues);
 
       const overviewBars = [
 
-        { label: t('1. Doanh thu xác minh (Thực nhận)', '1. Verified Revenue (Settled)'), val: Number(nine['1_verified_revenue_usd'] || 0) },
+        { label: t('1. Doanh thu xác minh (Thực nhận)', '1. Verified Revenue (Settled)'), val: financeValueOrNull(nine['1_verified_revenue_usd']) },
 
-        { label: t('2. Khoản chờ đối soát (Chưa cộng)', '2. Pending Verification (Unsettled)'), val: Number(nine['2_pending_payments_usd'] || 0) },
+        { label: t('2. Khoản chờ đối soát (Chưa cộng)', '2. Pending Verification (Unsettled)'), val: financeValueOrNull(nine['2_pending_payments_usd']) },
 
-        { label: t('3. Doanh thu dự kiến (Đơn chưa TT)', '3. Estimated Revenue (Unpaid Orders)'), val: Number(nine['3_estimated_revenue_usd'] || 0) },
+        { label: t('3. Doanh thu dự kiến (Đơn chưa TT)', '3. Estimated Revenue (Unpaid Orders)'), val: financeValueOrNull(nine['3_estimated_revenue_usd']) },
 
-        { label: t('5. Chi phí AI & Vận hành thực tế', '5. Actual AI & Operating Costs'), val: Number(nine['5_ai_costs_usd'] || 0) + Number(nine['6_hosting_costs_usd'] || 0) }
+        { label: t('5. Chi phí AI & Vận hành thực tế', '5. Actual AI & Operating Costs'), val: [nine['5_ai_costs_usd'], nine['6_hosting_costs_usd']].every(value => financeValueOrNull(value) !== null) ? Number(nine['5_ai_costs_usd']) + Number(nine['6_hosting_costs_usd']) : null }
 
       ];
 
       if (document.getElementById('overviewAccountingBars')) document.getElementById('overviewAccountingBars').innerHTML = overviewBars.map(b => {
 
-        const pct = Math.min(100, Math.round((b.val / maxBarVal) * 100));
+        const pct = b.val === null ? 0 : Math.min(100, Math.round((b.val / maxBarVal) * 100));
 
         return `
 
@@ -2216,7 +2238,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
             <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
 
-            <div class="bar-val">$${b.val.toFixed(2)}</div>
+            <div class="bar-val">${escapeHtml(formatFinanceValue(b.val, 2))}</div>
 
           </div>
 
@@ -2238,9 +2260,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         alertItems.push(t(
 
-          `<li><span class="chip warn">CHẾ ĐỘ CỤC BỘ</span> Đang bật thuật toán kiểm toán Python nội bộ (Chi phí API = $0.00), không giả mạo gọi mô hình AI trả phí bên ngoài.</li>`,
+          `<li><span class="chip warn">CHẾ ĐỘ CỤC BỘ</span> Đang dùng kiểm toán Python nội bộ; không có lượt gọi provider trả phí được ghi nhận. Điện và chi phí máy local chưa được đo.</li>`,
 
-          `<li><span class="chip warn">LOCAL ENGINE</span> Local deterministic Python audit engine is active (API Cost = $0.00); never fakes external paid LLM calls.</li>`
+          `<li><span class="chip warn">LOCAL ENGINE</span> Using the local Python audit path; no paid-provider call is recorded. Electricity and local compute costs are unmeasured.</li>`
 
         ));
 
@@ -2289,98 +2311,19 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
       const agGrid = document.getElementById('agentsRegistryGrid');
-
       if (agGrid) {
-
-        const core24Agents = [{"role": "RESEARCH_AGENT", "title": "Lê Minh — AI Nghiên Cứu Thị Trường & Quét GitHub", "step": "Bước 1-2 / 13 • Quét 8 Thị Trường", "responsibility": "Quét liên tục HackerNews, GitHub MIT Repos, xu hướng SaaS & Crypto để nạp đầu vào sản xuất cho toàn công ty.", "completed_count": 642, "cost_usd": 0.1284, "badge_color": "#06b6d4"}, {"role": "PRODUCT_AGENT", "title": "Hoàng Bách — AI Kiến Trúc Sản Phẩm & Định Giá Rẻ ($1.99–$5.99)", "step": "Bước 4 / 13 • Định Giá Cạnh Tranh", "responsibility": "Quét giá thị trường Gumroad/CodeCanyon ($19–$49) và tự động định giá sản phẩm của công ty ở mức siêu rẻ $1.99–$5.99 USD (rẻ hơn 85%).", "completed_count": 318, "cost_usd": 0.0452, "badge_color": "#38bdf8"}, {"role": "CODING_AGENT", "title": "Vũ Khoa — AI Lập Trình & Sản Xuất Web App Liên Tục", "step": "Bước 5 / 13 • Dây Chuyền Sản Xuất Code", "responsibility": "Biên dịch mã nguồn mở MIT thành ứng dụng Web HTML5 thương mại gắn sẵn quảng cáo A-Ads và cổng thanh toán tự động.", "completed_count": 785, "cost_usd": 0.112, "badge_color": "#6366f1"}, {"role": "MARKETING_AGENT", "title": "Phạm Thảo — AI Tiếp Thị Nội Dung SEO & Quảng Cáo A-Ads", "step": "Bước 7 / 13 • SEO & A-Ads", "responsibility": "Tự động xuất bản bài viết SEO tiếng Anh, nhúng mã A-Ads (#2460284 & #2460312) và đẩy chỉ mục lên Google WebSub / IndexNow.", "completed_count": 412, "cost_usd": 0.058, "badge_color": "#a855f7"}, {"role": "SALES_AGENT", "title": "Đặng Quân — AI Tìm Khách & Báo Giá Quốc Tế (100% EN)", "step": "Bước 8-9 / 13 • Chốt Đơn Quốc Tế", "responsibility": "Tự động quét doanh nghiệp quốc tế, kiểm toán lỗi website, định giá cạnh tranh ($1.99–$5.99) và tự động phê duyệt/gửi báo giá 24/7.", "completed_count": 824, "cost_usd": 0.1648, "badge_color": "#14b8a6"}, {"role": "CUSTOMER_SUPPORT_AGENT", "title": "Khánh Linh — AI Hỗ Trợ Khách Hàng & Bàn Giao Tự Động", "step": "Bước 10 / 13 • Bàn Giao 24/7", "responsibility": "Trực cổng thanh toán, giải đáp khách hàng trên Sổ tay 24/7 và mở khóa tải mã nguồn White-Label ngay khi thanh toán.", "completed_count": 264, "cost_usd": 0.0285, "badge_color": "#38bdf8"}, {"role": "FINANCE_AGENT", "title": "Bảo Trâm — AI Tài Chính, Sổ Cái & Đối Soát On-Chain", "step": "Bước 11 / 13 • Đối Soát USDT/VPBank", "responsibility": "Đối soát giao dịch USDT BEP20 (Binance) / VietQR VPBank và hạch toán minh bạch các dòng doanh thu đa nhánh.", "completed_count": 486, "cost_usd": 0.0394, "badge_color": "#10b981"}, {"role": "OPTIMIZATION_AGENT", "title": "Minh Châu — AI Tối Ưu Hóa Chiến Lược & Nhân Bản Nhánh Lãi Cao", "step": "Bước 12-13 / 13 • Mở Rộng Nhánh", "responsibility": "Phân tích tỷ lệ chuyển đổi của từng nhánh thị trường, tự động đẻ thêm nhánh con ở các ngách có biên lợi nhuận cao nhất.", "completed_count": 295, "cost_usd": 0.034, "badge_color": "#ec4899"}, {"role": "SECURITY_AGENT", "title": "Trần Phong — AI Bảo Mật, Phân Quyền & Chống Quá Tải", "step": "Bước 3 & Giám sát 24/7", "responsibility": "Bảo vệ chế độ Khách Tham Quan (ẩn tuyệt đối cài đặt Admin), bảo mật thông tin thanh toán và giữ hệ thống chạy ổn định 100%.", "completed_count": 510, "cost_usd": 0.0315, "badge_color": "#f43f5e"}, {"role": "AFFILIATE_AMAZON_AGENT", "title": "Mai Anh — AI Chuyên Gia Affiliate Amazon, Shopee & TikTok", "step": "Trực chiến 24/7 • Nhánh Amazon & TMĐT", "responsibility": "Săn sản phẩm công nghệ, AI Mini PC, GPU, SSD bán chạy trên Amazon, Shopee, TikTok Shop; tự động tạo trang Review gắn tag Affiliate.", "completed_count": 438, "cost_usd": 0.0485, "badge_color": "#f97316"}, {"role": "SHOPIFY_ECOM_AGENT", "title": "Quốc Tuấn — AI Chuyên Gia Shopify Partner & SaaS Affiliate", "step": "Trực chiến 24/7 • Nhánh Shopify & SaaS", "responsibility": "Triển khai chiến dịch tiếp thị liên kết cho Shopify ($25–$150/store), Semrush ($200/sale), Hostinger & AI SaaS hưởng hoa hồng định kỳ 20%–50%.", "completed_count": 376, "cost_usd": 0.042, "badge_color": "#84cc16"}, {"role": "CRYPTO_ARBITRAGE_AGENT", "title": "Hải Đăng — AI Chuyên Gia Arbitrage Crypto & Referral Sàn", "step": "Trực chiến 24/7 • Nhánh Crypto & Sàn", "responsibility": "Quét chênh lệch giá BTC/ETH/SOL/BNB giữa các sàn CEX/DEX, tối ưu lãi suất gửi USDT DeFi APY cao và thu hoa hồng Referral Binance/Bybit/Ledger.", "completed_count": 524, "cost_usd": 0.056, "badge_color": "#f59e0b"}, {"role": "AIRDROP_BOUNTY_AGENT", "title": "Thanh Hà — AI Chuyên Gia Săn Airdrop Web3 & Bug Bounty", "step": "Trực chiến 24/7 • Nhánh Airdrop & Bounty", "responsibility": "Tự động săn chiến dịch Airdrop Layer-2 vốn $0 (Monad, Berachain, Linea) và các nhiệm vụ giải thưởng vá lỗi GitHub Algora / Immunefi ($50–$500 USDT).", "completed_count": 312, "cost_usd": 0.0325, "badge_color": "#38bdf8"}, {"role": "VIRAL_TRAFFIC_AGENT", "title": "Gia Huy — AI Chuyên Gia Kéo Traffic Đa Kênh Quốc Tế", "step": "Trực chiến 24/7 • Nhánh Syndication", "responsibility": "Tự động xuất bản bài viết tiếng Anh lên Telegra.ph, rút gọn link TinyURL, tạo danh mục dpaste và ping Google WebSub / IndexNow 24/7.", "completed_count": 618, "cost_usd": 0.064, "badge_color": "#d946ef"}, {"role": "TEMPLATE_POD_AGENT", "title": "Phương Nghi — AI Thiết Kế Template Notion, Theme & POD", "step": "Trực chiến 24/7 • Nhánh Sản Phẩm Số", "responsibility": "Thiết kế và đóng gói bộ sưu tập Template Notion AI, mẫu giao diện Shopify/Framer và Print-on-Demand (POD) bán giá bình dân $1.99–$3.99 USD.", "completed_count": 345, "cost_usd": 0.0375, "badge_color": "#2dd4bf"}, {"role": "AUTO_SCALER_HR_AGENT", "title": "Bảo Châu — AI Kiến Trúc Sư Tự Nhân Bản & Cân Bằng Tải Nhân Sự", "step": "Trực chiến 24/7 • Tự Động Code Thêm Nhân Sự", "responsibility": "Giám sát tải công việc trên toàn bộ 36+ nhánh thị trường; cứ khi nào tải vượt 75% là tự động viết code sinh thêm Nhân Sự AI mới để không bao giờ quá tải.", "completed_count": 215, "cost_usd": 0.024, "badge_color": "#10b981"}, {"role": "CHROME_EXT_SAAS_AGENT", "title": "Minh Khôi — AI Sản Xuất Chrome Extension & Micro-SaaS", "step": "Trực chiến 24/7 • Nhánh Chrome Web Store", "responsibility": "Liên tục đóng gói các tiện ích mở rộng trình duyệt Chrome/Edge (Manifest V3) và Micro-SaaS giải quyết nhu cầu thực tế, bán giá mềm $2.49 USD.", "completed_count": 284, "cost_usd": 0.031, "badge_color": "#60a5fa"}, {"role": "SHORT_VIDEO_VIRAL_AGENT", "title": "Thảo Vy — AI Xây Kênh TikTok, Reels & YouTube Shorts Tự Động", "step": "Trực chiến 24/7 • Nhánh Video Ngắn Viral", "responsibility": "Tự động tạo kịch bản video ngắn giấu mặt (Faceless Video), gắn link Affiliate ElevenLabs/HeyGen (30% hoa hồng) và kéo traffic từ TikTok/Shorts.", "completed_count": 326, "cost_usd": 0.0355, "badge_color": "#f472b6"}, {"role": "DROPSHIP_POD_AGENT", "title": "Tuấn Kiệt — AI Săn Sản Phẩm Winning Dropship, Etsy & POD", "step": "Trực chiến 24/7 • Nhánh Etsy & Dropship US/EU", "responsibility": "Quét xu hướng sản phẩm bán chạy trên Etsy, Printful, Printify và AutoDS để liên tục đẻ thêm các nhánh cửa hàng số & POD quốc tế.", "completed_count": 268, "cost_usd": 0.0295, "badge_color": "#a3e635"}, {"role": "B2B_OUTREACH_FUNNEL_AGENT", "title": "Ngọc Hân — AI Tiếp Thị B2B Cold-Outreach & Phễu Chốt Đơn", "step": "Trực chiến 24/7 • Nhánh Phễu Doanh Nghiệp B2B", "responsibility": "Vận hành phễu kiểm toán SEO & bảo mật tự động cho các Agency và Startup quốc tế, kết hợp bán gói sửa lỗi $3.99 và hoa hồng Semrush $200/sale.", "completed_count": 392, "cost_usd": 0.053, "badge_color": "#2dd4bf"}, {"role": "API_MARKETPLACE_AGENT", "title": "Hoàng Nam — AI Đóng Gói Cổng API Microservices (RapidAPI)", "step": "Trực chiến 24/7 • Nhánh Cổng API Thương Mại", "responsibility": "Biến các thuật toán kiểm toán SEO, xử lý JSON, tạo mã QR và phân tích dữ liệu thành các cổng API thu phí định kỳ trên RapidAPI & Cloud.", "completed_count": 246, "cost_usd": 0.027, "badge_color": "#818cf8"}, {"role": "DIGITAL_PUBLISHING_AGENT", "title": "Khánh Đoan — AI Xuất Bản Kho Prompt AI, Ebook & Workflow", "step": "Trực chiến 24/7 • Nhánh Xuất Bản Sản Phẩm Số", "responsibility": "Tự động biên soạn các bộ 1.500+ Prompt AI chuyên sâu, tài liệu hướng dẫn tự động hóa n8n/Make và Ebook kỹ thuật tiếng Anh bán toàn cầu.", "completed_count": 308, "cost_usd": 0.033, "badge_color": "#c084fc"}, {"role": "WEB3_YIELD_AGENT", "title": "Đức Thịnh — AI Săn Kèo Launchpool, Staking & Delta-Neutral", "step": "Trực chiến 24/7 • Nhánh Launchpool & Funding Rate", "responsibility": "Quét các kèo Launchpool sàn Binance/Bybit và chiến lược Delta-Neutral hưởng Funding Rate dương (14%–22% APY) không rủi ro biến động giá.", "completed_count": 274, "cost_usd": 0.0305, "badge_color": "#fbbf24"}, {"role": "GLOBAL_BRANCHING_AGENT", "title": "Lan Hương — AI Nhân Bản Kênh Đa Quốc Gia (US/EU/JP/KR/SEA)", "step": "Trực chiến 24/7 • Tự Động Đẻ Nhánh Mới", "responsibility": "Tự động nhân bản các kênh bán hàng và trang đích Affiliate sang nhiều nhánh thị trường ngách tại Mỹ, Châu Âu, Nhật Bản, Hàn Quốc và Đông Nam Á.", "completed_count": 356, "cost_usd": 0.039, "badge_color": "#34d399"}, {"role": "YOUTUBE_TRAFFIC_AGENT", "title": "Khôi Nguyên — AI Giám Đốc Đẩy View & Đề Xuất Video YouTube", "step": "Trực chiến 24/7 • Mảng Kéo View & Traffic YouTube", "responsibility": "Nhúng trình phát Video YouTube lên toàn mạng lưới 555+ Web App và điều phối trạm cầu nối /go/youtube-watch.html kéo người xem thật.", "completed_count": 318, "cost_usd": 0.0, "badge_color": "#ef4444"}, {"role": "YOUTUBE_MULTILANG_SEO_AGENT", "title": "Nhã Phương — AI Phóng Backlink SEO YouTube 12 Ngôn Ngữ", "step": "Trực chiến 24/7 • Backlink Telegra.ph & Google WebSub", "responsibility": "Tự động viết bài PR tóm tắt Video bằng 12 ngôn ngữ, tạo bộ 30 thẻ Tags CTR cao và phát tán lên Telegra.ph, dpaste, IndexNow.", "completed_count": 342, "cost_usd": 0.0, "badge_color": "#f97316"}, {"role": "YOUTUBE_RETENTION_AGENT", "title": "Gia Bảo — AI Vận Hành Rạp Chiếu 30 Giây (Watch Time & BTC)", "step": "Trực chiến 24/7 • Giữ Chân Người Xem & Tăng BTC A-Ads", "responsibility": "Quản lý Rạp Chiếu 30s mở khóa thưởng giúp tăng thời lượng xem (Retention) cho kênh YouTube đồng thời tăng hiển thị trả tiền A-Ads (#2460284 & #2460312).", "completed_count": 295, "cost_usd": 0.0, "badge_color": "#eab308"}, {"role": "YOUTUBE_SHORTS_HOOK_AGENT", "title": "Thanh Trúc — AI Phân Tích Thumbnail 4K & Tiêu Đề Triệu View", "step": "Trực chiến 24/7 • Công Cụ Miễn Phí Hút Chủ Kênh YouTube", "responsibility": "Vận hành bộ công cụ chấm điểm SEO YouTube và trích xuất Thumbnail 4K miễn phí để kéo hàng ngàn YouTuber truy cập web mỗi ngày.", "completed_count": 268, "cost_usd": 0.0, "badge_color": "#ec4899"}, {"role": "BINANCE_CPA_CONVERSION_AGENT", "title": "Nhật Minh — AI Tối Ưu Chuyển Đổi Link Binance 1225675522", "step": "Trực chiến 24/7 • Tối Ưu Hoa Hồng $1,000 USD Binance", "responsibility": "Đảm bảo 100% trạm cầu nối, bài PR YouTube và Web App đều gắn mặc định mã giới thiệu Binance 1225675522 của Chủ sở hữu.", "completed_count": 389, "cost_usd": 0.0, "badge_color": "#f59e0b"}, {"role": "WORKLOAD_BALANCER_AGENT", "title": "Ngọc Ánh — AI Điều Phối Chia Việc 30+ Nhân Sự & Đối Soát Gói YouTube", "step": "Trực chiến 24/7 • Chia Tải 42% (0% Quá Tải) & On-Chain QA", "responsibility": "Chia nhỏ khối lượng công việc YouTube, Affiliate 205+ nhánh và 555+ Web App cho 30+ nhân sự AI (giữ tải TB 42% không bao giờ quá tải) và tự động kích hoạt đơn gói YouTube khi có USDT về ví Binance.", "completed_count": 412, "cost_usd": 0.0, "badge_color": "#10b981"}];
-
-        const extraSpawned = (typeof DYNAMIC_SPAWNED_SUB_AGENTS !== 'undefined' && Array.isArray(DYNAMIC_SPAWNED_SUB_AGENTS)) ? DYNAMIC_SPAWNED_SUB_AGENTS : [];
-
-        const allActiveAgents = [...core24Agents, ...extraSpawned];
-
+        const message = t(
+          'Chưa có hoạt động agent runtime đã xác minh từ backend.',
+          'No verified agent runtime activity from the backend.'
+        );
+        agGrid.replaceChildren();
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+        emptyState.textContent = message;
+        agGrid.appendChild(emptyState);
         const capChip = document.getElementById('workforceCapacityChip');
-
-        if (capChip) capChip.textContent = allActiveAgents.length + '+ Nhân sự AI Đang Làm Việc (0% Quá Tải)';
-
-        const totalDoneTasks = allActiveAgents.reduce((s, a) => s + Number(a.completed_count || 120), 0);
-
-        const bannerHtml = `
-
-          <div style="grid-column: 1 / -1; padding:10px 14px; border-radius:10px; background:linear-gradient(90deg, rgba(6,78,59,0.45), rgba(15,23,42,0.95)); border:1px solid rgba(16,185,129,0.55); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:4px;">
-
-            <div>
-
-              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-
-                <span class="chip success" style="font-weight:800; font-size:10.5px;">⚡ CƠ CHẾ TỰ ĐỘNG CODE THÊM NHÂN SỰ AI (AUTO-SCALING WORKFORCE 24/7)</span>
-
-                <span class="chip cyan" style="font-size:10.5px;">👥 Quân số hiện tại: <strong>${allActiveAgents.length} Nhân Sự AI Trực Chiến</strong></span>
-
-                <span class="chip purple" style="font-size:10.5px;">🌳 Phân nhánh: <strong>10 Kênh Gốc ➔ <span class="live-branches-count-badge">${typeof TOTAL_ACTIVE_REVENUE_BRANCHES !== 'undefined' ? TOTAL_ACTIVE_REVENUE_BRANCHES : 36}</span>+ Nhánh Thị Trường</strong></span>
-
-              </div>
-
-              <div style="font-size:11.5px; color:#d1fae5; margin-top:4px;">
-
-                🤖 <strong>Bảo Châu (AI Kiến Trúc Sư Tự Nhân Bản Nhân Sự)</strong> liên tục đo tải công việc trên mọi thị trường: Ngay khi bất kỳ nhánh nào vượt <strong>75% tải</strong>, hệ thống tự động viết code sinh thêm Nhân Sự AI mới để chia việc — cam kết <strong>0% quá tải, 0 lỗi thực thi, tổng ${totalDoneTasks.toLocaleString('vi-VN')} nhiệm vụ hoàn thành!</strong>
-
-              </div>
-
-            </div>
-
-            <div style="font-family:var(--font-mono); font-size:11px; color:#6ee7b7; background:rgba(6,15,28,0.85); padding:6px 10px; border-radius:8px; border:1px solid rgba(16,185,129,0.4);">
-
-              <div>• Tải TB mỗi AI: <strong id="agentsViewLoadPctBadge" style="color:#34d399;">56% (An toàn)</strong></div>
-
-              <div>• Trạng thái: <strong>100% HOÀN THÀNH / ĐANG CHẠY</strong></div>
-
-            </div>
-
-          </div>
-
-        `;
-
-        agGrid.innerHTML = bannerHtml + allActiveAgents.map(ag => {
-
-          const agentTasks = (STATE.tasks || []).filter(x => x.agent_role === ag.role && x.status !== 'BLOCKED_BY_BUDGET' && x.status !== 'FAILED');
-
-          const doneCount = Math.max(ag.completed_count, agentTasks.length) + (typeof LIVE_PRODUCTION_CYCLE_TICKS !== 'undefined' ? LIVE_PRODUCTION_CYCLE_TICKS : 0);
-
-          const costVal = Math.max(ag.cost_usd, agentTasks.reduce((acc, x) => acc + Number(x.actual_cost_usd || 0), 0));
-
-          return `
-
-            <div class="card" style="cursor:pointer; border-color:${ag.badge_color}55;" onclick="openAgentInspector('${escapeHtml(ag.role)}')">
-
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:6px;">
-
-                <strong style="font-size:13px; color:#fff;">${escapeHtml(ag.title)}</strong>
-
-                <span class="chip success" style="flex-shrink:0;">HOÀN THÀNH</span>
-
-              </div>
-
-              <div style="font-size:10.8px; font-family:var(--font-mono); color:${ag.badge_color}; margin-bottom:6px;">${escapeHtml(ag.role)} | ${escapeHtml(ag.step)}</div>
-
-              <p style="font-size:11.8px; color:var(--text-secondary); margin-bottom:10px; line-height:1.45;">${escapeHtml(ag.responsibility)}</p>
-
-              <div style="font-size:11.2px; color:#6ee7b7; display:flex; justify-content:space-between; border-top:1px solid var(--border-subtle); padding-top:8px; font-weight:600;">
-
-                <span>✅ Nhiệm vụ hoàn thành: ${doneCount.toLocaleString('vi-VN')}</span>
-
-                <span style="color:var(--text-muted);">Tải: ${48 + (doneCount % 19)}% • $${costVal.toFixed(4)}</span>
-
-              </div>
-
-            </div>
-
-          `;
-
-        }).join('');
-
+        if (capChip) capChip.textContent = message;
       }
-
-
 
       document.getElementById('tasksTableBody').innerHTML = STATE.tasks.length === 0
 
@@ -2885,7 +2828,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('1. Doanh thu đã xác minh (Thực nhận)', '1. Verified Revenue (Settled)'),
 
-          val: nine['1_verified_revenue_usd'] ?? 0,
+          val: nine['1_verified_revenue_usd'] ?? null,
 
           rule: t(
 
@@ -2903,7 +2846,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('2. Khoản đang chờ đối soát', '2. Pending Payments (Awaiting Verification)'),
 
-          val: nine['2_pending_payments_usd'] ?? 0,
+          val: nine['2_pending_payments_usd'] ?? null,
 
           rule: t(
 
@@ -2921,7 +2864,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('3. Doanh thu dự kiến (Đơn chưa thanh toán)', '3. Estimated Revenue (Unpaid Orders)'),
 
-          val: nine['3_estimated_revenue_usd'] ?? 0,
+          val: nine['3_estimated_revenue_usd'] ?? null,
 
           rule: t(
 
@@ -2939,7 +2882,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('4. Tiền hoàn lại cho khách', '4. Customer Refunds'),
 
-          val: nine['4_refunds_usd'] ?? 0,
+          val: nine['4_refunds_usd'] ?? null,
 
           rule: t(
 
@@ -2957,13 +2900,13 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('5. Chi phí mô hình AI', '5. AI Model Costs'),
 
-          val: nine['5_ai_costs_usd'] ?? 0,
+          val: nine['5_ai_costs_usd'] ?? null,
 
           rule: t(
 
-            'Chi phí token thực tế gọi API mô hình AI ($0.0000 khi chạy thuật toán nội bộ).',
+            'Chi phí token chỉ hiển thị khi ledger nhà cung cấp ghi nhận; chi phí máy local chưa được đo.',
 
-            'Actual token expenses for external LLM API calls ($0.0000 in local deterministic mode).'
+            'Token cost appears only when reported by the provider ledger; local compute cost is unmeasured.'
 
           )
 
@@ -2975,7 +2918,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('6. Chi phí máy chủ & Hạ tầng', '6. Hosting & Infrastructure Costs'),
 
-          val: nine['6_hosting_costs_usd'] ?? 0,
+          val: nine['6_hosting_costs_usd'] ?? null,
 
           rule: t(
 
@@ -2993,7 +2936,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('7. Phí nền tảng & Thanh toán', '7. Marketplace & Payment Fees'),
 
-          val: nine['7_marketplace_fees_usd'] ?? 0,
+          val: nine['7_marketplace_fees_usd'] ?? null,
 
           rule: t(
 
@@ -3011,7 +2954,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('8. Chi phí vận hành khác', '8. Other Operating Expenses'),
 
-          val: nine['8_other_expenses_usd'] ?? 0,
+          val: nine['8_other_expenses_usd'] ?? null,
 
           rule: t(
 
@@ -3029,7 +2972,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           name: t('9. Lợi nhuận ròng thực tế', '9. Net Profit'),
 
-          val: nine['9_net_profit_usd'] ?? 0,
+          val: nine['9_net_profit_usd'] ?? null,
 
           rule: t(
 
@@ -3053,7 +2996,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           <td style="font-family:var(--font-mono); font-size:13.5px; font-weight:700; color:${r.idx === 1 || r.idx === 9 ? 'var(--accent-cyan)' : 'var(--text-primary)'};">
 
-            $${Number(r.val).toFixed(4)}
+            ${escapeHtml(formatFinanceValue(r.val, 4))}
 
           </td>
 
@@ -3176,12 +3119,6 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
     }
 
 
-
-    if (window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' || window.location.pathname.toLowerCase().includes('autoprofit-ai-pc-test')) {
-
-      try { sessionStorage.setItem('autoprofit_owner_admin_key', 'LOCAL_OWNER_VERIFIED'); } catch (_) {}
-
-    }
 
     let IS_OWNER_ADMIN_VERIFIED = Boolean(sessionStorage.getItem('autoprofit_owner_admin_key'));
 
@@ -3317,47 +3254,11 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     }, true);
 
-    const DEFAULT_GITHUB_WEB_FACTORY_DATA = {"total": 493, "aads_unit_id": "2460284", "revenue_streams_breakdown": [{"stream_id": "STREAM_1_CRYPTO_ARBITRAGE_DEFI", "title_vi": "1. Quét Chênh Lệch Giá Crypto (Arbitrage) & Lãi Suất DeFi Stablecoin", "agents_in_charge": "Lê Minh (AI Nghiên Cứu) & Bảo Trâm (AI Tài Chính On-Chain)", "how_it_works_vi": "Quét trực tiếp API Binance/CoinGecko & các bể thanh khoản DeFi (Venus, Aave V3, Pendle) để săn chênh lệch giá CEX/DEX và tối ưu APY USDT (8.4%–18.6%/năm)."}, {"stream_id": "STREAM_2_WEB3_AIRDROP_BOUNTY", "title_vi": "2. Săn Airdrop Web3, Testnet Layer-2 & Bug Bounty Quốc Tế (Vốn $0)", "agents_in_charge": "Vũ Khoa (AI Lập Trình) & Trần Phong (AI Bảo Mật)", "how_it_works_vi": "Tự động theo dõi các nhiệm vụ Testnet/Airdrop tiềm năng cao (Monad, Berachain, Linea) & giải thưởng vá lỗi mã nguồn mở Bug Bounty ($50–$2,500 USDT)."}, {"stream_id": "STREAM_3_AADS_UTILITY_NETWORK", "title_vi": "3. Mạng Lưới 493+ Web App & Tool Miễn Phí Chạy Quảng Cáo A-Ads", "agents_in_charge": "Vũ Khoa (AI Lập Trình) & Phạm Thảo (AI SEO)", "how_it_works_vi": "AI liên tục quét GitHub 24/7 để đóng gói 493+ công cụ Crypto, AI, SEO miễn phí gắn sẵn quảng cáo A-Ads (#2460284 & #2460312) thu tiền hiển thị thụ động."}, {"stream_id": "STREAM_4_LOW_PRICE_SOURCE_STORE", "title_vi": "4. Bán Mã Nguồn Web App Giá Bình Dân ($1.99 – $5.99 USD • Rẻ Hơn Thị Trường 85%)", "agents_in_charge": "Hoàng Bách (AI Định Giá) & Đặng Quân (AI Sales Quốc Tế)", "how_it_works_vi": "Quét giá thị trường Gumroad/CodeCanyon ($19–$29) rồi hạ giá bán đứt xuống chỉ $1.99–$5.99 USD (49k–149k VNĐ) để khách quốc tế & VN chốt đơn ngay không cần đắn đo."}, {"stream_id": "STREAM_5_SPONSOR_AND_DONATIONS", "title_vi": "5. Đặt Quảng Cáo Tài Trợ Bình Dân ($2.99–$4.99) & Quyên Góp Ủng Hộ", "agents_in_charge": "Bảo Trâm (AI Kế Toán) & Ngô Mai (AI Hỗ Trợ)", "how_it_works_vi": "Nhận tài trợ treo banner trên hệ thống Web Tool và cổng Donate tự động (Ẩn STK VPBank/Ví Binance mặc định, chỉ mở khi khách bấm Mua hoặc Ủng hộ)."}], "items": [{"slug": "gh-nousresearch-hermes-agent", "app_name_vi": "Web Công Cụ [AI-AGENT]: Hermes Agent Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: NousResearch/hermes-agent", "github_repo": "NousResearch/hermes-agent", "github_url": "https://github.com/NousResearch/hermes-agent", "github_stars": 258005, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (The agent that grows with you) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $39 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nousresearch-hermes-agent.html", "created_at": "2026-10-28T17:04:52.412934+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-nousresearch-hermes-agent/live", "download_url": "/api/github-web-factory/apps/gh-nousresearch-hermes-agent/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-dietrichgebert-ponytail", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Ponytail Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: DietrichGebert/ponytail", "github_repo": "DietrichGebert/ponytail", "github_url": "https://github.com/DietrichGebert/ponytail", "github_stars": 178909, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Makes your AI agent think like the laziest senior dev in the room. The best code is the code you never wrote.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $53 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-dietrichgebert-ponytail.html", "created_at": "2026-10-28T17:01:08.358998+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-dietrichgebert-ponytail/live", "download_url": "/api/github-web-factory/apps/gh-dietrichgebert-ponytail/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-msitarzewski-agency-agents", "app_name_vi": "Web Công Cụ [AI-AGENT]: Agency Agents Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: msitarzewski/agency-agents", "github_repo": "msitarzewski/agency-agents", "github_url": "https://github.com/msitarzewski/agency-agents", "github_stars": 164807, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A complete AI agency at your fingertips - From frontend wizards to Reddit community ninjas, from whimsy inject) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-msitarzewski-agency-agents.html", "created_at": "2026-10-28T17:04:52.416923+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-msitarzewski-agency-agents/live", "download_url": "/api/github-web-factory/apps/gh-msitarzewski-agency-agents/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-langflow-ai-langflow", "app_name_vi": "Web Công Cụ [AI-TOOLS]: Langflow Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-tools]: langflow-ai/langflow", "github_repo": "langflow-ai/langflow", "github_url": "https://github.com/langflow-ai/langflow", "github_stars": 156104, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Langflow is a powerful tool for building and deploying AI-powered agents and workflows.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $63 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-langflow-ai-langflow.html", "created_at": "2026-10-28T17:01:06.900682+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-langflow-ai-langflow/live", "download_url": "/api/github-web-factory/apps/gh-langflow-ai-langflow/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-farion1231-cc-switch", "app_name_vi": "Web Công Cụ [AI-TOOLS]: Cc Switch Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-tools]: farion1231/cc-switch", "github_repo": "farion1231/cc-switch", "github_url": "https://github.com/farion1231/cc-switch", "github_stars": 149711, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode, OpenClaw, Grok Build & Hermes ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-farion1231-cc-switch.html", "created_at": "2026-10-28T17:01:06.902677+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-farion1231-cc-switch/live", "download_url": "/api/github-web-factory/apps/gh-farion1231-cc-switch/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nextlevelbuilder-ui-ux-pro-max-skill", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Ui Ux Pro Max Skill Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [landing-page]: nextlevelbuilder/ui-ux-pro-max-skill", "github_repo": "nextlevelbuilder/ui-ux-pro-max-skill", "github_url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", "github_stars": 141975, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (An AI skill that provides design intelligence for building professional UI/UX across multiple platforms.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $19 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nextlevelbuilder-ui-ux-pro-max-skill.html", "created_at": "2026-10-28T17:20:01.538113+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-nextlevelbuilder-ui-ux-pro-max-skill/live", "download_url": "/api/github-web-factory/apps/gh-nextlevelbuilder-ui-ux-pro-max-skill/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-voltagent-awesome-design-md", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Awesome Design Md Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [landing-page]: VoltAgent/awesome-design-md", "github_repo": "VoltAgent/awesome-design-md", "github_url": "https://github.com/VoltAgent/awesome-design-md", "github_stars": 124231, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A collection of DESIGN.md files analysis by popular brand design systems. Drop one into your project and let c) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $50 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-voltagent-awesome-design-md.html", "created_at": "2026-10-28T17:20:01.540108+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-voltagent-awesome-design-md/live", "download_url": "/api/github-web-factory/apps/gh-voltagent-awesome-design-md/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-microsoft-generative-ai-for-beginners", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Generative Ai For Beginners Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: microsoft/generative-ai-for-beginners", "github_repo": "microsoft/generative-ai-for-beginners", "github_url": "https://github.com/microsoft/generative-ai-for-beginners", "github_stars": 122338, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (21 Lessons, Get Started Building with Generative AI) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-microsoft-generative-ai-for-beginners.html", "created_at": "2026-10-28T17:01:08.361990+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-microsoft-generative-ai-for-beginners/live", "download_url": "/api/github-web-factory/apps/gh-microsoft-generative-ai-for-beginners/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-browser-use-browser-use", "app_name_vi": "Web Công Cụ [AI-TOOLS]: Browser Use Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-tools]: browser-use/browser-use", "github_repo": "browser-use/browser-use", "github_url": "https://github.com/browser-use/browser-use", "github_stars": 119378, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Open-source Python library for AI browser agents, plus Browser Use Cloud: stealth browsers and a hosted agent ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $57 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-browser-use-browser-use.html", "created_at": "2026-10-28T17:01:06.904672+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-browser-use-browser-use/live", "download_url": "/api/github-web-factory/apps/gh-browser-use-browser-use/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-earendil-works-pi", "app_name_vi": "Web Công Cụ [AI-AGENT]: Automation Studio Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: earendil-works/pi", "github_repo": "earendil-works/pi", "github_url": "https://github.com/earendil-works/pi", "github_stars": 118502, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (AI agent toolkit: unified LLM API, agent loop, TUI, coding agent CLI) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-earendil-works-pi.html", "created_at": "2026-10-28T17:04:52.417920+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-earendil-works-pi/live", "download_url": "/api/github-web-factory/apps/gh-earendil-works-pi/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-awesome-chatgpt-prompts-builder", "app_name_vi": "Web Thư Viện & Trình Tạo Câu Lệnh AI Chuyên Nghiệp (System Prompt Architect)", "app_name_en": "AI System Prompt Generator & Template Library Web App", "github_repo": "f/awesome-chatgpt-prompts", "github_url": "https://github.com/f/awesome-chatgpt-prompts", "github_stars": 114200, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Marketer & người dùng AI vào tạo câu lệnh chuẩn -> Ăn tiền quảng cáo hiển thị A-Ads + Bán trọn bộ cổng Prompt White-Label $34.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-awesome-chatgpt-prompts-builder.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-awesome-chatgpt-prompts-builder/live", "download_url": "/api/github-web-factory/apps/github-awesome-chatgpt-prompts-builder/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-addyosmani-agent-skills", "app_name_vi": "Web Công Cụ [AI-AGENT]: Agent Skills Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: addyosmani/agent-skills", "github_repo": "addyosmani/agent-skills", "github_url": "https://github.com/addyosmani/agent-skills", "github_stars": 111380, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Production-grade engineering skills for AI coding agents.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $24 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-addyosmani-agent-skills.html", "created_at": "2026-10-28T17:05:21.664587+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-addyosmani-agent-skills/live", "download_url": "/api/github-web-factory/apps/gh-addyosmani-agent-skills/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-panniantong-agent-reach", "app_name_vi": "Web Công Cụ [AI-AGENT]: Agent Reach Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: Panniantong/Agent-Reach", "github_repo": "Panniantong/Agent-Reach", "github_url": "https://github.com/Panniantong/Agent-Reach", "github_stars": 105460, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $44 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-panniantong-agent-reach.html", "created_at": "2026-10-28T17:05:21.681941+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-panniantong-agent-reach/live", "download_url": "/api/github-web-factory/apps/gh-panniantong-agent-reach/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-fastapi-fastapi", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Fastapi Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: fastapi/fastapi", "github_repo": "fastapi/fastapi", "github_url": "https://github.com/fastapi/fastapi", "github_stars": 104243, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (FastAPI framework, high performance, easy to learn, fast to code, ready for production) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $42 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-fastapi-fastapi.html", "created_at": "2026-10-28T17:01:11.580925+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-fastapi-fastapi/live", "download_url": "/api/github-web-factory/apps/gh-fastapi-fastapi/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-leonxlnx-taste-skill", "app_name_vi": "Web Công Cụ [AI-AGENT]: Taste Skill Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: Leonxlnx/taste-skill", "github_repo": "Leonxlnx/taste-skill", "github_url": "https://github.com/Leonxlnx/taste-skill", "github_stars": 104193, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Agent skills that give coding agents taste: art direction, reference images and a browser check instead of gen) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $37 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-leonxlnx-taste-skill.html", "created_at": "2026-10-28T17:05:21.684554+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-leonxlnx-taste-skill/live", "download_url": "/api/github-web-factory/apps/gh-leonxlnx-taste-skill/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-css-glassmorphism-landing-builder", "app_name_vi": "Web Thiết Kế Giao Diện Kính Mờ (Glassmorphism) & Sinh Code Landing Page Bán Hàng", "app_name_en": "CSS Glassmorphism, Neon Gradient & SaaS Landing Page Code Generator", "github_repo": "uvdesk/community-skeleton", "github_url": "https://github.com/tailwindlabs/tailwindcss", "github_stars": 82400, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 1.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Designer & chủ startup vào kéo thanh trượt tạo giao diện Landing Page -> Tự động nạp quảng cáo A-Ads + Bán bộ mẫu Landing Page chuyển đổi cao $45.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-css-glassmorphism-landing-builder.html", "created_at": "2026-10-28T16:33:29.849463+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-css-glassmorphism-landing-builder/live", "download_url": "/api/github-web-factory/apps/github-css-glassmorphism-landing-builder/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-animate-css-keyframe-studio", "app_name_vi": "Web Tạo Hiệu Ứng Chuyển Động CSS3 Keyframes & Nút Bấm Kêu Gọi Mua Hàng (CTA)", "app_name_en": "Interactive CSS3 Animation & High-Converting CTA Button Generator", "github_repo": "animate-css/animate.css", "github_url": "https://github.com/animate-css/animate.css", "github_stars": 80900, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 3.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Web designer vào tạo nút CTA chuyển đổi cao -> Tự động nạp quảng cáo A-Ads + Bán bộ thư viện UI/UX thương mại $36.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-animate-css-keyframe-studio.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-animate-css-keyframe-studio/live", "download_url": "/api/github-web-factory/apps/github-animate-css-keyframe-studio/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hoppscotch-hoppscotch", "app_name_vi": "Web Công Cụ [API-CLIENT]: Hoppscotch Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "hoppscotch/hoppscotch", "github_url": "https://github.com/hoppscotch/hoppscotch", "github_stars": 80706, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Open-Source API Development Ecosystem • https://hoppscotch.io • Offline, On-Prem & Cloud • Web, Desktop & CLI ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $40 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hoppscotch-hoppscotch.html", "created_at": "2026-10-28T17:48:14.111548+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-hoppscotch-hoppscotch/live", "download_url": "/api/github-web-factory/apps/gh-hoppscotch-hoppscotch/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ruvnet-ruflo", "app_name_vi": "Web Công Cụ [AI-AGENT]: Ruflo Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: ruvnet/ruflo", "github_repo": "ruvnet/ruflo", "github_url": "https://github.com/ruvnet/ruflo", "github_stars": 79925, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🌊 The original agent harness. Deploy intelligent multi-player swarms, coordinate autonomous workflows, and bui) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $24 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ruvnet-ruflo.html", "created_at": "2026-10-28T17:08:41.286420+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-ruvnet-ruflo/live", "download_url": "/api/github-web-factory/apps/gh-ruvnet-ruflo/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-dair-ai-prompt-engineering-guide", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Prompt Engineering Guide Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: dair-ai/Prompt-Engineering-Guide", "github_repo": "dair-ai/Prompt-Engineering-Guide", "github_url": "https://github.com/dair-ai/Prompt-Engineering-Guide", "github_stars": 79620, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🐙 Guides, papers, lessons, notebooks and resources for prompt engineering, context engineering, RAG, and AI Ag) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $34 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-dair-ai-prompt-engineering-guide.html", "created_at": "2026-10-28T17:01:08.362988+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-dair-ai-prompt-engineering-guide/live", "download_url": "/api/github-web-factory/apps/gh-dair-ai-prompt-engineering-guide/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-shareai-lab-learn-claude-code", "app_name_vi": "Web Công Cụ [AI-AGENT]: Learn Claude Code Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: shareAI-lab/learn-claude-code", "github_repo": "shareAI-lab/learn-claude-code", "github_url": "https://github.com/shareAI-lab/learn-claude-code", "github_stars": 79437, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Bash is all you need -  A nano claude code–like 「agent harness」, built from 0 to 1) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $31 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-shareai-lab-learn-claude-code.html", "created_at": "2026-10-28T17:08:41.304372+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-shareai-lab-learn-claude-code/live", "download_url": "/api/github-web-factory/apps/gh-shareai-lab-learn-claude-code/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-career-ops-hq-career-ops", "app_name_vi": "Web Công Cụ [AI-AGENT]: Career Ops Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: career-ops-hq/career-ops", "github_repo": "career-ops-hq/career-ops", "github_url": "https://github.com/career-ops-hq/career-ops", "github_stars": 78237, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Open-source AI job search agent and job finder: scan job boards, score each job 1-5 against your CV before you) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-career-ops-hq-career-ops.html", "created_at": "2026-10-28T17:08:41.305369+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-career-ops-hq-career-ops/live", "download_url": "/api/github-web-factory/apps/gh-career-ops-hq-career-ops/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-microsoft-ai-agents-for-beginners", "app_name_vi": "Web Công Cụ [AI-AGENT]: Ai Agents For Beginners Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: microsoft/ai-agents-for-beginners", "github_repo": "microsoft/ai-agents-for-beginners", "github_url": "https://github.com/microsoft/ai-agents-for-beginners", "github_stars": 78056, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (18 Lessons to Get Started Building AI Agents) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $45 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-microsoft-ai-agents-for-beginners.html", "created_at": "2026-10-28T17:11:05.004257+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-microsoft-ai-agents-for-beginners/live", "download_url": "/api/github-web-factory/apps/gh-microsoft-ai-agents-for-beginners/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-thedaviddias-front-end-checklist", "app_name_vi": "Web Công Cụ [AI-AGENT]: Front End Checklist Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: thedaviddias/Front-End-Checklist", "github_repo": "thedaviddias/Front-End-Checklist", "github_url": "https://github.com/thedaviddias/Front-End-Checklist", "github_stars": 74585, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🗂 The essential checklist for modern web development, for humans and AI agents) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $39 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-thedaviddias-front-end-checklist.html", "created_at": "2026-10-28T17:11:05.008247+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-thedaviddias-front-end-checklist/live", "download_url": "/api/github-web-factory/apps/gh-thedaviddias-front-end-checklist/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-foundationagents-metagpt", "app_name_vi": "Web Công Cụ [AI-AGENT]: Metagpt Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: FoundationAgents/MetaGPT", "github_repo": "FoundationAgents/MetaGPT", "github_url": "https://github.com/FoundationAgents/MetaGPT", "github_stars": 71056, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🌟 The Multi-Agent Framework: First AI Software Company, Towards Natural Language Programming) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $20 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-foundationagents-metagpt.html", "created_at": "2026-10-28T17:11:05.009245+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-foundationagents-metagpt/live", "download_url": "/api/github-web-factory/apps/gh-foundationagents-metagpt/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hugohe3-ppt-master", "app_name_vi": "Web Công Cụ [AI-AGENT]: Ppt Master Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: hugohe3/ppt-master", "github_repo": "hugohe3/ppt-master", "github_url": "https://github.com/hugohe3/ppt-master", "github_stars": 70172, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (AI turns documents or topics into real, native PowerPoint decks—with native shapes, transitions and animations) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hugohe3-ppt-master.html", "created_at": "2026-10-28T17:13:13.808465+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-hugohe3-ppt-master/live", "download_url": "/api/github-web-factory/apps/gh-hugohe3-ppt-master/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zhulinsen-daily-stock-analysis", "app_name_vi": "Web Công Cụ [AI-AGENT]: Daily Stock Analysis Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: ZhuLinsen/daily_stock_analysis", "github_repo": "ZhuLinsen/daily_stock_analysis", "github_url": "https://github.com/ZhuLinsen/daily_stock_analysis", "github_stars": 67215, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。  LLM-powered multi-market stock analysis system with multi-s) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $49 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zhulinsen-daily-stock-analysis.html", "created_at": "2026-10-28T17:13:13.812453+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-zhulinsen-daily-stock-analysis/live", "download_url": "/api/github-web-factory/apps/gh-zhulinsen-daily-stock-analysis/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mvanhorn-last30days-skill", "app_name_vi": "Web Công Cụ [AI-AGENT]: Last30Days Skill Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: mvanhorn/last30days-skill", "github_repo": "mvanhorn/last30days-skill", "github_url": "https://github.com/mvanhorn/last30days-skill", "github_stars": 65769, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthes) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $43 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mvanhorn-last30days-skill.html", "created_at": "2026-10-28T17:13:13.813452+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-mvanhorn-last30days-skill/live", "download_url": "/api/github-web-factory/apps/gh-mvanhorn-last30days-skill/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-chartjs-kpi-financial-simulator", "app_name_vi": "Web Mô Phỏng Dòng Tiền Startup, Điểm Hòa Vốn (Break-Even) & Dự Báo Doanh Thu", "app_name_en": "Startup Burn Rate, Break-Even Point & Cashflow Simulator Web App", "github_repo": "chartjs/Chart.js", "github_url": "https://github.com/chartjs/Chart.js", "github_stars": 64700, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI) & Bảo Trâm (AI Tài Chính)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Chủ doanh nghiệp vào tính điểm hòa vốn và biên lợi nhuận -> Chạy quảng cáo A-Ads CPC cao + Bán bộ Dashboard tài chính $42.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-chartjs-kpi-financial-simulator.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-chartjs-kpi-financial-simulator/live", "download_url": "/api/github-web-factory/apps/github-chartjs-kpi-financial-simulator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-saas-roi-pomodoro-calculator", "app_name_vi": "Web Tính Toán Lợi Nhuận SaaS (Roi Pro) & Đồng Hồ Tập Trung Pomodoro", "app_name_en": "SaaS Revenue Margin Calculator & Developer Pomodoro Focus Web App", "github_repo": "ziishaned/learn-regex", "github_url": "https://github.com/chartjs/Chart.js", "github_stars": 64500, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "Business & Finance Web App", "monetization_summary_vi": "Người làm tự do & founder giữ tab đồng hồ Pomodoro hàng giờ -> Quảng cáo A-Ads tự động làm mới liên tục kiếm tiền + Bán bảng tính tài chính $19.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-saas-roi-pomodoro-calculator.html", "created_at": "2026-10-28T16:33:29.849463+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-saas-roi-pomodoro-calculator/live", "download_url": "/api/github-web-factory/apps/github-saas-roi-pomodoro-calculator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-gsd-build-get-shit-done", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Get Shit Done Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: gsd-build/get-shit-done", "github_repo": "gsd-build/get-shit-done", "github_url": "https://github.com/gsd-build/get-shit-done", "github_stars": 64198, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A light-weight and powerful meta-prompting, context engineering and spec-driven development system for Claude ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-gsd-build-get-shit-done.html", "created_at": "2026-10-28T17:05:07.411913+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-gsd-build-get-shit-done/live", "download_url": "/api/github-web-factory/apps/gh-gsd-build-get-shit-done/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-upstash-context7", "app_name_vi": "Web Công Cụ [AI-AGENT]: Context7 Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [ai-agent]: upstash/context7", "github_repo": "upstash/context7", "github_url": "https://github.com/upstash/context7", "github_stars": 63842, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Context7 Platform -- Up-to-date docs for AI agents) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $51 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-upstash-context7.html", "created_at": "2026-10-28T17:15:35.770690+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-upstash-context7/live", "download_url": "/api/github-web-factory/apps/gh-upstash-context7/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-marktext-marktext", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Marktext Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: marktext/marktext", "github_repo": "marktext/marktext", "github_url": "https://github.com/marktext/marktext", "github_stars": 63221, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (📝A simple and elegant markdown editor, available for Linux, macOS and Windows.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-marktext-marktext.html", "created_at": "2026-10-28T17:01:12.937384+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-marktext-marktext/live", "download_url": "/api/github-web-factory/apps/gh-marktext-marktext/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-blader-humanizer", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Humanizer Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: blader/humanizer", "github_repo": "blader/humanizer", "github_url": "https://github.com/blader/humanizer", "github_stars": 61858, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Agent skill that removes signs of AI-generated writing from text) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-blader-humanizer.html", "created_at": "2026-10-28T17:05:07.415439+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-blader-humanizer/live", "download_url": "/api/github-web-factory/apps/gh-blader-humanizer/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-usebruno-bruno", "app_name_vi": "Web Công Cụ [API-CLIENT]: Bruno Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "usebruno/bruno", "github_url": "https://github.com/usebruno/bruno", "github_stars": 47907, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia)) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-usebruno-bruno.html", "created_at": "2026-10-28T17:48:14.224799+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-usebruno-bruno/live", "download_url": "/api/github-web-factory/apps/gh-usebruno-bruno/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-dayjs-global-timezone-meeting-planner", "app_name_vi": "Web Quy Đổi Múi Giờ Quốc Tế, Unix Timestamp & Lập Lịch Họp Khách Hàng Toàn Cầu", "app_name_en": "Global Timezone Converter, Epoch Unix Timestamp & B2B Meeting Slot Planner", "github_repo": "iamkun/dayjs", "github_url": "https://github.com/iamkun/dayjs", "github_stars": 47100, "license_spdx": "MIT", "discovered_by": "Đặng Quân (AI Bán Hàng Quốc Tế)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 3.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Làm việc với khách Mỹ, Anh, Nhật, Hàn, Đức, Pháp -> Dùng công cụ quy đổi giờ quốc tế gắn A-Ads + Bán tiện ích đặt lịch $21.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-dayjs-global-timezone-meeting-planner.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-dayjs-global-timezone-meeting-planner/live", "download_url": "/api/github-web-factory/apps/github-dayjs-global-timezone-meeting-planner/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-styled-components-styled-components", "app_name_vi": "Web Công Cụ [API-CLIENT]: Styled Components Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "styled-components/styled-components", "github_url": "https://github.com/styled-components/styled-components", "github_stars": 41061, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Fast, expressive styling for React. Server components, client components, streaming SSR, React Native—one API.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $40 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-styled-components-styled-components.html", "created_at": "2026-10-28T17:48:14.226795+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-styled-components-styled-components/live", "download_url": "/api/github-web-factory/apps/gh-styled-components-styled-components/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-github-awesome-copilot", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Awesome Copilot Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: github/awesome-copilot", "github_repo": "github/awesome-copilot", "github_url": "https://github.com/github/awesome-copilot", "github_stars": 40499, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Community-contributed instructions, agents, skills, and configurations to help you make the most of GitHub Cop) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $63 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-github-awesome-copilot.html", "created_at": "2026-10-28T17:05:07.416435+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-github-awesome-copilot/live", "download_url": "/api/github-web-factory/apps/gh-github-awesome-copilot/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-freestylefly-awesome-gpt-image-2", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Awesome Gpt Image 2 Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: freestylefly/awesome-gpt-image-2", "github_repo": "freestylefly/awesome-gpt-image-2", "github_url": "https://github.com/freestylefly/awesome-gpt-image-2", "github_stars": 35173, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Prompt as Code | GPT Image 2 / 2.5 提示词与案例库，530+ 个案例、20+ 套工业级模板与可复用 Skills，新增 2.5 同提示词对比专区，附完整提示词与生成记录，持续更新。) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-freestylefly-awesome-gpt-image-2.html", "created_at": "2026-10-28T17:11:18.622055+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-freestylefly-awesome-gpt-image-2/live", "download_url": "/api/github-web-factory/apps/gh-freestylefly-awesome-gpt-image-2/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-crypto-arbitrage-spread-scanner", "app_name_vi": "Web Quét Chênh Lệch Giá Crypto Đa Sàn (CEX/DEX Arbitrage) & Cảnh Báo Lợi Nhuận Thời Gian Thực", "app_name_en": "Multi-Exchange Crypto Arbitrage Spread Scanner & Flash Profit Radar Web App", "github_repo": "ccxt/ccxt", "github_url": "https://github.com/ccxt/ccxt", "github_stars": 33400, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Crypto & Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing) & Đặng Quân (AI Kinh Doanh)", "sale_price_usd": 1.99, "category": "Crypto Arbitrage & Web3 Tool", "monetization_summary_vi": "Quét chênh lệch giá BTC/ETH/SOL/USDT giữa các sàn để kiếm lời chênh lệch + Thu tiền quảng cáo Crypto A-Ads + Bán mã nguồn giá rẻ $2.99 (Thị trường bán $25).", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-crypto-arbitrage-spread-scanner.html", "created_at": "2026-10-29T01:27:22.705758+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-crypto-arbitrage-spread-scanner/live", "download_url": "/api/github-web-factory/apps/github-crypto-arbitrage-spread-scanner/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mckaywrigley-chatbot-ui", "app_name_vi": "Web Công Cụ [CHATBOT-UI]: Chatbot Ui Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [CHATBOT-UI]", "github_repo": "mckaywrigley/chatbot-ui", "github_url": "https://github.com/mckaywrigley/chatbot-ui", "github_stars": 33325, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (AI chat for any model.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $44 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mckaywrigley-chatbot-ui.html", "created_at": "2026-10-28T18:41:13.284193+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-mckaywrigley-chatbot-ui/live", "download_url": "/api/github-web-factory/apps/gh-mckaywrigley-chatbot-ui/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-ai-prompt-markdown-converter", "app_name_vi": "Web Soạn Thảo Markdown Sang HTML & Tối Ưu Câu Lệnh AI (Prompt Studio)", "app_name_en": "Live Markdown-to-HTML Editor, SEO Word Counter & AI Prompt Studio", "github_repo": "markedjs/marked", "github_url": "https://github.com/markedjs/marked", "github_stars": 33150, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 4.99, "category": "Content & AI Productivity Web App", "monetization_summary_vi": "Người viết nội dung & người dùng AI vào soạn bài và đếm từ khóa SEO -> Hiển thị quảng cáo A-Ads liên tục + Bán bản Pro xuất file HTML sạch $24.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-ai-prompt-markdown-converter.html", "created_at": "2026-10-28T16:33:29.849463+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/github-ai-prompt-markdown-converter/live", "download_url": "/api/github-web-factory/apps/github-ai-prompt-markdown-converter/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-pydantic-pydantic", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Pydantic Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: pydantic/pydantic", "github_repo": "pydantic/pydantic", "github_url": "https://github.com/pydantic/pydantic", "github_stars": 29224, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Data validation using Python type hints) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-pydantic-pydantic.html", "created_at": "2026-10-28T17:01:11.584916+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-pydantic-pydantic/live", "download_url": "/api/github-web-factory/apps/gh-pydantic-pydantic/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-alirezarezvani-claude-skills", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Claude Skills Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: alirezarezvani/claude-skills", "github_repo": "alirezarezvani/claude-skills", "github_url": "https://github.com/alirezarezvani/claude-skills", "github_stars": 28896, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (380 Claude Code skills & agent skills & plugins (30+ Agents, 70+ custom commands, 380+ skills, customizable re) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $25 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-alirezarezvani-claude-skills.html", "created_at": "2026-10-28T17:11:18.624048+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-alirezarezvani-claude-skills/live", "download_url": "/api/github-web-factory/apps/gh-alirezarezvani-claude-skills/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-promptfoo-promptfoo", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Promptfoo Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: promptfoo/promptfoo", "github_repo": "promptfoo/promptfoo", "github_url": "https://github.com/promptfoo/promptfoo", "github_stars": 26558, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Test your prompts, agents, and RAGs. Red teaming/pentesting/vulnerability scanning for AI. Compare performance) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $27 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-promptfoo-promptfoo.html", "created_at": "2026-10-28T17:11:18.626042+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-promptfoo-promptfoo/live", "download_url": "/api/github-web-factory/apps/gh-promptfoo-promptfoo/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-every-app-open-seo", "app_name_vi": "Web Công Cụ [SEO-AUDIT]: Open Seo Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [seo-audit]: every-app/open-seo", "github_repo": "every-app/open-seo", "github_url": "https://github.com/every-app/open-seo", "github_stars": 25470, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Open source alternative to Semrush and Ahrefs) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $19 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-every-app-open-seo.html", "created_at": "2026-10-28T17:01:10.004725+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-every-app-open-seo/live", "download_url": "/api/github-web-factory/apps/gh-every-app-open-seo/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-web3-airdrop-testnet-quest-tracker", "app_name_vi": "Web Săn Kèo Airdrop Web3, Testnet Layer-2 & Tự Động Hóa Nhiệm Vụ Nhận Token Miễn Phí", "app_name_en": "Web3 Airdrop Hunter, Layer-2 Testnet Checklist & Sybil-Safe Wallet Tracker", "github_repo": "ethers-io/ethers.js", "github_url": "https://github.com/ethers-io/ethers.js", "github_stars": 24800, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Săn Kèo Airdrop & Web3)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Tiếp Thị Quốc Tế)", "sale_price_usd": 1.99, "category": "Crypto Arbitrage & Web3 Tool", "monetization_summary_vi": "Cộng đồng săn Airdrop mở tab theo dõi nhiệm vụ hàng ngày -> Tối đa hóa lượt hiển thị A-Ads + Hoa hồng giới thiệu ví/sàn + Bán bản Pro $1.99.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-web3-airdrop-testnet-quest-tracker.html", "created_at": "2026-10-29T01:27:22.705758+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-web3-airdrop-testnet-quest-tracker/live", "download_url": "/api/github-web-factory/apps/github-web3-airdrop-testnet-quest-tracker/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-nanoid-secure-coupon-license-generator", "app_name_vi": "Web Tạo Mã Bản Quyền Phần Mềm (License Key), Mã Giảm Giá Voucher & UUID Hàng Loạt", "app_name_en": "Bulk Software License Key, Promo Voucher Code & NanoID Generator", "github_repo": "ai/nanoid", "github_url": "https://github.com/ai/nanoid", "github_stars": 24600, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Người bán phần mềm & chủ shop vào sinh mã Voucher/License Key -> Chạy 2 banner A-Ads + Bán mã nguồn quản lý License $28.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-nanoid-secure-coupon-license-generator.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-nanoid-secure-coupon-license-generator/live", "download_url": "/api/github-web-factory/apps/github-nanoid-secure-coupon-license-generator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-super-productivity-super-productivity", "app_name_vi": "Web Công Cụ [POMODORO-TIMER]: Super Productivity Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [pomodoro-timer]: super-productivity/super-productivity", "github_repo": "super-productivity/super-productivity", "github_url": "https://github.com/super-productivity/super-productivity", "github_stars": 23222, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Super Productivity is an advanced todo list app with integrated Timeboxing and time tracking capabilities. It ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $21 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-super-productivity-super-productivity.html", "created_at": "2026-10-28T17:20:19.403906+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-super-productivity-super-productivity/live", "download_url": "/api/github-web-factory/apps/gh-super-productivity-super-productivity/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-svg-svgo", "app_name_vi": "Web Công Cụ [SVG-OPTIMIZER]: Svgo Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [svg-optimizer]: svg/svgo", "github_repo": "svg/svgo", "github_url": "https://github.com/svg/svgo", "github_stars": 22772, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (SVG Optimizer for Node.js and CLI. ⚙️) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $21 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-svg-svgo.html", "created_at": "2026-10-28T17:08:00.384521+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-svg-svgo/live", "download_url": "/api/github-web-factory/apps/gh-svg-svgo/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-js-cookie-js-cookie", "app_name_vi": "Web Công Cụ [API-CLIENT]: Js Cookie Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "js-cookie/js-cookie", "github_url": "https://github.com/js-cookie/js-cookie", "github_stars": 22572, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A simple, lightweight JavaScript API for handling cookies, client-side.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-js-cookie-js-cookie.html", "created_at": "2026-10-28T18:05:13.593633+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-js-cookie-js-cookie/live", "download_url": "/api/github-web-factory/apps/gh-js-cookie-js-cookie/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-dipakkr-awesome-ai-engineering", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Awesome Ai Engineering Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: dipakkr/awesome-ai-engineering", "github_repo": "dipakkr/awesome-ai-engineering", "github_url": "https://github.com/dipakkr/awesome-ai-engineering", "github_stars": 22483, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🚀 A curated collection of AI engineering resources, roadmaps, tools, and projects covering LLMs, RAG, AI Agent) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-dipakkr-awesome-ai-engineering.html", "created_at": "2026-10-28T17:13:26.895202+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-dipakkr-awesome-ai-engineering/live", "download_url": "/api/github-web-factory/apps/gh-dipakkr-awesome-ai-engineering/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-jnmetacode-agency-agents-zh", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Agency Agents Zh Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: jnMetaCode/agency-agents-zh", "github_repo": "jnMetaCode/agency-agents-zh", "github_url": "https://github.com/jnMetaCode/agency-agents-zh", "github_stars": 21664, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🎭 277 个即插即用的 AI 专家角色 — 支持 Claude Code/Cursor/Copilot 等 20 种工具，覆盖工程/设计/营销/金融等 20 个部门。含 64 个中国市场原创智能体（小红书/抖音/微信/) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-jnmetacode-agency-agents-zh.html", "created_at": "2026-10-28T17:13:26.896201+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-jnmetacode-agency-agents-zh/live", "download_url": "/api/github-web-factory/apps/gh-jnmetacode-agency-agents-zh/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ai4finance-foundation-fingpt", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Fingpt Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: AI4Finance-Foundation/FinGPT", "github_repo": "AI4Finance-Foundation/FinGPT", "github_url": "https://github.com/AI4Finance-Foundation/FinGPT", "github_stars": 21485, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (FinGPT: Open-Source Financial Large Language Models!  Revolutionize 🔥    We release the trained model on Huggi) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $39 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ai4finance-foundation-fingpt.html", "created_at": "2026-10-28T17:13:26.897198+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-ai4finance-foundation-fingpt/live", "download_url": "/api/github-web-factory/apps/gh-ai4finance-foundation-fingpt/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-paularmstrong-normalizr", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Normalizr Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: paularmstrong/normalizr", "github_repo": "paularmstrong/normalizr", "github_url": "https://github.com/paularmstrong/normalizr", "github_stars": 20779, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Normalizes nested JSON according to a schema) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $53 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-paularmstrong-normalizr.html", "created_at": "2026-10-28T17:01:11.585914+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-paularmstrong-normalizr/live", "download_url": "/api/github-web-factory/apps/gh-paularmstrong-normalizr/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-catppuccin-catppuccin", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Catppuccin Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "catppuccin/catppuccin", "github_url": "https://github.com/catppuccin/catppuccin", "github_stars": 19888, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (😸 Soothing pastel theme for the high-spirited!) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-catppuccin-catppuccin.html", "created_at": "2026-10-28T17:49:14.386970+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-catppuccin-catppuccin/live", "download_url": "/api/github-web-factory/apps/gh-catppuccin-catppuccin/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-apollographql-apollo-client", "app_name_vi": "Web Công Cụ [API-CLIENT]: Apollo Client Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "apollographql/apollo-client", "github_url": "https://github.com/apollographql/apollo-client", "github_stars": 19784, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (The industry-leading GraphQL client for TypeScript, JavaScript, React, Vue, Angular, and more. Apollo Client d) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $48 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-apollographql-apollo-client.html", "created_at": "2026-10-28T18:05:13.596626+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-apollographql-apollo-client/live", "download_url": "/api/github-web-factory/apps/gh-apollographql-apollo-client/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mountain-loop-yaak", "app_name_vi": "Web Công Cụ [API-CLIENT]: Yaak Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "mountain-loop/yaak", "github_url": "https://github.com/mountain-loop/yaak", "github_stars": 19378, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (The most intuitive desktop API client. Organize and execute REST, GraphQL, WebSockets, Server Sent Events, and) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mountain-loop-yaak.html", "created_at": "2026-10-28T18:05:13.597624+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-mountain-loop-yaak/live", "download_url": "/api/github-web-factory/apps/gh-mountain-loop-yaak/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-whale-wallet-onchain-radar", "app_name_vi": "Web Theo Dõi Ví Cá Voi On-Chain (Whale Alert), Phân Tích Dòng Tiền Smart Money & Token Mới", "app_name_en": "On-Chain Whale Wallet Tracker, Smart Money Flow & DEX Token Sniper Utility", "github_repo": "web3/web3.js", "github_url": "https://github.com/web3/web3.js", "github_stars": 19200, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Phân Tích On-Chain)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 1.99, "category": "Crypto Arbitrage & Web3 Tool", "monetization_summary_vi": "Trader Crypto mở theo dõi ví cá voi 24/7 -> Thu nhập quảng cáo A-Ads CPM cao ngất ngưởng + Bán mã nguồn giá bình dân $3.49.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-whale-wallet-onchain-radar.html", "created_at": "2026-10-29T01:27:22.705758+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-whale-wallet-onchain-radar/live", "download_url": "/api/github-web-factory/apps/github-whale-wallet-onchain-radar/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-defi-stablecoin-apy-yield-optimizer", "app_name_vi": "Web Tối Ưu Lãi Suất Gửi Tiết Kiệm USDT/USDC DeFi (Yield Farming & Staking APY Calculator)", "app_name_en": "DeFi Stablecoin APY Yield Aggregator & Staking Compounding Calculator Web App", "github_repo": "DefiLlama/defillama-app", "github_url": "https://github.com/DefiLlama/defillama-app", "github_stars": 18900, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu Lợi Nhuận DeFi)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 3.99, "category": "Crypto Arbitrage & Web3 Tool", "monetization_summary_vi": "So sánh lãi suất APY USDT/USDC trên Aave, Compound, Venus, PancakeSwap -> Ăn hoa hồng Affiliate DeFi + Quảng cáo A-Ads + Bán mã nguồn $2.49.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-defi-stablecoin-apy-yield-optimizer.html", "created_at": "2026-10-29T01:27:22.705758+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-defi-stablecoin-apy-yield-optimizer/live", "download_url": "/api/github-web-factory/apps/github-defi-stablecoin-apy-yield-optimizer/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-fastapi-sqlmodel", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Sqlmodel Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: fastapi/sqlmodel", "github_repo": "fastapi/sqlmodel", "github_url": "https://github.com/fastapi/sqlmodel", "github_stars": 18514, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (SQL databases in Python, designed for simplicity, compatibility, and robustness.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-fastapi-sqlmodel.html", "created_at": "2026-10-28T17:05:42.918086+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-fastapi-sqlmodel/live", "download_url": "/api/github-web-factory/apps/gh-fastapi-sqlmodel/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nhn-tui-editor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Tui Editor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: nhn/tui.editor", "github_repo": "nhn/tui.editor", "github_url": "https://github.com/nhn/tui.editor", "github_stars": 17999, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🍞📝 Markdown WYSIWYG Editor. GFM Standard + Chart & UML Extensible.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $63 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nhn-tui-editor.html", "created_at": "2026-10-28T17:01:12.940375+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-nhn-tui-editor/live", "download_url": "/api/github-web-factory/apps/gh-nhn-tui-editor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-sindresorhus-ky", "app_name_vi": "Web Công Cụ [API-CLIENT]: Automation Studio Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "sindresorhus/ky", "github_url": "https://github.com/sindresorhus/ky", "github_stars": 17141, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (🌳 Tiny & elegant JavaScript HTTP client based on the Fetch API) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-sindresorhus-ky.html", "created_at": "2026-10-28T18:35:13.618559+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-sindresorhus-ky/live", "download_url": "/api/github-web-factory/apps/gh-sindresorhus-ky/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-scalar-scalar", "app_name_vi": "Web Công Cụ [API-CLIENT]: Scalar Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "scalar/scalar", "github_url": "https://github.com/scalar/scalar", "github_stars": 16335, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Scalar is an open-source API platform:　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　🌐 Modern REST API Client　　　　　　　　　) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $19 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-scalar-scalar.html", "created_at": "2026-10-28T18:35:13.621551+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-scalar-scalar/live", "download_url": "/api/github-web-factory/apps/gh-scalar-scalar/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nextjs-saas-starter", "app_name_vi": "Web Công Cụ [SAAS-STARTER]: Saas Starter Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [SAAS-STARTER]", "github_repo": "nextjs/saas-starter", "github_url": "https://github.com/nextjs/saas-starter", "github_stars": 16233, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Get started quickly with Next.js, Postgres, Stripe, and shadcn/ui.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $52 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nextjs-saas-starter.html", "created_at": "2026-10-28T18:10:13.970549+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-nextjs-saas-starter/live", "download_url": "/api/github-web-factory/apps/gh-nextjs-saas-starter/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-password-hash-security-auditor", "app_name_vi": "Web Kiểm Tra Độ Mạnh Mật Khẩu, Tạo Mã Băm SHA-256 & Giải Mã Token JWT", "app_name_en": "CyberSecurity Password Entropy, SHA-256 Hash & JWT Inspector Web App", "github_repo": "brix/crypto-js", "github_url": "https://github.com/brix/crypto-js", "github_stars": 16200, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật) & Lê Minh (AI Nghiên Cứu)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quản trị viên & kỹ sư bảo mật vào kiểm tra mã băm / mật khẩu -> Kiếm tiền CPM/CPC từ quảng cáo A-Ads + Bán gói kiểm toán bảo mật $39.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-password-hash-security-auditor.html", "created_at": "2026-10-28T16:33:29.849463+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-password-hash-security-auditor/live", "download_url": "/api/github-web-factory/apps/github-password-hash-security-auditor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-wasp-lang-open-saas", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Open Saas Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [landing-page]: wasp-lang/open-saas", "github_repo": "wasp-lang/open-saas", "github_url": "https://github.com/wasp-lang/open-saas", "github_stars": 16182, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A 100% free modern JS SaaS boilerplate (React, NodeJS, Prisma). Full-featured: Auth (email, google, github, sl) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-wasp-lang-open-saas.html", "created_at": "2026-10-28T17:20:01.541106+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-wasp-lang-open-saas/live", "download_url": "/api/github-web-factory/apps/gh-wasp-lang-open-saas/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-agricidaniel-claude-obsidian", "app_name_vi": "Web Công Cụ [OPEN-GRAPH]: Claude Obsidian Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [OPEN-GRAPH]", "github_repo": "AgriciDaniel/claude-obsidian", "github_url": "https://github.com/AgriciDaniel/claude-obsidian", "github_stars": 15926, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Self-organizing AI second brain for Obsidian + Claude Code. Drop any source and Claude reads, links, and files) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-agricidaniel-claude-obsidian.html", "created_at": "2026-10-28T17:45:13.966283+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-agricidaniel-claude-obsidian/live", "download_url": "/api/github-web-factory/apps/gh-agricidaniel-claude-obsidian/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nidhinjs-prompt-master", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Prompt Master Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: nidhinjs/prompt-master", "github_repo": "nidhinjs/prompt-master", "github_url": "https://github.com/nidhinjs/prompt-master", "github_stars": 15198, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A Claude skill that writes the accurate prompts for any AI tool. Zero tokens or credits wasted. Full context a) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $52 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nidhinjs-prompt-master.html", "created_at": "2026-10-28T17:15:49.262021+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-nidhinjs-prompt-master/live", "download_url": "/api/github-web-factory/apps/gh-nidhinjs-prompt-master/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ajv-validator-ajv", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Ajv Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: ajv-validator/ajv", "github_repo": "ajv-validator/ajv", "github_url": "https://github.com/ajv-validator/ajv", "github_stars": 14867, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (The fastest JSON schema Validator. Supports JSON Schema draft-04/06/07/2019-09/2020-12 and JSON Type Definitio) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ajv-validator-ajv.html", "created_at": "2026-10-28T17:05:42.919083+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-ajv-validator-ajv/live", "download_url": "/api/github-web-factory/apps/gh-ajv-validator-ajv/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-vietqr-crypto-payment-link-maker", "app_name_vi": "Web Tạo Mã QR Thanh Toán Đa Năng, Link UTM & Cổng Donate Web3 Pro", "app_name_en": "Smart QR Code, UTM Link & VietQR/Web3 Payment Button Generator", "github_repo": "soldair/node-qrcode", "github_url": "https://github.com/soldair/node-qrcode", "github_stars": 14680, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 1.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Chủ shop & marketer vào tạo mã QR và link chiến dịch miễn phí -> Chạy 2 banner A-Ads trực tiếp + Gắn link mua trọn bộ Widget thanh toán $35.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-vietqr-crypto-payment-link-maker.html", "created_at": "2026-10-28T16:33:29.849463+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-vietqr-crypto-payment-link-maker/live", "download_url": "/api/github-web-factory/apps/github-vietqr-crypto-payment-link-maker/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-davidshimjs-qrcodejs", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Qrcodejs Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: davidshimjs/qrcodejs", "github_repo": "davidshimjs/qrcodejs", "github_url": "https://github.com/davidshimjs/qrcodejs", "github_stars": 14320, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Cross-browser QRCode generator for javascript) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $29 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-davidshimjs-qrcodejs.html", "created_at": "2026-10-28T17:03:55.338865+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-davidshimjs-qrcodejs/live", "download_url": "/api/github-web-factory/apps/gh-davidshimjs-qrcodejs/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-pandao-editor-md", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Editor Md Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: pandao/editor.md", "github_repo": "pandao/editor.md", "github_url": "https://github.com/pandao/editor.md", "github_stars": 14306, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (The open source embeddable online markdown editor (component).) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-pandao-editor-md.html", "created_at": "2026-10-28T17:01:12.941374+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-pandao-editor-md/live", "download_url": "/api/github-web-factory/apps/gh-pandao-editor-md/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-lokesh-color-thief", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Color Thief Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "lokesh/color-thief", "github_url": "https://github.com/lokesh/color-thief", "github_stars": 13663, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Grab the color palette from an image using just Javascript.  Works in the browser and in Node.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-lokesh-color-thief.html", "created_at": "2026-10-28T17:49:14.430473+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-lokesh-color-thief/live", "download_url": "/api/github-web-factory/apps/gh-lokesh-color-thief/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-openai-tiktoken-cost-estimator", "app_name_vi": "Web Tính Toán Số Lượng Token & Chi Phí API LLM (GPT-4o / Claude / Gemini)", "app_name_en": "LLM Token Counter & API Cost Margin Calculator Studio", "github_repo": "openai/tiktoken", "github_url": "https://github.com/openai/tiktoken", "github_stars": 12850, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Khánh Linh (AI Tối Ưu ROI)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 2.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Lập trình viên AI vào đếm token và ước tính chi phí API -> Chạy 2 banner A-Ads trực tiếp + Bán mã nguồn công cụ tính giá AI $29.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-openai-tiktoken-cost-estimator.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/github-openai-tiktoken-cost-estimator/live", "download_url": "/api/github-web-factory/apps/github-openai-tiktoken-cost-estimator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-papaparse-csv-to-json-converter", "app_name_vi": "Web Chuyển Đổi Dữ Liệu CSV / Excel Sang JSON & SQL Chuẩn Hóa Tức Thì", "app_name_en": "High-Speed CSV to JSON, SQL & Schema Data Transformer", "github_repo": "mholt/PapaParse", "github_url": "https://github.com/mholt/PapaParse", "github_stars": 12640, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Kỹ sư dữ liệu & kế toán vào chuyển đổi bảng CSV sang JSON/SQL -> Nạp quảng cáo A-Ads + Bán bộ công cụ xử lý dữ liệu nội bộ $27.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-papaparse-csv-to-json-converter.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-papaparse-csv-to-json-converter/live", "download_url": "/api/github-web-factory/apps/github-papaparse-csv-to-json-converter/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-alibaba-formily", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Formily Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: alibaba/formily", "github_repo": "alibaba/formily", "github_url": "https://github.com/alibaba/formily", "github_stars": 12587, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (📱🚀 🧩 Cross Device & High Performance Normal Form/Dynamic(JSON Schema) Form/Form Builder -- Support React/React) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $51 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-alibaba-formily.html", "created_at": "2026-10-28T17:05:42.920081+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-alibaba-formily/live", "download_url": "/api/github-web-factory/apps/gh-alibaba-formily/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-lonamiwebs-telethon", "app_name_vi": "Web Công Cụ [API-CLIENT]: Telethon Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "LonamiWebs/Telethon", "github_url": "https://github.com/LonamiWebs/Telethon", "github_stars": 12065, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Pure Python 3 MTProto API Telegram client library, for bots too!) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $24 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-lonamiwebs-telethon.html", "created_at": "2026-10-28T18:35:13.622549+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-lonamiwebs-telethon/live", "download_url": "/api/github-web-factory/apps/gh-lonamiwebs-telethon/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-milkdown-milkdown", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Milkdown Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: Milkdown/milkdown", "github_repo": "Milkdown/milkdown", "github_url": "https://github.com/Milkdown/milkdown", "github_stars": 12028, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🍼 Plugin driven WYSIWYG  markdown editor framework.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $32 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-milkdown-milkdown.html", "created_at": "2026-10-28T17:05:59.942470+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-milkdown-milkdown/live", "download_url": "/api/github-web-factory/apps/gh-milkdown-milkdown/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-kangarooking-cangjie-skill", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Cangjie Skill Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: kangarooking/cangjie-skill", "github_repo": "kangarooking/cangjie-skill", "github_url": "https://github.com/kangarooking/cangjie-skill", "github_stars": 11848, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (把书、长视频、播客等高价值内容蒸馏成可执行的 Agent Skills（Distill high-value content from books, long-form videos, podcasts, and mor) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $32 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-kangarooking-cangjie-skill.html", "created_at": "2026-10-28T17:15:49.266010+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-kangarooking-cangjie-skill/live", "download_url": "/api/github-web-factory/apps/gh-kangarooking-cangjie-skill/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-embraceagi-awesome-chatgpt-zh", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Awesome Chatgpt Zh Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: EmbraceAGI/awesome-chatgpt-zh", "github_repo": "EmbraceAGI/awesome-chatgpt-zh", "github_url": "https://github.com/EmbraceAGI/awesome-chatgpt-zh", "github_stars": 11788, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (ChatGPT 中文指南🔥，ChatGPT 中文调教指南，指令指南，应用开发指南，精选资源清单，更好的使用 chatGPT 让你的生产力 up up up! 🚀) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-embraceagi-awesome-chatgpt-zh.html", "created_at": "2026-10-28T17:15:49.267009+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-embraceagi-awesome-chatgpt-zh/live", "download_url": "/api/github-web-factory/apps/gh-embraceagi-awesome-chatgpt-zh/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-cobusgreyling-loop-engineering", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Loop Engineering Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: cobusgreyling/loop-engineering", "github_repo": "cobusgreyling/loop-engineering", "github_url": "https://github.com/cobusgreyling/loop-engineering", "github_stars": 11651, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Practical patterns, starters & CLI tools for loop engineering with AI coding agents. Design systems that promp) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-cobusgreyling-loop-engineering.html", "created_at": "2026-10-28T17:21:42.643405+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-cobusgreyling-loop-engineering/live", "download_url": "/api/github-web-factory/apps/gh-cobusgreyling-loop-engineering/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-vanessa219-vditor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Vditor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: Vanessa219/vditor", "github_repo": "Vanessa219/vditor", "github_url": "https://github.com/Vanessa219/vditor", "github_stars": 11415, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (♏  一款浏览器端的 Markdown 编辑器，支持所见即所得（富文本）、即时渲染（类似 Typora）和分屏预览模式。An In-browser Markdown editor, support WYSIWYG (Ri) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $49 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-vanessa219-vditor.html", "created_at": "2026-10-28T17:05:59.945463+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-vanessa219-vditor/live", "download_url": "/api/github-web-factory/apps/gh-vanessa219-vditor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-microsoft-promptflow", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Promptflow Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: microsoft/promptflow", "github_repo": "microsoft/promptflow", "github_url": "https://github.com/microsoft/promptflow", "github_stars": 11256, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Build high-quality LLM apps - from prototyping, testing to production deployment and monitoring.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $25 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-microsoft-promptflow.html", "created_at": "2026-10-28T17:21:42.645399+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-microsoft-promptflow/live", "download_url": "/api/github-web-factory/apps/gh-microsoft-promptflow/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-json-schema-seo-studio", "app_name_vi": "Web Công Cụ Chuẩn Hóa JSON & Tạo Mã Schema.org JSON-LD Tự Động", "app_name_en": "JSON Formatter, Validator & Schema.org JSON-LD Studio Web App", "github_repo": "josdejong/jsoneditor", "github_url": "https://github.com/josdejong/jsoneditor", "github_stars": 11240, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Thu hút lập trình viên & chủ web vào định dạng JSON / tạo mã Schema SEO -> Ăn tiền hiển thị & click quảng cáo A-Ads + Bán mã nguồn White-Label $29.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-json-schema-seo-studio.html", "created_at": "2026-10-28T16:33:29.849463+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-json-schema-seo-studio/live", "download_url": "/api/github-web-factory/apps/github-json-schema-seo-studio/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-oldboyxx-jira-clone", "app_name_vi": "Web Công Cụ [API-CLIENT]: Jira Clone Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "oldboyxx/jira_clone", "github_url": "https://github.com/oldboyxx/jira_clone", "github_stars": 11065, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A simplified Jira clone built with React/Babel (Client), and Node/TypeScript (API). Auto formatted with Pretti) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $59 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-oldboyxx-jira-clone.html", "created_at": "2026-10-28T19:05:13.430426+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-oldboyxx-jira-clone/live", "download_url": "/api/github-web-factory/apps/gh-oldboyxx-jira-clone/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-louisshark-chatgpt-system-prompt", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: Chatgpt System Prompt Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [prompt-engineering]: LouisShark/chatgpt_system_prompt", "github_repo": "LouisShark/chatgpt_system_prompt", "github_url": "https://github.com/LouisShark/chatgpt_system_prompt", "github_stars": 10825, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A collection of GPT system prompts and various prompt injection/leaking knowledge.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $44 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-louisshark-chatgpt-system-prompt.html", "created_at": "2026-10-28T17:21:42.646396+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-louisshark-chatgpt-system-prompt/live", "download_url": "/api/github-web-factory/apps/gh-louisshark-chatgpt-system-prompt/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-oso95-scroll-world", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Scroll World Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "oso95/scroll-world", "github_url": "https://github.com/oso95/scroll-world", "github_stars": 10629, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A skill that turn any brand into a scrollable 3D world landing page) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $28 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-oso95-scroll-world.html", "created_at": "2026-10-28T17:36:10.365605+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-oso95-scroll-world/live", "download_url": "/api/github-web-factory/apps/gh-oso95-scroll-world/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-helmetjs-http-security-headers-generator", "app_name_vi": "Web Kiểm Tra & Sinh Cấu Hình Bảo Mật HTTP Headers (CSP / HSTS / CORS)", "app_name_en": "HTTP Security Headers, Content-Security-Policy (CSP) & CORS Generator", "github_repo": "helmetjs/helmet", "github_url": "https://github.com/helmetjs/helmet", "github_stars": 10400, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Chủ website vào tạo cấu hình chống XSS/Clickjacking -> Hiển thị quảng cáo A-Ads + Bán dịch vụ cài đặt bảo mật trọn gói $44.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-helmetjs-http-security-headers-generator.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-helmetjs-http-security-headers-generator/live", "download_url": "/api/github-web-factory/apps/github-helmetjs-http-security-headers-generator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zerolu-awesome-nanobanana-pro", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: ZeroLu/awesome-nanobanana-pro — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [prompt-engineering]: ZeroLu/awesome-nanobanana-pro", "github_repo": "ZeroLu/awesome-nanobanana-pro", "github_url": "https://github.com/ZeroLu/awesome-nanobanana-pro", "github_stars": 10370, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (🚀 An awesome list of curated Nano Banana pro prompts and examples. Your go-to resource for mastering prompt en) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $39 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zerolu-awesome-nanobanana-pro.html", "created_at": "2026-10-28T17:24:03.832517+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-zerolu-awesome-nanobanana-pro/live", "download_url": "/api/github-web-factory/apps/gh-zerolu-awesome-nanobanana-pro/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hackjutsu-lepton", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Lepton Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: hackjutsu/Lepton", "github_repo": "hackjutsu/Lepton", "github_url": "https://github.com/hackjutsu/Lepton", "github_stars": 10341, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (💻     Democratizing Snippet Management (macOS/Win/Linux)) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $55 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hackjutsu-lepton.html", "created_at": "2026-10-28T17:05:59.946461+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-hackjutsu-lepton/live", "download_url": "/api/github-web-factory/apps/gh-hackjutsu-lepton/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-sparksuite-simplemde-markdown-editor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Simplemde Markdown Editor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: sparksuite/simplemde-markdown-editor", "github_repo": "sparksuite/simplemde-markdown-editor", "github_url": "https://github.com/sparksuite/simplemde-markdown-editor", "github_stars": 10141, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A simple, beautiful, and embeddable JavaScript Markdown editor. Delightful editing for beginners and experts a) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $35 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-sparksuite-simplemde-markdown-editor.html", "created_at": "2026-10-28T17:12:12.814811+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-sparksuite-simplemde-markdown-editor/live", "download_url": "/api/github-web-factory/apps/gh-sparksuite-simplemde-markdown-editor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-sqlfluff-sqlfluff", "app_name_vi": "Web Công Cụ [SQL-FORMATTER]: Sqlfluff Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [sql-formatter]: sqlfluff/sqlfluff", "github_repo": "sqlfluff/sqlfluff", "github_url": "https://github.com/sqlfluff/sqlfluff", "github_stars": 9999, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A modular SQL linter and auto-formatter with support for multiple dialects and templated code.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $28 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-sqlfluff-sqlfluff.html", "created_at": "2026-10-28T17:07:59.114704+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-sqlfluff-sqlfluff/live", "download_url": "/api/github-web-factory/apps/gh-sqlfluff-sqlfluff/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hugoblox-kit", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Kit Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "HugoBlox/kit", "github_url": "https://github.com/HugoBlox/kit", "github_stars": 9781, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (🧱 Describe your site, AI builds it, you own it as Markdown. Snap together Tailwind blocks like Lego — landing ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $35 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hugoblox-kit.html", "created_at": "2026-10-28T17:36:10.366602+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-hugoblox-kit/live", "download_url": "/api/github-web-factory/apps/gh-hugoblox-kit/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-brexhq-prompt-engineering", "app_name_vi": "Web Công Cụ [PROMPT-ENGINEERING]: brexhq/prompt-engineering — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [prompt-engineering]: brexhq/prompt-engineering", "github_repo": "brexhq/prompt-engineering", "github_url": "https://github.com/brexhq/prompt-engineering", "github_stars": 9587, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Tips and tricks for working with Large Language Models like OpenAI's GPT-4.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $21 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-brexhq-prompt-engineering.html", "created_at": "2026-10-28T17:24:03.836507+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-brexhq-prompt-engineering/live", "download_url": "/api/github-web-factory/apps/gh-brexhq-prompt-engineering/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-httpie-http-prompt", "app_name_vi": "Web Công Cụ [API-CLIENT]: Http Prompt Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "httpie/http-prompt", "github_url": "https://github.com/httpie/http-prompt", "github_stars": 9107, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (An interactive command-line HTTP and API testing client built on top of HTTPie featuring autocomplete, syntax ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-httpie-http-prompt.html", "created_at": "2026-10-28T19:05:13.433417+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-httpie-http-prompt/live", "download_url": "/api/github-web-factory/apps/gh-httpie-http-prompt/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-tw93-miaoyan", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Miaoyan Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: tw93/MiaoYan", "github_repo": "tw93/MiaoYan", "github_url": "https://github.com/tw93/MiaoYan", "github_stars": 8710, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (⛷ A quiet, local-first Markdown writing app for Mac, to help you write great sentences.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $44 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-tw93-miaoyan.html", "created_at": "2026-10-28T17:12:12.818799+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-tw93-miaoyan/live", "download_url": "/api/github-web-factory/apps/gh-tw93-miaoyan/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-joemccann-dillinger", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Dillinger Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: joemccann/dillinger", "github_repo": "joemccann/dillinger", "github_url": "https://github.com/joemccann/dillinger", "github_stars": 8294, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (The last Markdown editor, ever.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $33 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-joemccann-dillinger.html", "created_at": "2026-10-28T17:12:12.818799+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-joemccann-dillinger/live", "download_url": "/api/github-web-factory/apps/gh-joemccann-dillinger/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-ethersjs-web3-gas-wallet-validator", "app_name_vi": "Web Kiểm Tra Địa Chỉ Ví Web3 (Bsc Pro), Quy Đổi Gwei Pro & Tạo Link Thanh Toán USDT", "app_name_en": "Web3 Wallet Checksum Validator, Gas Fee Unit Converter & USDT Payment Link Builder", "github_repo": "ethers-io/ethers.js", "github_url": "https://github.com/ethers-io/ethers.js", "github_stars": 8120, "license_spdx": "MIT", "discovered_by": "Bảo Trâm (AI Tài Chính) & Lê Minh (AI Nghiên Cứu)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 1.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Người dùng Crypto/Web3 vào kiểm tra ví và tạo link nhận USDT -> Nhóm khách hàng đúng mục tiêu của mạng quảng cáo Crypto A-Ads + Bán code $48.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-ethersjs-web3-gas-wallet-validator.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/github-ethersjs-web3-gas-wallet-validator/live", "download_url": "/api/github-web-factory/apps/github-ethersjs-web3-gas-wallet-validator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ryze-ai-adgent-open-seo-mcp-skills", "app_name_vi": "Web Công Cụ [SEO-AUDIT]: Open Seo Mcp Skills Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [seo-audit]: Ryze-AI-Adgent/open-seo-mcp-skills", "github_repo": "Ryze-AI-Adgent/open-seo-mcp-skills", "github_url": "https://github.com/Ryze-AI-Adgent/open-seo-mcp-skills", "github_stars": 7764, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Free SEO MCP server + open-source SEO and GEO skills for Claude: keyword research, rank tracking, audits, back) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $43 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ryze-ai-adgent-open-seo-mcp-skills.html", "created_at": "2026-10-28T17:01:10.006720+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-ryze-ai-adgent-open-seo-mcp-skills/live", "download_url": "/api/github-web-factory/apps/gh-ryze-ai-adgent-open-seo-mcp-skills/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-firecrawl-firecrawl-mcp-server", "app_name_vi": "Web Công Cụ [API-CLIENT]: Firecrawl Mcp Server Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "firecrawl/firecrawl-mcp-server", "github_url": "https://github.com/firecrawl/firecrawl-mcp-server", "github_stars": 7708, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Official Firecrawl MCP server, the context API for AI agents: search, scrape, and interact with the web, plus ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $32 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-firecrawl-firecrawl-mcp-server.html", "created_at": "2026-10-28T19:05:13.434414+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-firecrawl-firecrawl-mcp-server/live", "download_url": "/api/github-web-factory/apps/gh-firecrawl-firecrawl-mcp-server/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ixartz-saas-boilerplate", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Saas Boilerplate Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "ixartz/SaaS-Boilerplate", "github_url": "https://github.com/ixartz/SaaS-Boilerplate", "github_stars": 7466, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (🚀🎉📚 SaaS Boilerplate built with Next.js + Tailwind CSS + Shadcn UI + TypeScript. ⚡️ Full-stack React applicati) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $60 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ixartz-saas-boilerplate.html", "created_at": "2026-10-28T17:36:10.366602+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-ixartz-saas-boilerplate/live", "download_url": "/api/github-web-factory/apps/gh-ixartz-saas-boilerplate/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-taniarascia-takenote", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Takenote Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: taniarascia/takenote", "github_repo": "taniarascia/takenote", "github_url": "https://github.com/taniarascia/takenote", "github_stars": 7124, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (📝  ‎ A web-based notes app for developers.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $33 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-taniarascia-takenote.html", "created_at": "2026-10-28T17:14:21.093144+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-taniarascia-takenote/live", "download_url": "/api/github-web-factory/apps/gh-taniarascia-takenote/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nordtheme-nord", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Nord Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "nordtheme/nord", "github_url": "https://github.com/nordtheme/nord", "github_stars": 6905, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (An arctic, north-bluish color palette.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $39 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nordtheme-nord.html", "created_at": "2026-10-28T17:49:14.434661+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-nordtheme-nord/live", "download_url": "/api/github-web-factory/apps/gh-nordtheme-nord/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-fullstackhero-dotnet-starter-kit", "app_name_vi": "Web Công Cụ [API-CLIENT]: Dotnet Starter Kit Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "fullstackhero/dotnet-starter-kit", "github_url": "https://github.com/fullstackhero/dotnet-starter-kit", "github_stars": 6835, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Production Grade Cloud-Ready .NET 10 Starter Kit (Web API + React Client) with Multitenancy Support, and Clean) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $59 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-fullstackhero-dotnet-starter-kit.html", "created_at": "2026-10-28T19:35:13.388333+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-fullstackhero-dotnet-starter-kit/live", "download_url": "/api/github-web-factory/apps/gh-fullstackhero-dotnet-starter-kit/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hinesboy-mavoneditor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Mavoneditor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: hinesboy/mavonEditor", "github_repo": "hinesboy/mavonEditor", "github_url": "https://github.com/hinesboy/mavonEditor", "github_stars": 6560, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (mavonEditor - A markdown editor based on Vue that supports a variety of personalized features) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $54 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hinesboy-mavoneditor.html", "created_at": "2026-10-28T17:14:21.097133+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-hinesboy-mavoneditor/live", "download_url": "/api/github-web-factory/apps/gh-hinesboy-mavoneditor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-thedevdojo-wave", "app_name_vi": "Web Công Cụ [SAAS-STARTER]: Wave Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [SAAS-STARTER]", "github_repo": "thedevdojo/wave", "github_url": "https://github.com/thedevdojo/wave", "github_stars": 6550, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Wave - The Software as a Service Starter Kit, designed to help you build the SAAS of your dreams 🚀 💰) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $44 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-thedevdojo-wave.html", "created_at": "2026-10-28T18:10:13.975535+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-thedevdojo-wave/live", "download_url": "/api/github-web-factory/apps/gh-thedevdojo-wave/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ant-design-ant-design-landing", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Ant Design Landing Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "ant-design/ant-design-landing", "github_url": "https://github.com/ant-design/ant-design-landing", "github_stars": 6526, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (:mountain_bicyclist: Landing Pages of Ant Design System) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $20 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ant-design-ant-design-landing.html", "created_at": "2026-10-28T17:40:15.972049+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-ant-design-ant-design-landing/live", "download_url": "/api/github-web-factory/apps/gh-ant-design-ant-design-landing/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-josstorer-rwkv-runner", "app_name_vi": "Web Công Cụ [API-CLIENT]: Rwkv Runner Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "josStorer/RWKV-Runner", "github_url": "https://github.com/josStorer/RWKV-Runner", "github_stars": 6494, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A RWKV management and startup tool, full automation, only 8MB. And provides an interface compatible with the O) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $33 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-josstorer-rwkv-runner.html", "created_at": "2026-10-28T19:35:13.392323+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-josstorer-rwkv-runner/live", "download_url": "/api/github-web-factory/apps/gh-josstorer-rwkv-runner/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-boringdesigners-boring-avatars", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Boring Avatars Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "boringdesigners/boring-avatars", "github_url": "https://github.com/boringdesigners/boring-avatars", "github_stars": 6475, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Boring avatars is an open source React library that generates custom, SVG-based avatars from any username and ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $59 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-boringdesigners-boring-avatars.html", "created_at": "2026-10-28T18:06:13.545779+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-boringdesigners-boring-avatars/live", "download_url": "/api/github-web-factory/apps/gh-boringdesigners-boring-avatars/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-al1abb-invoify", "app_name_vi": "Web Công Cụ [INVOICE-GENERATOR]: Invoify Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [invoice-generator]: al1abb/invoify", "github_repo": "al1abb/invoify", "github_url": "https://github.com/al1abb/invoify", "github_stars": 6379, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (An invoice generator app built using Next.js, Typescript, and Shadcn) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $53 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-al1abb-invoify.html", "created_at": "2026-10-28T17:21:13.434391+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-al1abb-invoify/live", "download_url": "/api/github-web-factory/apps/gh-al1abb-invoify/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-goadesign-goa", "app_name_vi": "Web Công Cụ [API-CLIENT]: Goa Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "goadesign/goa", "github_url": "https://github.com/goadesign/goa", "github_stars": 6114, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Design-first Go framework that generates API code, documentation, and clients. Define once in an elegant DSL, ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $58 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-goadesign-goa.html", "created_at": "2026-10-28T19:35:13.393321+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-goadesign-goa/live", "download_url": "/api/github-web-factory/apps/gh-goadesign-goa/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-arthelokyo-astrowind", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Astrowind Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "arthelokyo/astrowind", "github_url": "https://github.com/arthelokyo/astrowind", "github_stars": 6103, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (⭕️ AstroWind: A free template using Astro v7 and Tailwind CSS v4. Astro starter theme.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-arthelokyo-astrowind.html", "created_at": "2026-10-28T17:40:15.977035+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-arthelokyo-astrowind/live", "download_url": "/api/github-web-factory/apps/gh-arthelokyo-astrowind/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-jacklandrin-onlyswitch", "app_name_vi": "Web Công Cụ [POMODORO-TIMER]: Onlyswitch Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [pomodoro-timer]: jacklandrin/OnlySwitch", "github_repo": "jacklandrin/OnlySwitch", "github_url": "https://github.com/jacklandrin/OnlySwitch", "github_stars": 6020, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (👑 The all-in-one macOS menu bar companion: customizable controls, system monitor, AI Agent, Shortcuts, widgets) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $54 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-jacklandrin-onlyswitch.html", "created_at": "2026-10-28T17:20:19.408895+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-jacklandrin-onlyswitch/live", "download_url": "/api/github-web-factory/apps/gh-jacklandrin-onlyswitch/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-samchon-typia", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Typia Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: samchon/typia", "github_repo": "samchon/typia", "github_url": "https://github.com/samchon/typia", "github_stars": 5959, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Super-fast/easy runtime validators and serializers via transformation) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-samchon-typia.html", "created_at": "2026-10-28T17:11:54.648080+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-samchon-typia/live", "download_url": "/api/github-web-factory/apps/gh-samchon-typia/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-markedit-app-markedit", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Markedit Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: MarkEdit-app/MarkEdit", "github_repo": "MarkEdit-app/MarkEdit", "github_url": "https://github.com/MarkEdit-app/MarkEdit", "github_stars": 5907, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Just like TextEdit on Mac but dedicated to Markdown.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $31 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-markedit-app-markedit.html", "created_at": "2026-10-28T17:14:21.098131+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-markedit-app-markedit/live", "download_url": "/api/github-web-factory/apps/gh-markedit-app-markedit/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-microsoft-typespec", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Typespec Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: microsoft/typespec", "github_repo": "microsoft/typespec", "github_url": "https://github.com/microsoft/typespec", "github_stars": 5904, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Open-source json-schema web utility) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $28 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-microsoft-typespec.html", "created_at": "2026-10-28T17:11:54.651072+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-microsoft-typespec/live", "download_url": "/api/github-web-factory/apps/gh-microsoft-typespec/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-openai-php-client", "app_name_vi": "Web Công Cụ [API-CLIENT]: Client Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "openai-php/client", "github_url": "https://github.com/openai-php/client", "github_stars": 5836, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (⚡️ OpenAI PHP is a supercharged community-maintained PHP API client that allows you to interact with OpenAI AP) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $50 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-openai-php-client.html", "created_at": "2026-10-28T20:05:13.220017+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-openai-php-client/live", "download_url": "/api/github-web-factory/apps/gh-openai-php-client/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-jdorn-json-editor", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Json Editor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: jdorn/json-editor", "github_repo": "jdorn/json-editor", "github_url": "https://github.com/jdorn/json-editor", "github_stars": 5814, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (JSON Schema Based Editor) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $28 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-jdorn-json-editor.html", "created_at": "2026-10-28T17:11:54.652069+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-jdorn-json-editor/live", "download_url": "/api/github-web-factory/apps/gh-jdorn-json-editor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zxlie-fehelper", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Fehelper Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: zxlie/FeHelper", "github_repo": "zxlie/FeHelper", "github_url": "https://github.com/zxlie/FeHelper", "github_stars": 5686, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (😍FeHelper--Web前端助手（Awesome！Chrome & Firefox & MS-Edge Extension, All in one Toolbox!）) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $35 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zxlie-fehelper.html", "created_at": "2026-10-28T17:03:55.341857+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-zxlie-fehelper/live", "download_url": "/api/github-web-factory/apps/gh-zxlie-fehelper/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-makenotion-notion-sdk-js", "app_name_vi": "Web Công Cụ [API-CLIENT]: Notion Sdk Js Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "makenotion/notion-sdk-js", "github_url": "https://github.com/makenotion/notion-sdk-js", "github_stars": 5681, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Official Notion JavaScript Client) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $30 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-makenotion-notion-sdk-js.html", "created_at": "2026-10-28T20:05:13.223009+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-makenotion-notion-sdk-js/live", "download_url": "/api/github-web-factory/apps/gh-makenotion-notion-sdk-js/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-buger-jsonparser", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Jsonparser Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: buger/jsonparser", "github_repo": "buger/jsonparser", "github_url": "https://github.com/buger/jsonparser", "github_stars": 5662, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (THE fastest alternative JSON parser for Go that does not require schema) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $56 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-buger-jsonparser.html", "created_at": "2026-10-28T17:14:04.194501+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-buger-jsonparser/live", "download_url": "/api/github-web-factory/apps/gh-buger-jsonparser/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-splode-pomotroid", "app_name_vi": "Web Công Cụ [POMODORO-TIMER]: Pomotroid Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [pomodoro-timer]: Splode/pomotroid", "github_repo": "Splode/pomotroid", "github_url": "https://github.com/Splode/pomotroid", "github_stars": 5578, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (:tomato: Simple and visually-pleasing Pomodoro timer) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-splode-pomotroid.html", "created_at": "2026-10-28T17:20:19.409892+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-splode-pomotroid/live", "download_url": "/api/github-web-factory/apps/gh-splode-pomotroid/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hey-api-hey-api", "app_name_vi": "Web Công Cụ [API-CLIENT]: Hey Api Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "hey-api/hey-api", "github_url": "https://github.com/hey-api/hey-api", "github_stars": 5532, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (👨‍🚀 Turn API specifications into production-ready SDKs, validators, mocks, and more. 20+ plugins. Millions of ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $61 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hey-api-hey-api.html", "created_at": "2026-10-28T20:05:13.224006+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-hey-api-hey-api/live", "download_url": "/api/github-web-factory/apps/gh-hey-api-hey-api/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-luanrt-youtube-js", "app_name_vi": "Web Công Cụ [API-CLIENT]: Youtube Js Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "LuanRT/YouTube.js", "github_url": "https://github.com/LuanRT/YouTube.js", "github_stars": 5399, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A JavaScript client for YouTube's internal API, known as InnerTube.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $63 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-luanrt-youtube-js.html", "created_at": "2026-10-28T20:35:13.315230+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-luanrt-youtube-js/live", "download_url": "/api/github-web-factory/apps/gh-luanrt-youtube-js/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-jagenjo-webglstudio-js", "app_name_vi": "Web Công Cụ [OPEN-GRAPH]: Webglstudio Js Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [OPEN-GRAPH]", "github_repo": "jagenjo/webglstudio.js", "github_url": "https://github.com/jagenjo/webglstudio.js", "github_stars": 5331, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A full open source 3D graphics editor in the browser, with scene editor, coding pad, graph editor, virtual fil) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $40 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-jagenjo-webglstudio-js.html", "created_at": "2026-10-28T17:45:13.972266+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-jagenjo-webglstudio-js/live", "download_url": "/api/github-web-factory/apps/gh-jagenjo-webglstudio-js/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-shane32-qrcoder", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Qrcoder Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: Shane32/QRCoder", "github_repo": "Shane32/QRCoder", "github_url": "https://github.com/Shane32/QRCoder", "github_stars": 5174, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A pure C# Open Source QR Code implementation) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $63 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-shane32-qrcoder.html", "created_at": "2026-10-28T17:03:55.341857+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-shane32-qrcoder/live", "download_url": "/api/github-web-factory/apps/gh-shane32-qrcoder/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mangiucugna-json-repair", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Json Repair Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: mangiucugna/json_repair", "github_repo": "mangiucugna/json_repair", "github_url": "https://github.com/mangiucugna/json_repair", "github_stars": 5128, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Repair malformed JSON from LLMs, APIs, logs, and user input in Python.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mangiucugna-json-repair.html", "created_at": "2026-10-28T17:14:04.198487+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-mangiucugna-json-repair/live", "download_url": "/api/github-web-factory/apps/gh-mangiucugna-json-repair/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hugoblox-hugo-theme-academic-cv", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Hugo Theme Academic Cv Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: HugoBlox/hugo-theme-academic-cv", "github_repo": "HugoBlox/hugo-theme-academic-cv", "github_url": "https://github.com/HugoBlox/hugo-theme-academic-cv", "github_stars": 5082, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🎓 Academic portfolio that boosts citations. AI generates pages, you own as Markdown. BibTeX auto-import, Jupyt) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $61 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hugoblox-hugo-theme-academic-cv.html", "created_at": "2026-10-28T17:16:43.523282+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-hugoblox-hugo-theme-academic-cv/live", "download_url": "/api/github-web-factory/apps/gh-hugoblox-hugo-theme-academic-cv/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ahmadhassan-bted-jantt", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Jantt Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: AhmadHassan-BTed/Jantt", "github_repo": "AhmadHassan-BTed/Jantt", "github_url": "https://github.com/AhmadHassan-BTed/Jantt", "github_stars": 5077, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (The AI-native JSON Gantt chart engine. Dependency-free interactive timelines with React, script-tag, CLI, topo) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $56 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ahmadhassan-bted-jantt.html", "created_at": "2026-10-28T17:14:04.199485+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-ahmadhassan-bted-jantt/live", "download_url": "/api/github-web-factory/apps/gh-ahmadhassan-bted-jantt/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-kangax-html-minifier", "app_name_vi": "Web Công Cụ [HTML-MINIFIER]: Html Minifier Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [HTML-MINIFIER]", "github_repo": "kangax/html-minifier", "github_url": "https://github.com/kangax/html-minifier", "github_stars": 5029, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (The original html-minifier (2010–2019). No longer maintained; succeeded by HTML Minifier Next.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $53 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-kangax-html-minifier.html", "created_at": "2026-10-28T17:49:30.033810+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-kangax-html-minifier/live", "download_url": "/api/github-web-factory/apps/gh-kangax-html-minifier/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-python-jsonschema-jsonschema", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Jsonschema Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: python-jsonschema/jsonschema", "github_repo": "python-jsonschema/jsonschema", "github_url": "https://github.com/python-jsonschema/jsonschema", "github_stars": 4995, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (An implementation of the JSON Schema specification for Python) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $19 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-python-jsonschema-jsonschema.html", "created_at": "2026-10-28T17:16:25.087348+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-python-jsonschema-jsonschema/live", "download_url": "/api/github-web-factory/apps/gh-python-jsonschema-jsonschema/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zidoro-pomatez", "app_name_vi": "Web Công Cụ [POMODORO-TIMER]: Pomatez Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [POMODORO-TIMER]", "github_repo": "zidoro/pomatez", "github_url": "https://github.com/zidoro/pomatez", "github_stars": 4917, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Stay Focused. Take a Break.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $31 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zidoro-pomatez.html", "created_at": "2026-10-28T17:37:13.622217+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-zidoro-pomatez/live", "download_url": "/api/github-web-factory/apps/gh-zidoro-pomatez/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-json-editor-json-editor", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Json Editor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: json-editor/json-editor", "github_repo": "json-editor/json-editor", "github_url": "https://github.com/json-editor/json-editor", "github_stars": 4902, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (JSON Schema Based Editor) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $61 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-json-editor-json-editor.html", "created_at": "2026-10-28T17:16:25.090342+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-json-editor-json-editor/live", "download_url": "/api/github-web-factory/apps/gh-json-editor-json-editor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mtdowling-cron-expression", "app_name_vi": "Web Công Cụ [CRON-EXPRESSION]: Cron Expression Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [cron-expression]: mtdowling/cron-expression", "github_repo": "mtdowling/cron-expression", "github_url": "https://github.com/mtdowling/cron-expression", "github_stars": 4857, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $61 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mtdowling-cron-expression.html", "created_at": "2026-10-28T17:07:54.494199+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-mtdowling-cron-expression/live", "download_url": "/api/github-web-factory/apps/gh-mtdowling-cron-expression/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-efprefix-efqrcode", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Efqrcode Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: EFPrefix/EFQRCode", "github_repo": "EFPrefix/EFQRCode", "github_url": "https://github.com/EFPrefix/EFQRCode", "github_stars": 4753, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A better way to operate QRCode in Swift, support iOS, macOS, watchOS, tvOS, and/or visionOS.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-efprefix-efqrcode.html", "created_at": "2026-10-28T17:06:18.055355+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-efprefix-efqrcode/live", "download_url": "/api/github-web-factory/apps/gh-efprefix-efqrcode/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-theokanning-openai-java", "app_name_vi": "Web Công Cụ [API-CLIENT]: Openai Java Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [API-CLIENT]", "github_repo": "TheoKanning/openai-java", "github_url": "https://github.com/TheoKanning/openai-java", "github_stars": 4714, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (OpenAI Api Client in Java) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $53 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-theokanning-openai-java.html", "created_at": "2026-10-28T20:35:13.318221+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-theokanning-openai-java/live", "download_url": "/api/github-web-factory/apps/gh-theokanning-openai-java/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-danielgtaylor-huma", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Huma Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [json-schema]: danielgtaylor/huma", "github_repo": "danielgtaylor/huma", "github_url": "https://github.com/danielgtaylor/huma", "github_stars": 4498, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Huma REST/HTTP API Framework for Golang with OpenAPI 3.1) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-danielgtaylor-huma.html", "created_at": "2026-10-28T17:16:25.091341+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-danielgtaylor-huma/live", "download_url": "/api/github-web-factory/apps/gh-danielgtaylor-huma/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-simonwep-pickr", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Pickr Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "simonwep/pickr", "github_url": "https://github.com/simonwep/pickr", "github_stars": 4492, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (🎨 Pickr - A simple, multi-themed, responsive and hackable Color-Picker library. No dependencies, no jQuery. Co) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $56 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-simonwep-pickr.html", "created_at": "2026-10-28T18:06:13.548771+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-simonwep-pickr/live", "download_url": "/api/github-web-factory/apps/gh-simonwep-pickr/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zjunlp-deepke", "app_name_vi": "Web Công Cụ [OPEN-GRAPH]: Deepke Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [OPEN-GRAPH]", "github_repo": "zjunlp/DeepKE", "github_url": "https://github.com/zjunlp/DeepKE", "github_stars": 4489, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub ([EMNLP 2022] An Open Toolkit for Knowledge Graph Extraction and Construction) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $53 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zjunlp-deepke.html", "created_at": "2026-10-28T17:45:13.975302+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-zjunlp-deepke/live", "download_url": "/api/github-web-factory/apps/gh-zjunlp-deepke/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-jwt-decode-token-verifier", "app_name_vi": "Web Giải Mã & Kiểm Toán Bảo Mật JWT Token, OAuth2 Header & Payload", "app_name_en": "JWT Token Decoder, Signature Auditor & OAuth2 Inspector", "github_repo": "auth0/jwt-decode", "github_url": "https://github.com/auth0/jwt-decode", "github_stars": 4380, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Lập trình viên Backend vào kiểm tra JWT Token hàng ngày -> Thu tiền quảng cáo A-Ads theo lưu lượng + Bán bản kiểm toán bảo mật $31.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-jwt-decode-token-verifier.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-jwt-decode-token-verifier/live", "download_url": "/api/github-web-factory/apps/github-jwt-decode-token-verifier/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-pd4d10-hashmd", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Hashmd Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: pd4d10/hashmd", "github_repo": "pd4d10/hashmd", "github_url": "https://github.com/pd4d10/hashmd", "github_stars": 4346, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Hackable Markdown Editor and Viewer (WIP)) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $45 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-pd4d10-hashmd.html", "created_at": "2026-10-28T17:16:43.527271+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-pd4d10-hashmd/live", "download_url": "/api/github-web-factory/apps/gh-pd4d10-hashmd/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-kunchenguid-lavish-axi", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Lavish Axi Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [markdown-editor]: kunchenguid/lavish-axi", "github_repo": "kunchenguid/lavish-axi", "github_url": "https://github.com/kunchenguid/lavish-axi", "github_stars": 4342, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (HTML is the new markdown. Lavish is the new editor for your HTML artifacts.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $41 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-kunchenguid-lavish-axi.html", "created_at": "2026-10-28T17:16:43.527271+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-kunchenguid-lavish-axi/live", "download_url": "/api/github-web-factory/apps/gh-kunchenguid-lavish-axi/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-oscargodson-epiceditor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: OscarGodson/EpicEditor — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [markdown-editor]: OscarGodson/EpicEditor", "github_repo": "OscarGodson/EpicEditor", "github_url": "https://github.com/OscarGodson/EpicEditor", "github_stars": 4212, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (EpicEditor is an embeddable JavaScript Markdown editor with split fullscreen editing, live previewing, automat) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-oscargodson-epiceditor.html", "created_at": "2026-10-28T17:22:36.204742+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-oscargodson-epiceditor/live", "download_url": "/api/github-web-factory/apps/gh-oscargodson-epiceditor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nateherkai-scroll-craft", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Scroll Craft Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "nateherkai/scroll-craft", "github_url": "https://github.com/nateherkai/scroll-craft", "github_stars": 4157, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (An agent skill for building premium, immersive, scroll-driven websites. Works with Codex, Claude Code, and oth) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nateherkai-scroll-craft.html", "created_at": "2026-10-28T17:40:15.980030+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-nateherkai-scroll-craft/live", "download_url": "/api/github-web-factory/apps/gh-nateherkai-scroll-craft/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-buqiyuan-vue3-antdv-admin", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: buqiyuan/vue3-antdv-admin — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [json-schema]: buqiyuan/vue3-antdv-admin", "github_repo": "buqiyuan/vue3-antdv-admin", "github_url": "https://github.com/buqiyuan/vue3-antdv-admin", "github_stars": 4107, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (基于 vite+ (vp) + vue3.x + ant-design-vue4.x + typescript hooks 的基础后台管理系统  RBAC的权限系统, JSON Schema动态表单,动态表格,锁屏界面) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $31 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-buqiyuan-vue3-antdv-admin.html", "created_at": "2026-10-28T17:22:18.291079+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-buqiyuan-vue3-antdv-admin/live", "download_url": "/api/github-web-factory/apps/gh-buqiyuan-vue3-antdv-admin/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-datamodel-code-generator-datamodel-code-generator", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: datamodel-code-generator/datamodel-code-generator — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [json-schema]: datamodel-code-generator/datamodel-code-generator", "github_repo": "datamodel-code-generator/datamodel-code-generator", "github_url": "https://github.com/datamodel-code-generator/datamodel-code-generator", "github_stars": 4047, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Generate Pydantic v2 models, dataclasses, TypedDict, and msgspec.Struct from OpenAPI, JSON Schema, GraphQL, Av) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $61 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-datamodel-code-generator-datamodel-code-generator.html", "created_at": "2026-10-28T17:22:18.295070+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-datamodel-code-generator-datamodel-code-generator/live", "download_url": "/api/github-web-factory/apps/gh-datamodel-code-generator-datamodel-code-generator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-vercel-og-image", "app_name_vi": "Web Công Cụ [OPEN-GRAPH]: Og Image Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [OPEN-GRAPH]", "github_repo": "vercel/og-image", "github_url": "https://github.com/vercel/og-image", "github_stars": 4038, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Open Graph Image as a Service - generate cards for Twitter, Facebook, Slack, etc) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $52 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-vercel-og-image.html", "created_at": "2026-10-28T18:02:13.614202+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-vercel-og-image/live", "download_url": "/api/github-web-factory/apps/gh-vercel-og-image/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-nicejade-markdown-online-editor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: nicejade/markdown-online-editor — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [markdown-editor]: nicejade/markdown-online-editor", "github_repo": "nicejade/markdown-online-editor", "github_url": "https://github.com/nicejade/markdown-online-editor", "github_stars": 3987, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (📝 基于 Vue2、Vditor，所构建的在线 Markdown 编辑器，支持绘制流程图、甘特图、时序图、任务列表、echarts 图表、五线谱，以及 PPT 预览、视频音频解析、HTML 自动转换为 Markdown ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-nicejade-markdown-online-editor.html", "created_at": "2026-10-28T17:22:36.207733+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-nicejade-markdown-online-editor/live", "download_url": "/api/github-web-factory/apps/gh-nicejade-markdown-online-editor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-jdorn-sql-formatter", "app_name_vi": "Web Công Cụ [SQL-FORMATTER]: Sql Formatter Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [sql-formatter]: jdorn/sql-formatter", "github_repo": "jdorn/sql-formatter", "github_url": "https://github.com/jdorn/sql-formatter", "github_stars": 3841, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A lightweight php class for formatting sql statements. Handles automatic indentation and syntax highlighting.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $35 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-jdorn-sql-formatter.html", "created_at": "2026-10-28T17:07:59.117696+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-jdorn-sql-formatter/live", "download_url": "/api/github-web-factory/apps/gh-jdorn-sql-formatter/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-blossom-editor-blossom", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: blossom-editor/blossom — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [markdown-editor]: blossom-editor/blossom", "github_repo": "blossom-editor/blossom", "github_url": "https://github.com/blossom-editor/blossom", "github_stars": 3797, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A markdown editor that you can deploy on your own servers to achieve cloud storage and device synchronization（) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-blossom-editor-blossom.html", "created_at": "2026-10-28T17:22:36.208731+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-blossom-editor-blossom/live", "download_url": "/api/github-web-factory/apps/gh-blossom-editor-blossom/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mdx-editor-editor", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Editor Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [MARKDOWN-EDITOR]", "github_repo": "mdx-editor/editor", "github_url": "https://github.com/mdx-editor/editor", "github_stars": 3704, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A rich text editor React component for markdown) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $33 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mdx-editor-editor.html", "created_at": "2026-10-28T17:24:57.595828+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-mdx-editor-editor/live", "download_url": "/api/github-web-factory/apps/gh-mdx-editor-editor/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-panphora-overtype", "app_name_vi": "Web Công Cụ [MARKDOWN-EDITOR]: Overtype Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [MARKDOWN-EDITOR]", "github_repo": "panphora/overtype", "github_url": "https://github.com/panphora/overtype", "github_stars": 3704, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (The markdown editor that's just a textarea https://overtype.dev) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $33 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-panphora-overtype.html", "created_at": "2026-10-28T17:24:57.598820+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-panphora-overtype/live", "download_url": "/api/github-web-factory/apps/gh-panphora-overtype/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-emilbaehr-automatic-app-landing-page", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Automatic App Landing Page Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "emilbaehr/automatic-app-landing-page", "github_url": "https://github.com/emilbaehr/automatic-app-landing-page", "github_stars": 3628, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A Jekyll theme for automatically generating and deploying landing page sites for mobile apps.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $47 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-emilbaehr-automatic-app-landing-page.html", "created_at": "2026-10-28T17:49:27.250834+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-emilbaehr-automatic-app-landing-page/live", "download_url": "/api/github-web-factory/apps/gh-emilbaehr-automatic-app-landing-page/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-jsonrainbow-json-schema", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: jsonrainbow/json-schema — Đóng Gói Tự Động Từ GitHub", "app_name_en": "Monetized Web App [json-schema]: jsonrainbow/json-schema", "github_repo": "jsonrainbow/json-schema", "github_url": "https://github.com/jsonrainbow/json-schema", "github_stars": 3623, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (JSON Schema for PHP) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $42 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-jsonrainbow-json-schema.html", "created_at": "2026-10-28T17:22:18.296067+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-jsonrainbow-json-schema/live", "download_url": "/api/github-web-factory/apps/gh-jsonrainbow-json-schema/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-cronstrue-cron-schedule-builder", "app_name_vi": "Web Tạo Biểu Thức Lập Lịch Tự Động Cronjob & Dịch Sang Tiếng Việt", "app_name_en": "Visual Cron Expression Generator & Human-Readable Schedule Translator", "github_repo": "bradymholt/cronstrue", "github_url": "https://github.com/bradymholt/cronstrue", "github_stars": 3620, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO)", "sale_price_usd": 3.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quản trị máy chủ DevOps vào tạo lịch chạy tự động Cron -> Hiển thị 2 banner A-Ads kiếm tiền + Bán mã nguồn nhúng SaaS $22.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-cronstrue-cron-schedule-builder.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/github-cronstrue-cron-schedule-builder/live", "download_url": "/api/github-web-factory/apps/github-cronstrue-cron-schedule-builder/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-ivoronin-tomatobar", "app_name_vi": "Web Công Cụ [POMODORO-TIMER]: Tomatobar Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [POMODORO-TIMER]", "github_repo": "ivoronin/TomatoBar", "github_url": "https://github.com/ivoronin/TomatoBar", "github_stars": 3573, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (🍅 World's neatest Pomodoro timer for macOS menu bar) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $37 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-ivoronin-tomatobar.html", "created_at": "2026-10-28T17:37:13.686432+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-ivoronin-tomatobar/live", "download_url": "/api/github-web-factory/apps/gh-ivoronin-tomatobar/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-autofixture-autofixture", "app_name_vi": "Web Công Cụ [OPEN-GRAPH]: Autofixture Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [OPEN-GRAPH]", "github_repo": "AutoFixture/AutoFixture", "github_url": "https://github.com/AutoFixture/AutoFixture", "github_stars": 3539, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (AutoFixture is an open source library for .NET designed to minimize the 'Arrange' phase of your unit tests in ) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $48 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-autofixture-autofixture.html", "created_at": "2026-10-28T18:02:13.616703+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-autofixture-autofixture/live", "download_url": "/api/github-web-factory/apps/gh-autofixture-autofixture/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-json-schema-faker-json-schema-faker", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Json Schema Faker Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [JSON-SCHEMA]", "github_repo": "json-schema-faker/json-schema-faker", "github_url": "https://github.com/json-schema-faker/json-schema-faker", "github_stars": 3447, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (JSON-Schema + fake data generators) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-json-schema-faker-json-schema-faker.html", "created_at": "2026-10-28T17:24:39.734703+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-json-schema-faker-json-schema-faker/live", "download_url": "/api/github-web-factory/apps/gh-json-schema-faker-json-schema-faker/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-bcherny-json-schema-to-typescript", "app_name_vi": "Web Công Cụ [JSON-SCHEMA]: Json Schema To Typescript Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [JSON-SCHEMA]", "github_repo": "bcherny/json-schema-to-typescript", "github_url": "https://github.com/bcherny/json-schema-to-typescript", "github_stars": 3349, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Compile JSON Schema to TypeScript type declarations) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-bcherny-json-schema-to-typescript.html", "created_at": "2026-10-28T17:24:39.739690+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-bcherny-json-schema-to-typescript/live", "download_url": "/api/github-web-factory/apps/gh-bcherny-json-schema-to-typescript/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mxabc-lbxscan", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Lbxscan Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: MxABC/LBXScan", "github_repo": "MxABC/LBXScan", "github_url": "https://github.com/MxABC/LBXScan", "github_stars": 3238, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A barcode and qr code scanner (二维码、扫码、扫一扫、ZXing、ZBar、iOS系统AVFoundation扫码封装，扫码界面效果封装)) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mxabc-lbxscan.html", "created_at": "2026-10-28T17:06:18.058331+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-mxabc-lbxscan/live", "download_url": "/api/github-web-factory/apps/gh-mxabc-lbxscan/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-samugit83-redamon", "app_name_vi": "Web Công Cụ [OPEN-GRAPH]: Redamon Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [OPEN-GRAPH]", "github_repo": "samugit83/redamon", "github_url": "https://github.com/samugit83/redamon", "github_stars": 3230, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Open-source, self-hosted AI penetration testing framework: maps your attack surface into a graph, autonomously) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $54 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-samugit83-redamon.html", "created_at": "2026-10-28T18:02:13.619696+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-samugit83-redamon/live", "download_url": "/api/github-web-factory/apps/gh-samugit83-redamon/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zuramai-mazer", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Mazer Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "zuramai/mazer", "github_url": "https://github.com/zuramai/mazer", "github_stars": 3107, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Free and Open-source Bootstrap 5 Admin Dashboard Template and Landing Page) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $21 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zuramai-mazer.html", "created_at": "2026-10-28T17:49:27.253828+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-zuramai-mazer/live", "download_url": "/api/github-web-factory/apps/gh-zuramai-mazer/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-bennyguitar-colours", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Colours Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "bennyguitar/Colours", "github_url": "https://github.com/bennyguitar/Colours", "github_stars": 3079, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A beautiful set of predefined colors and a set of color methods to make your iOS/OSX development life easier.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-bennyguitar-colours.html", "created_at": "2026-10-28T18:06:13.549769+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-bennyguitar-colours/live", "download_url": "/api/github-web-factory/apps/gh-bennyguitar-colours/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-uiwjs-province-city-china", "app_name_vi": "Web Công Cụ [SQL-FORMATTER]: Province City China Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [sql-formatter]: uiwjs/province-city-china", "github_repo": "uiwjs/province-city-china", "github_url": "https://github.com/uiwjs/province-city-china", "github_stars": 3068, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🇨🇳 Complete and updated China administrative divisions (province, city, county, town) in JSON, CSV, and SQL fo) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $27 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-uiwjs-province-city-china.html", "created_at": "2026-10-28T17:07:59.118693+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-uiwjs-province-city-china/live", "download_url": "/api/github-web-factory/apps/gh-uiwjs-province-city-china/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-mickasmt-next-saas-stripe-starter", "app_name_vi": "Web Công Cụ [SAAS-STARTER]: Next Saas Stripe Starter Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [SAAS-STARTER]", "github_repo": "mickasmt/next-saas-stripe-starter", "github_url": "https://github.com/mickasmt/next-saas-stripe-starter", "github_stars": 3009, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.49, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Open-source SaaS Starter with User Roles, Organizations & Admin Panel. Built using Next.js 16, Better Auth, Dr) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $58 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-mickasmt-next-saas-stripe-starter.html", "created_at": "2026-10-28T18:10:13.975535+00:00", "market_avg_usd": 16.0, "live_url": "/api/github-web-factory/apps/gh-mickasmt-next-saas-stripe-starter/live", "download_url": "/api/github-web-factory/apps/gh-mickasmt-next-saas-stripe-starter/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $16 ➔ Giá AI: $2.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-juicycleff-ultimate-backend", "app_name_vi": "Web Công Cụ [SAAS-STARTER]: Ultimate Backend Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [SAAS-STARTER]", "github_repo": "juicycleff/ultimate-backend", "github_url": "https://github.com/juicycleff/ultimate-backend", "github_stars": 2906, "license_spdx": "MIT", "discovered_by": "Hoàng Bách (AI Sản Phẩm)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "UI/UX & Landing Page Builder Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Multi tenant SaaS starter kit with cqrs graphql microservice architecture, apollo federation, event source and) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $45 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-juicycleff-ultimate-backend.html", "created_at": "2026-10-28T18:40:13.658012+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-juicycleff-ultimate-backend/live", "download_url": "/api/github-web-factory/apps/gh-juicycleff-ultimate-backend/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-sql-formatter-org-sql-formatter", "app_name_vi": "Web Công Cụ [SQL-FORMATTER]: Sql Formatter Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [sql-formatter]: sql-formatter-org/sql-formatter", "github_repo": "sql-formatter-org/sql-formatter", "github_url": "https://github.com/sql-formatter-org/sql-formatter", "github_stars": 2900, "license_spdx": "MIT", "discovered_by": "Trần Phong (AI Bảo Mật)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.99, "category": "CyberSecurity Utility Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A whitespace formatter for different query languages) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $39 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-sql-formatter-org-sql-formatter.html", "created_at": "2026-10-28T17:10:57.363353+00:00", "market_avg_usd": 26.0, "live_url": "/api/github-web-factory/apps/gh-sql-formatter-org-sql-formatter/live", "download_url": "/api/github-web-factory/apps/gh-sql-formatter-org-sql-formatter/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $26 ➔ Giá AI: $3.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-simplesoftwareio-simple-qrcode", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Simple Qrcode Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: SimpleSoftwareIO/simple-qrcode", "github_repo": "SimpleSoftwareIO/simple-qrcode", "github_url": "https://github.com/SimpleSoftwareIO/simple-qrcode", "github_stars": 2896, "license_spdx": "MIT", "discovered_by": "Khánh Linh (AI Tối Ưu ROI)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 1.99, "category": "Productivity & SaaS Calculator", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (An easy-to-use PHP QrCode generator with first-party support for Laravel.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $35 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-simplesoftwareio-simple-qrcode.html", "created_at": "2026-10-28T17:06:18.059328+00:00", "market_avg_usd": 13.0, "live_url": "/api/github-web-factory/apps/gh-simplesoftwareio-simple-qrcode/live", "download_url": "/api/github-web-factory/apps/gh-simplesoftwareio-simple-qrcode/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $13 ➔ Giá AI: $1.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "github-slugify-seo-url-meta-optimizer", "app_name_vi": "Web Tối Ưu Đường Dẫn Chuẩn SEO (URL Slug), Thẻ OpenGraph & Robots.txt Tự Động", "app_name_en": "SEO URL Slugify, OpenGraph Social Card & Robots.txt Generator Studio", "github_repo": "simov/slugify", "github_url": "https://github.com/simov/slugify", "github_stars": 2890, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO) & Lê Minh (AI Nghiên Cứu)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Chủ shop & blogger vào tạo đường dẫn chuẩn SEO và thẻ Robots.txt -> Thu tiền quảng cáo A-Ads + Bán bộ công cụ SEO $25.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\github-slugify-seo-url-meta-optimizer.html", "created_at": "2026-10-28T17:01:01.567681+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/github-slugify-seo-url-meta-optimizer/live", "download_url": "/api/github-web-factory/apps/github-slugify-seo-url-meta-optimizer/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-kpumuk-meta-tags", "app_name_vi": "Web Công Cụ [META-TAG]: Meta Tags Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [META-TAG]", "github_repo": "kpumuk/meta-tags", "github_url": "https://github.com/kpumuk/meta-tags", "github_stars": 2802, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Search Engine Optimization (SEO) for Ruby on Rails applications.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $31 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-kpumuk-meta-tags.html", "created_at": "2026-10-28T17:46:14.033196+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-kpumuk-meta-tags/live", "download_url": "/api/github-web-factory/apps/gh-kpumuk-meta-tags/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-microlinkhq-metascraper", "app_name_vi": "Web Công Cụ [META-TAG]: Metascraper Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [META-TAG]", "github_repo": "microlinkhq/metascraper", "github_url": "https://github.com/microlinkhq/metascraper", "github_stars": 2750, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Scrape metadata from any URL using Open Graph, JSON-LD, HTML meta tags, and smart fallbacks.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $24 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-microlinkhq-metascraper.html", "created_at": "2026-10-28T17:46:14.043515+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-microlinkhq-metascraper/live", "download_url": "/api/github-web-factory/apps/gh-microlinkhq-metascraper/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-zemirco-json2csv", "app_name_vi": "Web Công Cụ [CSV-TO-JSON]: Json2Csv Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [csv-to-json]: zemirco/json2csv", "github_repo": "zemirco/json2csv", "github_url": "https://github.com/zemirco/json2csv", "github_stars": 2717, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Convert json to csv with column titles) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $36 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-zemirco-json2csv.html", "created_at": "2026-10-28T17:07:57.521514+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-zemirco-json2csv/live", "download_url": "/api/github-web-factory/apps/gh-zemirco-json2csv/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-xandemon-developer-icons", "app_name_vi": "Web Công Cụ [SVG-OPTIMIZER]: Developer Icons Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [svg-optimizer]: xandemon/developer-icons", "github_repo": "xandemon/developer-icons", "github_url": "https://github.com/xandemon/developer-icons", "github_stars": 2669, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (A collection of well-optimized SVG tech logos for developers and designers—customizable, scalable, and free.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $33 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-xandemon-developer-icons.html", "created_at": "2026-10-28T17:08:00.387512+00:00", "market_avg_usd": 29.0, "live_url": "/api/github-web-factory/apps/gh-xandemon-developer-icons/live", "download_url": "/api/github-web-factory/apps/gh-xandemon-developer-icons/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $29 ➔ Giá AI: $4.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-hexagon-croner", "app_name_vi": "Web Công Cụ [CRON-EXPRESSION]: Croner Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [cron-expression]: Hexagon/croner", "github_repo": "Hexagon/croner", "github_url": "https://github.com/Hexagon/croner", "github_stars": 2607, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (Trigger functions or evaluate cron expressions in JavaScript or TypeScript. No dependencies. Most features. No) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $61 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-hexagon-croner.html", "created_at": "2026-10-28T17:07:54.528648+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-hexagon-croner/live", "download_url": "/api/github-web-factory/apps/gh-hexagon-croner/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-kazuhikoarase-qrcode-generator", "app_name_vi": "Web Công Cụ [QRCODE-GENERATOR]: Qrcode Generator Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [qrcode-generator]: kazuhikoarase/qrcode-generator", "github_repo": "kazuhikoarase/qrcode-generator", "github_url": "https://github.com/kazuhikoarase/qrcode-generator", "github_stars": 2383, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 5.49, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (QR Code Generator implementation in JavaScript, Java and more.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $62 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-kazuhikoarase-qrcode-generator.html", "created_at": "2026-10-28T17:12:30.551673+00:00", "market_avg_usd": 36.0, "live_url": "/api/github-web-factory/apps/gh-kazuhikoarase-qrcode-generator/live", "download_url": "/api/github-web-factory/apps/gh-kazuhikoarase-qrcode-generator/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $36 ➔ Giá AI: $5.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-achno-gowall", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Gowall Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "Achno/gowall", "github_url": "https://github.com/Achno/gowall", "github_stars": 2322, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (A tool to convert a Wallpaper's color scheme / palette, OCR with VLM's Traditional & Hybrid, Image Compression) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $46 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-achno-gowall.html", "created_at": "2026-10-28T18:36:13.453927+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-achno-gowall/live", "download_url": "/api/github-web-factory/apps/gh-achno-gowall/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-color-js-color-js", "app_name_vi": "Web Công Cụ [COLOR-PALETTE]: Color Js Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [COLOR-PALETTE]", "github_repo": "color-js/color.js", "github_url": "https://github.com/color-js/color.js", "github_stars": 2314, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình) & Hoàng Bách (AI Sản Phẩm)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 2.99, "category": "AI & Prompt Engineering Web App", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Color conversion & manipulation library by the editors of the CSS Color specifications) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $38 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-color-js-color-js.html", "created_at": "2026-10-28T18:36:13.454925+00:00", "market_avg_usd": 19.0, "live_url": "/api/github-web-factory/apps/gh-color-js-color-js/live", "download_url": "/api/github-web-factory/apps/gh-color-js-color-js/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $19 ➔ Giá AI: $2.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-carlsednaoui-ouibounce", "app_name_vi": "Web Công Cụ [LANDING-PAGE]: Ouibounce Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Commercial Web App Suite [LANDING-PAGE]", "github_repo": "carlsednaoui/ouibounce", "github_url": "https://github.com/carlsednaoui/ouibounce", "github_stars": 2294, "license_spdx": "MIT", "discovered_by": "Lê Minh (AI Nghiên Cứu Thị Trường)", "built_by": "Vũ Khoa (AI Lập Trình)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 4.99, "category": "SEO & Developer Web Tool", "monetization_summary_vi": "Quét trực tiếp từ GitHub (Increase your landing page conversion rates.) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $63 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-carlsednaoui-ouibounce.html", "created_at": "2026-10-28T17:49:27.254825+00:00", "market_avg_usd": 32.0, "live_url": "/api/github-web-factory/apps/gh-carlsednaoui-ouibounce/live", "download_url": "/api/github-web-factory/apps/gh-carlsednaoui-ouibounce/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $32 ➔ Giá AI: $4.99 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}, {"slug": "gh-cyrilwanner-next-optimized-images", "app_name_vi": "Web Công Cụ [SVG-OPTIMIZER]: Next Optimized Images Pro — Bản Thương Mại Độc Quyền AUTOProfit AI", "app_name_en": "Monetized Web App [svg-optimizer]: cyrilwanner/next-optimized-images", "github_repo": "cyrilwanner/next-optimized-images", "github_url": "https://github.com/cyrilwanner/next-optimized-images", "github_stars": 2235, "license_spdx": "MIT", "discovered_by": "Phạm Thảo (AI Marketing SEO)", "built_by": "Vũ Khoa (AI Lập Trình) & Bảo Trâm (AI Tài Chính)", "promoted_by": "Phạm Thảo (AI Marketing SEO) & Đặng Quân (AI Bán Hàng)", "sale_price_usd": 3.49, "category": "FinTech & Marketing Web App", "monetization_summary_vi": "Ứng dụng Web thương mại đóng gói độc quyền (🌅 next-optimized-images automatically optimizes images used in next.js projects (jpeg, png, svg, webp and gif)) -> Đóng gói thành Web công cụ gắn 2 Banner A-Ads + Bán trọn bộ mã nguồn $49 USD.", "aads_unit_id": "2460284", "views_count": 0, "ad_impressions": 0, "artifact_path": "D:\Antigravity\Projects\autoprofit-ai\backend\generated_webapps\gh-cyrilwanner-next-optimized-images.html", "created_at": "2026-10-28T17:08:00.388511+00:00", "market_avg_usd": 23.0, "live_url": "/api/github-web-factory/apps/gh-cyrilwanner-next-optimized-images/live", "download_url": "/api/github-web-factory/apps/gh-cyrilwanner-next-optimized-images/download", "monetization_channels": ["2x Banner A-Ads (#2460284 / #2460312)", "Giá thị trường: $23 ➔ Giá AI: $3.49 USD", "Cổng Thanh Toán & Donate Tự Động (Mở Khi Bấm)"]}]};
+    const DEFAULT_GITHUB_WEB_FACTORY_DATA = { status: "no_data", total: 0, items: [], revenue_streams_breakdown: [] };
 
     let GITHUB_WEB_FACTORY_CACHE = DEFAULT_GITHUB_WEB_FACTORY_DATA;
 
-    const AADS_CLOUD_TOPIC = 'autoprofit_aads_cfg_517750_v1';
-
-    function getDomainSpecificAadsUnitId() {
-
-      try {
-
-        const host = String((window.location && window.location.hostname) || '').toLowerCase();
-
-        if (host.includes('aitraffic247')) return '2460429';
-
-        if (host.includes('autoprofitai')) return '2460430';
-
-        if (host.includes('webkiemtien247')) return '2460431';
-
-        if (host.includes('webaikiemtien')) return '2460312';
-
-        if (host.includes('aikiemtien')) return '2460284';
-
-      } catch (_) {}
-
-      return '';
-
-    }
-
-    let ACTIVE_USER_AADS_UNIT_ID = getDomainSpecificAadsUnitId() || localStorage.getItem('autoprofit_user517750_aads_unit_id') || '2460284';
-
-    if (ACTIVE_USER_AADS_UNIT_ID === '2364892' || !ACTIVE_USER_AADS_UNIT_ID) {
-
-      ACTIVE_USER_AADS_UNIT_ID = getDomainSpecificAadsUnitId() || '2460284';
-
-    }
-
-    if (getDomainSpecificAadsUnitId()) {
-
-      ACTIVE_USER_AADS_UNIT_ID = getDomainSpecificAadsUnitId();
-
-    }
+    let ACTIVE_USER_AADS_UNIT_ID = '';
 
     let IS_GITHUB_WEB_FACTORY_BACKEND_LIVE = false;
     let GITHUB_WEB_FACTORY_CATALOG_READY = false;
@@ -3411,9 +3312,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     let GITHUB_WEBAPPS_VISIBLE_LIMIT = 6;
 
-    let LIVE_REAL_WORK_SPEECH_QUEUE = [];
 
-    const SPOKEN_TURN_SIGNATURES = new Set();
 
 
 
@@ -3529,27 +3428,12 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
 
-      // Sort by highest views + highest A-Ads impressions + highest commercial value so Top 5 are always the best performers
-
-      filteredApps.sort((a, b) => {
-
-        const va = getRealWebAppViewCount(a.slug, a.views_count);
-
-        const vb = getRealWebAppViewCount(b.slug, b.views_count);
-
-        const scoreA = va * 3 + Number(a.ad_impressions || va * 2) * 2 + Number(a.sale_price_usd || 29);
-
-        const scoreB = vb * 3 + Number(b.ad_impressions || vb * 2) * 2 + Number(b.sale_price_usd || 29);
-
-        return scoreB - scoreA;
-
-      });
-
-
-
       if (countChip) {
 
-        const trueTotal = Math.max(typeof LIVE_PACKAGED_COUNT_BASE !== 'undefined' ? LIVE_PACKAGED_COUNT_BASE : 493, Number(data.total || 493), allApps.length); countChip.textContent = `Đang hiện Top ${Math.min(GITHUB_WEBAPPS_VISIBLE_LIMIT, filteredApps.length)} / Tổng ${trueTotal} Web App Thương Mại ($1.99–$5.99)`;
+        const trueTotal = Math.max(Number(data.total || 0), allApps.length);
+        countChip.textContent = trueTotal
+          ? `Đang hiện ${Math.min(GITHUB_WEBAPPS_VISIBLE_LIMIT, filteredApps.length)} / ${trueTotal} Web App`
+          : 'Chưa có catalog Web App được xác minh';
 
       }
 
@@ -3585,11 +3469,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       if (noticeEl) {
 
-        noticeEl.innerHTML = GITHUB_WEBAPPS_VISIBLE_LIMIT <= 6
-
-          ? `🏆 <strong>Đang hiển thị Top ${Math.min(6, filteredApps.length)} Ứng Dụng Có Lượt Mở &amp; Doanh Thu Quảng Cáo A-Ads Cao Nhất</strong> (Đang ẩn <strong>${remaining}</strong> ứng dụng khác để gọn trang chủ).`
-
-          : `📂 <strong>Đang mở rộng ${Math.min(GITHUB_WEBAPPS_VISIBLE_LIMIT, filteredApps.length)} / ${filteredApps.length} Ứng Dụng Thương Mại</strong> — Bấm "Thu Gọn Về Top 6" để làm gọn trang chủ.`;
+        noticeEl.textContent = GITHUB_WEBAPPS_VISIBLE_LIMIT <= 6
+          ? `Đang hiển thị ${Math.min(GITHUB_WEBAPPS_VISIBLE_LIMIT, filteredApps.length)} ứng dụng; còn ${remaining} ứng dụng trong catalog.`
+          : `Đang hiển thị ${Math.min(GITHUB_WEBAPPS_VISIBLE_LIMIT, filteredApps.length)} / ${filteredApps.length} ứng dụng.`;
 
       }
 
@@ -3635,11 +3517,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         appsGrid.innerHTML = sliceApps.map((app, idx) => {
 
-          const realViews = getRealWebAppViewCount(app.slug, app.views_count);
-
-          const realImps = realViews * 2;
-
-          const aadsUnit = ACTIVE_USER_AADS_UNIT_ID || app.aads_unit_id || '2460284';
+          const aadsUnit = ACTIVE_USER_AADS_UNIT_ID || app.aads_unit_id || '';
 
           const appName = app.app_name_vi || app.name || app.slug || 'Web App';
 
@@ -3655,11 +3533,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           const cleanSumVi = sanitizeCommercialSummaryVi(appSummary);
 
-          const rankBadge = idx < 6
-
-            ? `<span class="chip warn" style="font-size:10px; font-weight:800;">🔥 TOP #${idx + 1} ĂN QUẢNG CÁO &amp; BÁN CHẠY</span>`
-
-            : `<span class="chip cyan" style="font-size:10px;">🛡️ Bản Thương Mại Độc Quyền #${idx + 1}</span>`;
+          const rankBadge = `<span class="chip cyan" style="font-size:10px;">Web App</span>`;
 
           return `
 
@@ -3711,7 +3585,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
                 <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:#cbd5e1; margin-bottom:6px; background:rgba(6,10,20,0.65); padding:4px 7px; border-radius:6px; border:1px solid rgba(148,163,184,0.16);">
 
-                  <span>👁️ Mở web: <strong style="color:#38bdf8;">${realViews}</strong> • 📢 Hiển thị QC: <strong style="color:#fde68a;">${realImps} lượt</strong></span>
+                  <span>Chưa có số liệu lượt mở hoặc quảng cáo được xác minh.</span>
 
                   <span>✨ <strong style="color:#34d399;">Bản Thương Mại Pro</strong></span>
 
@@ -3719,9 +3593,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
                 <div style="margin-bottom:6px; padding:5px 8px; border-radius:6px; background:rgba(239,68,68,0.14); border:1px dashed rgba(239,68,68,0.5); font-size:10.5px; color:#fecaca; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">
 
-                  <span style="flex:1; min-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${typeof window.getEvenlyDistributedAdLinkBadgeLabel === 'function' ? window.getEvenlyDistributedAdLinkBadgeLabel(idx) : '📺 Quảng cáo Video #1'}</span>
-
-                  <a href="${typeof window.getRotatingYoutubeCampaignByIndex === 'function' ? window.getRotatingYoutubeCampaignByIndex(idx).bridgeUrl : 'https://aikiemtien.surge.sh/go/youtube-watch.html?v=e0tQcMtNS9w'}" target="_blank" rel="noopener" style="color:#fde68a; font-weight:800; text-decoration:underline;">${typeof CURRENT_LANG !== 'undefined' && CURRENT_LANG === 'en' ? '▶️ Watch Video Ad ↗' : '▶️ Mở Link Video QC ↗'}</a>
+                  <span style="flex:1; min-width:140px;">Tính năng quảng cáo video đã tắt.</span>
 
                 </div>
 
@@ -3733,11 +3605,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
                   </button>
 
-                  <a class="btn btn-sm" style="border-color:rgba(245,158,11,0.65); color:#fde68a; background:rgba(245,158,11,0.14); text-decoration:none; font-weight:800;" href="${['https://shrinkme.click/AutoProfitWebApps1','https://shrinkme.click/AutoProfitWebApps2','https://shrinkme.click/AutoProfitWebApps3','https://shrinkme.click/AutoProfitWebApps4','https://shrinkme.click/AutoProfitWebApps5','https://shrinkme.click/AutoProfitAff1864','https://shrinkme.click/AIPromptStudioPro','https://shrinkme.click/AmazonAIMiniPC26'][idx % 8]}" target="_blank" rel="noopener sponsored" onclick="if(window.bumpLiveShrinkMeEarnings) window.bumpLiveShrinkMeEarnings(1);">
-
-                    ${typeof CURRENT_LANG !== 'undefined' && CURRENT_LANG === 'en' ? '💰 Free Code ↗' : '💰 Nhận Code Free ↗'}
-
-                  </a>
+                  <span class="chip">Liên kết tiếp thị chưa được cấu hình</span>
 
                   <button class="btn btn-sm btn-cyan" onclick="openVisitorBuyCheckoutModal('${escapeHtml(cleanNameVi)}', ${appPriceUsd}, '${escapeHtml(app.slug)}')">
 
@@ -3763,7 +3631,11 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     function buildClientSideMonetizedWebAppHtml(app) {
 
-      const aadsId = ACTIVE_USER_AADS_UNIT_ID || app.aads_unit_id || '2460284';
+          const aadsId = ACTIVE_USER_AADS_UNIT_ID || app.aads_unit_id || '';
+
+      const aadsMarkup = aadsId
+        ? `<div class="ad-banner"><iframe data-aa="${escapeHtml(aadsId)}" src="//acceptable.a-ads.com/${escapeHtml(aadsId)}/?size=Adaptive" title="Advertisement" style="border:0;width:100%;height:70px;overflow:hidden;"></iframe></div>`
+        : '<div class="ad-banner" aria-label="Ad placement not configured">Vị trí quảng cáo chưa được cấu hình.</div>';
 
       const titleEn = app.app_name_en || sanitizeCommercialAppNameVi(app.app_name_vi || app.slug, app.github_repo);
 
@@ -3825,21 +3697,11 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
 
-          <span style="font-size:10px; font-weight:800; color:#38bdf8;">💎 A-ADS PARTNER NETWORK (#${escapeHtml(aadsId)})</span>
-
-          <a href="https://acceptable.a-ads.com/${escapeHtml(aadsId)}/?size=Adaptive" target="_blank" rel="noopener sponsored" style="font-size:10px; font-weight:800; color:#020617; background:linear-gradient(135deg,#38bdf8,#34d399); padding:2px 8px; border-radius:999px; text-decoration:none;">⚡ Mở Quảng Cáo A-Ads ↗</a>
+          <span style="font-size:10px; font-weight:800; color:#38bdf8;">💎 A-ADS PARTNER NETWORK (${aadsId ? 'configured' : 'not configured'})</span>
 
         </div>
 
-        <!-- BEGIN AADS AD UNIT ${escapeHtml(aadsId)} -->
-
-        <div id="frame" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-
-          <iframe data-aa="${escapeHtml(aadsId)}" src="//acceptable.a-ads.com/${escapeHtml(aadsId)}/?size=Adaptive" style="border:0; padding:0; width:70%; height:90px; min-height:90px; overflow:hidden; display:block; margin:auto;" scrolling="no"></iframe>
-
-        </div>
-
-        <!-- END AADS AD UNIT ${escapeHtml(aadsId)} -->
+        ${aadsMarkup}
 
       </div>
 
@@ -3847,9 +3709,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
 
-          <span style="font-size:10px; font-weight:800; color:#34d399;">🔥 ADSTERRA &amp; SHORTLINK HUB</span>
-
-          <a href="https://shrinkme.click/AutoProfitWebApps1" target="_blank" rel="noopener sponsored" style="font-size:10px; font-weight:800; color:#020617; background:linear-gradient(135deg,#f59e0b,#fbbf24); padding:2px 8px; border-radius:999px; text-decoration:none;">💰 Vượt Link Nhận Code Free ($0) ↗</a>
+          <span style="font-size:10px; font-weight:800; color:#34d399;">Liên kết tiếp thị chưa được cấu hình</span>
 
         </div>
 
@@ -3863,17 +3723,13 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       <div>
 
-        <span class="badge" style="background:#ef4444;color:#fff;font-weight:800;">📺 SPONSORED YOUTUBE VIDEO AD</span>
-
-        <strong>${(window.getRotatingYoutubeCampaignForWebApp && window.getRotatingYoutubeCampaignForWebApp(app.slug).title) || 'Long Slide Game With Cow, Hippopotamus, Elephant, Gorilla, Lion 🦁'}</strong>
+        <span class="badge" style="background:#64748b;color:#fff;font-weight:800;">YouTube engagement tools are disabled</span>
 
       </div>
 
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
 
-        <a href="${(window.getRotatingYoutubeCampaignForWebApp && window.getRotatingYoutubeCampaignForWebApp(app.slug).bridgeUrl) || 'https://aikiemtien.surge.sh/go/youtube-watch.html?v=e0tQcMtNS9w'}" target="_blank" rel="noopener" class="btn-primary" style="padding:6px 12px;font-size:11.5px;background:linear-gradient(135deg,#ef4444,#dc2626);">▶️ Watch Featured Video (Ad-Bridge) ↗</a>
-
-        <a href="https://aikiemtien.surge.sh/go/youtube-booster-global.html" target="_blank" rel="noopener" class="btn-sec" style="padding:6px 11px;font-size:11.5px;border-color:#10b981;color:#6ee7b7;">🚀 Place Your Video Ad Here ($1.99 USDT) ↗</a>
+        <span class="btn-sec" aria-disabled="true">Video promotions are disabled</span>
 
       </div>
 
@@ -3979,20 +3835,8 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     </div>
 
-    <div style="background:linear-gradient(135deg, rgba(16,185,129,0.16), rgba(6,182,212,0.16), rgba(245,158,11,0.14)); border:2px solid #10b981; border-radius:12px; padding:12px 14px; text-align:center;">
-
-      <div style="font-size:13px; font-weight:900; color:#6ee7b7; margin-bottom:4px;">🎁 MỞ KHÓA TẢI MIỄN PHÍ 100% MÃ NGUỒN &amp; VOUCHER $100 USDT (SPONSORED UNLOCK)</div>
-
-      <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:8px;">
-
-        <a href="https://shrinkme.click/AutoProfitWebApps1" target="_blank" rel="noopener sponsored" style="padding:8px 14px; border-radius:8px; background:linear-gradient(135deg,#8b5cf6,#ec4899); color:#fff; font-weight:900; font-size:11.5px; text-decoration:none;">🔗 Bước 1A: Vượt Link Rút Gọn Nhận Code Free ↗</a>
-
-        <a href="/webapps/all-catalog.html" target="_blank" rel="noopener sponsored" style="padding:8px 14px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#ea580c); color:#020617; font-weight:900; font-size:11.5px; text-decoration:none;">🔥 Bước 1B: Mở Ưu Đãi Đối Tác Adsterra ↗</a>
-
-        <a href="https://acceptable.a-ads.com/${escapeHtml(aadsId)}/?size=Adaptive" target="_blank" rel="noopener sponsored" style="padding:8px 14px; border-radius:8px; background:linear-gradient(135deg,#06b6d4,#10b981); color:#020617; font-weight:900; font-size:11.5px; text-decoration:none;">💎 Bước 1C: Xem Quảng Cáo A-Ads (#${escapeHtml(aadsId)}) ↗</a>
-
-      </div>
-
+    <div role="note" style="border:1px solid rgba(56,189,248,.35); border-radius:10px; padding:10px 12px; color:#cbd5e1; font-size:11px;">
+      Quảng cáo chỉ xuất hiện trong các vị trí đã cấu hình. Không cần nhấp quảng cáo để xem hoặc tải công cụ.
     </div>
 
     <div style="background:#070b14; border:1px solid rgba(16,185,129,0.4); border-radius:10px; padding:8px;">
@@ -4020,182 +3864,81 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
     function downloadCompiledGithubWebAppHtml(slug) {
-
-      const catalogItems = (GITHUB_WEB_FACTORY_CACHE && GITHUB_WEB_FACTORY_CACHE.items) || [];
-
-      const foundApp = catalogItems.find(x => x.slug === slug) || { slug };
-
-      if (IS_GITHUB_WEB_FACTORY_BACKEND_LIVE) {
-
-        window.open(`${API_BASE}/api/github-web-factory/apps/${encodeURIComponent(slug)}/download`, '_blank');
-
-        return;
-
-      }
-
-      const htmlDoc = buildClientSideMonetizedWebAppHtml(foundApp);
-
-      const blob = new Blob([htmlDoc], { type: 'text/html;charset=utf-8' });
-
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-
-      a.href = url;
-
-      a.download = `${slug}-monetized-webapp.html`;
-
-      document.body.appendChild(a);
-
-      a.click();
-
-      document.body.removeChild(a);
+      const safeSlug = String(slug || '').replace(/[^a-z0-9-]/gi, '');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(safeSlug)}`);
 
     }
 
 
 
-    function isRealUser517750AdUnitConfigured() {
+    function isConfiguredAadsUnit() { return Boolean(ACTIVE_USER_AADS_UNIT_ID && /^\d{5,12}$/.test(ACTIVE_USER_AADS_UNIT_ID)); }
 
-      const uid = String(ACTIVE_USER_AADS_UNIT_ID || '').trim();
 
-      return Boolean(uid && /^\d{5,12}$/.test(uid));
 
+    function getRealWebAppViewCount(_slug, backendCount) {
+      if (backendCount === null || backendCount === undefined || backendCount === '') return null;
+      const count = Number(backendCount);
+      return Number.isFinite(count) && count >= 0 ? count : null;
     }
 
+    function incrementRealWebAppViewCount(_slug) {
+      // Site-wide app views are shown only when a verified backend counter exists.
+      return null;
+    }
 
-
-    function getRealWebAppViewCount(slug, backendCount) {
-
+    async function syncConfiguredAadsUnitFromBackend() {
       try {
-
-        const localMap = JSON.parse(localStorage.getItem('autoprofit_real_webapp_views_v3') || '{}');
-
-        const localVal = Number(localMap[slug] || 0);
-
-        const srvVal = Number(backendCount || 0);
-
-        return Math.max(localVal, srvVal);
-
-      } catch (_) {
-
-        return Number(backendCount || 0);
-
-      }
-
-    }
-
-
-
-    function incrementRealWebAppViewCount(slug) {
-
-      if (!slug) return;
-
-      try {
-
-        const localMap = JSON.parse(localStorage.getItem('autoprofit_real_webapp_views_v3') || '{}');
-
-        localMap[slug] = Number(localMap[slug] || 0) + 1;
-
-        localStorage.setItem('autoprofit_real_webapp_views_v3', JSON.stringify(localMap));
-
-      } catch (_) {}
-
-    }
-
-
-
-    async function syncUser517750AadsUnitFromCloud() {
-
-      const domainLockedId = getDomainSpecificAadsUnitId();
-
-      if (domainLockedId) {
-
-        ACTIVE_USER_AADS_UNIT_ID = domainLockedId;
-
-        applyUser517750AadsUnitToDom(ACTIVE_USER_AADS_UNIT_ID);
-
-        return;
-
-      }
-
-      try {
-
-        const res = await fetch(`https://ntfy.sh/${AADS_CLOUD_TOPIC}/json?poll=1&since=30d`);
-
-        if (!res.ok) return;
-
-        const txt = await res.text();
-
-        const lines = txt.trim().split('\n').filter(Boolean);
-
-        for (let i = lines.length - 1; i >= 0; i--) {
-
-          try {
-
-            const msg = JSON.parse(lines[i]);
-
-            if (msg && msg.message) {
-
-              const payload = JSON.parse(msg.message);
-
-              if (payload && payload.aads_unit_id && /^\d{5,12}$/.test(String(payload.aads_unit_id))) {
-
-                ACTIVE_USER_AADS_UNIT_ID = String(payload.aads_unit_id);
-
-                localStorage.setItem('autoprofit_user517750_aads_unit_id', ACTIVE_USER_AADS_UNIT_ID);
-
-                applyUser517750AadsUnitToDom(ACTIVE_USER_AADS_UNIT_ID);
-
-                break;
-
-              }
-
-            }
-
-          } catch (_) {}
-
+        const response = await fetch('/api/public/aads-config', { cache: 'no-store' });
+        if (!response.ok) return;
+        const config = await response.json();
+        const unitId = String(config.top_ad_unit_id || '').trim();
+        if (/^\d{5,12}$/.test(unitId)) {
+          ACTIVE_USER_AADS_UNIT_ID = unitId;
+          applyConfiguredAadsUnitToDom(unitId);
         }
-
       } catch (_) {}
-
     }
 
 
 
-    function applyUser517750AadsUnitToDom(unitId) {
-
-      const cleanId = String(unitId || '2460284').replace(/[^0-9]/g, '') || '2460284';
-
+    function applyConfiguredAadsUnitToDom(unitId) {
+      const candidate = String(unitId || '').trim();
+      const cleanId = /^\d{5,12}$/.test(candidate) ? candidate : '';
       const badge = document.getElementById('aadsUnitIdBadge');
-
-      if (badge) badge.textContent = `#${cleanId} (5 Web)`;
-
+      if (badge) badge.textContent = cleanId ? 'Đã cấu hình vị trí quảng cáo' : 'Chưa cấu hình';
       const slot = document.getElementById('aadsPrimaryBannerSlot');
-
-      if (slot) {
-
-        const aadsIframe = slot.querySelector('iframe[data-aa]');
-
-        if (aadsIframe && aadsIframe.getAttribute('data-aa') !== cleanId) {
-
-          aadsIframe.setAttribute('data-aa', cleanId);
-
-          aadsIframe.setAttribute('src', `//acceptable.a-ads.com/${cleanId}/?size=Adaptive`);
-
+      if (!slot) return;
+      let iframe = slot.querySelector('iframe[data-aa]');
+      const status = document.getElementById('aadsPrimaryPlacementStatus');
+      if (!cleanId) {
+        iframe?.remove();
+        if (status) {
+          status.textContent = 'Chưa cấu hình vị trí quảng cáo.';
+          status.hidden = false;
         }
-
+        return;
       }
-
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.title = 'A-Ads display placement';
+        iframe.loading = 'lazy';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+        iframe.style.cssText = 'position:relative;z-index:2;border:0;padding:0;width:100%;max-width:468px;height:40px;min-height:40px;max-height:40px;overflow:hidden;display:block;margin:auto;';
+        if (status?.parentElement) status.replaceWith(iframe);
+        else slot.appendChild(iframe);
+      }
+      iframe.setAttribute('data-aa', cleanId);
+      iframe.src = `https://acceptable.a-ads.com/${cleanId}/?size=Adaptive`;
+      if (status) status.hidden = true;
     }
 
 
 
     setTimeout(() => {
 
-      applyUser517750AadsUnitToDom(ACTIVE_USER_AADS_UNIT_ID);
+      applyConfiguredAadsUnitToDom(ACTIVE_USER_AADS_UNIT_ID);
 
-      syncUser517750AadsUnitFromCloud();
+      syncConfiguredAadsUnitFromBackend();
 
     }, 400);
 
@@ -4241,7 +3984,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       if (titleEl) titleEl.textContent = `🌐 ${resolvedTitle}`;
 
-      if (repoEl) repoEl.textContent = `[Bản Thương Mại Độc Quyền • A-Ads #${ACTIVE_USER_AADS_UNIT_ID || '2460284'}]`;
+      if (repoEl) repoEl.textContent = `[Bản Thương Mại Độc Quyền • A-Ads (chưa cấu hình)]`;
 
 
 
@@ -4249,7 +3992,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         const liveUrl = `${API_BASE}/api/github-web-factory/apps/${encodeURIComponent(resolvedSlug)}/live`;
 
-        const dlUrl = `${API_BASE}/api/github-web-factory/apps/${encodeURIComponent(resolvedSlug)}/download`;
+        const dlUrl = `/checkout.html?product=${encodeURIComponent(resolvedSlug)}`;
 
         iframe.removeAttribute('srcdoc');
 
@@ -4271,7 +4014,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         if (openBtn) openBtn.href = blobUrl;
 
-        if (dlBtn) { dlBtn.href = blobUrl; dlBtn.setAttribute('download', `${slug}-monetized-webapp.html`); }
+        if (dlBtn) { dlBtn.href = `/checkout.html?product=${encodeURIComponent(resolvedSlug)}`; dlBtn.removeAttribute('download'); }
 
       }
 
@@ -4342,6 +4085,14 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     async function togglePortalAdminAccessModal() {
 
+      if (!IS_OWNER_ADMIN_VERIFIED && !isSecureAdminOrigin()) {
+
+        showToast(t('Quản trị yêu cầu HTTPS; không nhập khóa trên kết nối HTTP.', 'Admin access requires HTTPS; do not enter the key over HTTP.'), true);
+
+        return;
+
+      }
+
       if (IS_OWNER_ADMIN_VERIFIED) {
 
         const confirmExit = window.confirm(t(
@@ -4390,9 +4141,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         await apiFetch('/api/admin/auth/verify', {
 
-          method: 'POST',
-
-          body: JSON.stringify({ admin_key: entered.trim() })
+          method: 'POST'
 
         });
 
@@ -4616,7 +4365,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       // 3. Public Supporter Donations
 
-      const donData = STATE.donations || { items: [], verified_donations_usd: 0 };
+      const donData = STATE.donations || { items: [], verified_donations_usd: null };
 
       const donItems = donData.items || [];
 
@@ -4624,7 +4373,12 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       if (donChip) {
 
-        donChip.textContent = t(`$${Number(donData.verified_donations_usd || 0).toFixed(2)} Đã xác minh`, `$${Number(donData.verified_donations_usd || 0).toFixed(2)} Verified`);
+        const verifiedDonations = donData.verified_donations_usd;
+        const hasVerifiedDonationTotal = verifiedDonations !== null && verifiedDonations !== undefined && Number.isFinite(Number(verifiedDonations));
+        donChip.dataset.status = hasVerifiedDonationTotal ? 'observed' : 'no_verified_data';
+        donChip.textContent = hasVerifiedDonationTotal
+          ? t(`$${Number(verifiedDonations).toFixed(2)} Đã xác minh`, `$${Number(verifiedDonations).toFixed(2)} Verified`)
+          : t('— Chưa có dữ liệu xác minh', '— No verified data');
 
       }
 
@@ -4689,13 +4443,13 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           <div style="display:flex; gap:14px; flex-wrap:wrap; padding:8px 12px; border-radius:var(--radius-sm); background:rgba(15,23,42,0.7); border:1px solid var(--border-subtle);">
 
-            <span>• <strong>${t('Dịch vụ & Sản phẩm (Đã xác minh):', 'Verified Services & Products:')}</strong> <code>$${Number(streams.service_and_product_verified_usd || 0).toFixed(2)}</code></span>
+            <span>• <strong>${t('Dịch vụ & Sản phẩm (Đã xác minh):', 'Verified Services & Products:')}</strong> <code>${escapeHtml(formatFinanceValue(streams.service_and_product_verified_usd, 2))}</code></span>
 
-            <span>• <strong>${t('Quảng cáo trực tiếp (Đã xác minh):', 'Verified Direct Ads:')}</strong> <code>$${Number(streams.direct_advertising_verified_usd || 0).toFixed(2)}</code> (${t('Chờ duyệt:', 'Pending:')} $${Number(streams.direct_advertising_pending_usd || 0).toFixed(2)})</span>
+            <span>• <strong>${t('Quảng cáo trực tiếp (Đã xác minh):', 'Verified Direct Ads:')}</strong> <code>${escapeHtml(formatFinanceValue(streams.direct_advertising_verified_usd, 2))}</code> (${t('Chờ duyệt:', 'Pending:')} ${escapeHtml(formatFinanceValue(streams.direct_advertising_pending_usd, 2))})</span>
 
-            <span>• <strong>${t('Quyên góp ủng hộ (Đã xác minh):', 'Verified Donations:')}</strong> <code>$${Number(streams.donations_verified_usd || 0).toFixed(2)}</code> (${t('Chờ duyệt:', 'Pending:')} $${Number(streams.donations_pending_usd || 0).toFixed(2)})</span>
+            <span>• <strong>${t('Quyên góp ủng hộ (Đã xác minh):', 'Verified Donations:')}</strong> <code>${escapeHtml(formatFinanceValue(streams.donations_verified_usd, 2))}</code> (${t('Chờ duyệt:', 'Pending:')} ${escapeHtml(formatFinanceValue(streams.donations_pending_usd, 2))})</span>
 
-            <span>• <strong>${t('Ước tính mạng QC & Affiliate (Chưa thanh toán):', 'Estimated Ad Network & Affiliate:')}</strong> <code>$${Number(streams.affiliate_and_ad_network_estimated_usd || 0).toFixed(2)}</code></span>
+            <span>• <strong>${t('Ước tính mạng QC & Affiliate (Chưa thanh toán):', 'Estimated Ad Network & Affiliate:')}</strong> <code>${escapeHtml(formatFinanceValue(streams.affiliate_and_ad_network_estimated_usd, 2))}</code></span>
 
           </div>
 
@@ -4711,29 +4465,29 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         const rows12 = [
 
-          [1, t('1. Doanh thu ước tính (Estimated Revenue)', '1. Estimated Revenue'), `$${Number(twelve['1_estimated_revenue_usd'] || 0).toFixed(2)} USD`],
+          [1, t('1. Doanh thu ước tính (Estimated Revenue)', '1. Estimated Revenue'), formatFinanceValue(twelve['1_estimated_revenue_usd'], 2)],
 
-          [2, t('2. Doanh thu chờ xác minh (Pending Revenue)', '2. Pending Revenue'), `$${Number(twelve['2_pending_revenue_usd'] || 0).toFixed(2)} USD`],
+          [2, t('2. Doanh thu chờ xác minh (Pending Revenue)', '2. Pending Revenue'), formatFinanceValue(twelve['2_pending_revenue_usd'], 2)],
 
-          [3, t('3. Tổng doanh thu đã xác minh (Verified Revenue)', '3. Verified Revenue (All Streams)'), `$${Number(twelve['3_verified_revenue_usd'] || 0).toFixed(2)} USD`],
+          [3, t('3. Tổng doanh thu đã xác minh (Verified Revenue)', '3. Verified Revenue (All Streams)'), formatFinanceValue(twelve['3_verified_revenue_usd'], 2)],
 
-          [4, t('4. Chi phí vận hành thực tế (Operating Costs)', '4. Operating Costs'), `$${Number(twelve['4_operating_costs_usd'] || 0).toFixed(4)} USD`],
+          [4, t('4. Chi phí vận hành thực tế (Operating Costs)', '4. Operating Costs'), formatFinanceValue(twelve['4_operating_costs_usd'], 4)],
 
-          [5, t('5. Tiền hoàn trả khách hàng (Refunds)', '5. Customer Refunds'), `$${Number(twelve['5_refunds_usd'] || 0).toFixed(2)} USD`],
+          [5, t('5. Tiền hoàn trả khách hàng (Refunds)', '5. Customer Refunds'), formatFinanceValue(twelve['5_refunds_usd'], 2)],
 
-          [6, t('6. Số dư khả dụng sau chi phí (Available Balance)', '6. Available Balance'), `$${Number(twelve['6_available_balance_usd'] || 0).toFixed(4)} USD`],
+          [6, t('6. Số dư khả dụng sau chi phí (Available Balance)', '6. Available Balance'), formatFinanceValue(twelve['6_available_balance_usd'], 4)],
 
-          [7, t('7. Số dư ví tiền mã hóa On-Chain (Cryptocurrency Balance)', '7. On-Chain Cryptocurrency Balance'), `${Number(STATE.wallet?.onchain_usdt_balance ?? twelve['7_cryptocurrency_balance_usdt'] ?? 0).toFixed(2)} USDT (BEP20)`],
+          [7, t('7. Số dư ví tiền mã hóa On-Chain (Cryptocurrency Balance)', '7. On-Chain Cryptocurrency Balance'), `${escapeHtml(formatFinanceValue(STATE.wallet?.onchain_usdt_balance ?? twelve['7_cryptocurrency_balance_usdt'], 2, 'USDT'))} (BEP20)`],
 
-          [8, t('8. Định giá tài sản số hiện tại (Token Valuation)', '8. Token Valuation (USD)'), `$${Number(STATE.wallet?.onchain_usdt_balance ?? twelve['8_token_valuation_usd'] ?? 0).toFixed(2)} USD`],
+          [8, t('8. Định giá tài sản số hiện tại (Token Valuation)', '8. Token Valuation (USD)'), formatFinanceValue(STATE.wallet?.onchain_usdt_balance ?? twelve['8_token_valuation_usd'], 2)],
 
-          [9, t('9. Tiền thực nhận đã giải ngân (Realized Proceeds)', '9. Realized Proceeds'), `$${Number(twelve['9_realized_proceeds_usd'] || 0).toFixed(2)} USD`],
+          [9, t('9. Tiền thực nhận đã giải ngân (Realized Proceeds)', '9. Realized Proceeds'), formatFinanceValue(twelve['9_realized_proceeds_usd'], 2)],
 
-          [10, t('10. Khoản rút đang chờ xử lý (Pending Payouts)', '10. Pending Payouts'), `$${Number(twelve['10_pending_payouts_usd'] || 0).toFixed(2)} USD`],
+          [10, t('10. Khoản rút đang chờ xử lý (Pending Payouts)', '10. Pending Payouts'), formatFinanceValue(twelve['10_pending_payouts_usd'], 2)],
 
-          [11, t('11. Khoản đã rút về ví/ngân hàng Chủ sở hữu (Confirmed Payouts)', '11. Confirmed Owner Payouts'), `$${Number(twelve['11_confirmed_payouts_usd'] || 0).toFixed(2)} USD`],
+          [11, t('11. Khoản đã rút về ví/ngân hàng Chủ sở hữu (Confirmed Payouts)', '11. Confirmed Owner Payouts'), formatFinanceValue(twelve['11_confirmed_payouts_usd'], 2)],
 
-          [12, t('12. Lợi nhuận ròng toàn công ty (Net Profit)', '12. Corporate Net Profit'), `$${Number(twelve['12_net_profit_usd'] || 0).toFixed(4)} USD`]
+          [12, t('12. Lợi nhuận ròng toàn công ty (Net Profit)', '12. Corporate Net Profit'), formatFinanceValue(twelve['12_net_profit_usd'], 4)]
 
         ];
 
@@ -4980,7 +4734,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         });
 
-        showToast(t('Đã gửi yêu cầu đặt quảng cáo tài trợ (Trạng thái: Chờ xác minh thanh toán — $0.00 doanh thu xác minh).', 'Submitted advertising inquiry (Status: Pending payment verification — $0.00 verified revenue).'));
+        showToast(t('Đã gửi yêu cầu quảng cáo tài trợ. Chưa tính doanh thu cho tới khi xác minh thanh toán.', 'Advertising request saved. Revenue is not counted until payment is verified.'));
 
         await refreshAllData(false);
 
@@ -5031,9 +4785,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
 
-    let VISITOR_IS_VIETNAM_IP = true;
+    let VISITOR_IS_VIETNAM_IP = false;
 
-    let VISITOR_COUNTRY_CODE = 'VN';
+    let VISITOR_COUNTRY_CODE = 'UNKNOWN';
 
     let VISITOR_GEO_DETECTED = false;
 
@@ -5041,9 +4795,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
 
-    function getDynamicMbbankAcc() { return '0702543889'; }
+    function getDynamicMbbankAcc() { return ''; }
 
-    function getDynamicUsdtWallet() { return 'Binance Pay ID: 1225675522'; }
+    function getDynamicUsdtWallet() { return ''; }
 
 
 
@@ -5060,36 +4814,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
       try {
 
         const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').toLowerCase();
-
-        const tzIsVn = tz.includes('ho_chi_minh') || tz.includes('saigon') || tz.includes('bangkok');
-
-        let detectedCode = tzIsVn ? 'VN' : '';
-
-
-
-        try {
-
-          const r = await fetch('https://api.country.is/', { cache: 'no-store' });
-
-          if (r.ok) {
-
-            const j = await r.json();
-
-            if (j && j.country) detectedCode = String(j.country).toUpperCase();
-
-          }
-
-        } catch (_) {
-
-          if (STATE.donations && STATE.donations.visitor_geo && STATE.donations.visitor_geo.country_code) {
-
-            detectedCode = STATE.donations.visitor_geo.country_code;
-
-          }
-
-        }
-
-        if (!detectedCode) detectedCode = 'VN';
+        const deviceLanguage = (navigator.language || '').toLowerCase();
+        const deviceSuggestsVietnam = tz.includes('ho_chi_minh') || tz.includes('saigon') || deviceLanguage.startsWith('vi');
+        const detectedCode = deviceSuggestsVietnam ? 'VN' : 'UNKNOWN';
 
         VISITOR_COUNTRY_CODE = detectedCode;
 
@@ -5099,9 +4826,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       } catch (_) {
 
-        VISITOR_COUNTRY_CODE = 'VN';
+        VISITOR_COUNTRY_CODE = 'UNKNOWN';
 
-        VISITOR_IS_VIETNAM_IP = true;
+        VISITOR_IS_VIETNAM_IP = false;
 
       }
 
@@ -5125,9 +4852,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         VISITOR_IS_VIETNAM_IP
 
-          ? '🇻🇳 Đang hiển thị chế độ Khách IP Việt Nam: Mở chuyển khoản VPBank (2.000đ - 100.000đ).'
+          ? '🇻🇳 Đang xem trước giao diện Việt Nam theo thiết lập thiết bị.'
 
-          : '🌍 Đang hiển thị chế độ Khách IP Quốc tế: Đã ẩn tài khoản ngân hàng VN, chỉ mở USD (Min $1).'
+          : '🌍 Đang xem trước giao diện quốc tế/chưa xác minh.'
 
       );
 
@@ -5255,7 +4982,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       if (memoEl) memoEl.textContent = memo;
 
-      if (qrEl) qrEl.src = `https://img.vietqr.io/image/MB-${acc}-compact2.png?accountName=LE%20HONG%20VAN&?amount=${vndVal}&addInfo=${encodeURIComponent(memo)}`;
+      if (qrEl) qrEl.src = `https://img.vietqr.io/image/MB-${acc}-compact2.png?accountName=&?amount=${vndVal}&addInfo=${encodeURIComponent(memo)}`;
 
       if (usdtAmtEl) usdtAmtEl.textContent = `$${usdVal.toFixed(2)} USDT (BEP20)`;
 
@@ -5321,70 +5048,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
     async function submitVisitorQuickCheckoutOrder() {
-
-      const email = (document.getElementById('checkoutBuyerEmail')?.value || '').trim();
-
-      const txRef = (document.getElementById('checkoutTxProofInput')?.value || '').trim();
-
-      const status = document.getElementById('checkoutOrderStatus');
-      const button = document.querySelector('#visitorBuyCheckoutModal [data-submit-checkout]');
-      const setStatus = (message, isError = false) => {
-        if (!status) return;
-        status.textContent = message;
-        status.style.color = isError ? '#fca5a5' : '#86efac';
-        status.style.display = 'block';
-      };
-
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setStatus(t('Nhập email hợp lệ để chủ cửa hàng có thể bàn giao mã nguồn.', 'Enter a valid email for the seller to deliver the source code.'), true);
-        document.getElementById('checkoutBuyerEmail')?.focus();
-        return;
-      }
-
-      if (!txRef || txRef.length < 4) {
-
-        setStatus(t('Nhập mã giao dịch ngân hàng hoặc TxHash (ít nhất 4 ký tự) để gửi đối soát.', 'Enter a bank transaction reference or TxHash (at least 4 characters) for review.'), true);
-
-        return;
-
-      }
-
-      const paymentMethod = document.getElementById('checkoutModalCryptoBox')?.style.display === 'none'
-        ? 'BANK_TRANSFER'
-        : 'BINANCE_PAY';
-      if (button) { button.disabled = true; button.textContent = t('Đang gửi yêu cầu…', 'Sending request…'); }
-      setStatus(t('Đang gửi yêu cầu đối soát lên máy chủ…', 'Sending the payment review request…'));
-      try {
-        const result = await apiFetch('/api/public/payment-reports', {
-          method: 'POST',
-          body: JSON.stringify({
-            product_slug: CURRENT_CHECKOUT_ITEM.slug,
-            payment_method: paymentMethod,
-            customer_email: email,
-            reference: txRef
-          })
-        });
-        if (!result?.accepted || !result.report_id) throw new Error(result?.detail || t('Máy chủ chưa xác nhận đã lưu yêu cầu.', 'The server did not confirm that the request was saved.'));
-        setStatus(t(
-          `Đã gửi yêu cầu ${result.report_id}. Trạng thái: chờ chủ cửa hàng đối soát; chưa xác nhận thanh toán và chưa bàn giao mã nguồn.`,
-          `Request ${result.report_id} was saved. Status: waiting for seller review; payment is not verified and source code has not been delivered.`
-        ));
-        if (status) {
-          status.innerHTML = `${escapeHtml(t(
-            `Đã gửi yêu cầu ${result.report_id}. Trạng thái: chờ chủ cửa hàng đối soát; chưa xác nhận thanh toán và chưa bàn giao mã nguồn.`,
-            `Request ${result.report_id} was saved. Status: waiting for seller review; payment is not verified and source code has not been delivered.`
-          ))} <button type="button" class="btn btn-sm" onclick="checkPublicPaymentReportStatus('${escapeHtml(result.report_id)}')">${escapeHtml(t('Kiểm tra trạng thái', 'Check status'))}</button>`;
-        }
-        showToast(t('Đã gửi yêu cầu đối soát. Mã nguồn chỉ được bàn giao sau khi xác nhận thanh toán.', 'Payment review request sent. Source code is delivered only after payment is verified.'));
-      } catch (err) {
-        setStatus(`${t('Không gửi được yêu cầu; chưa có đơn nào được ghi nhận.', 'The request was not sent; no order was recorded.')}${err?.message ? ` ${err.message}` : ''}`, true);
-        showToast(t('Không gửi được yêu cầu đối soát. Hãy kiểm tra kết nối rồi thử lại.', 'Could not send the payment review request. Check the connection and try again.'), true);
-      } finally {
-        if (button) { button.disabled = false; button.textContent = t('Gửi yêu cầu đối soát thanh toán', 'Send payment review request'); }
-      }
-
+      const slug = String(CURRENT_CHECKOUT_ITEM?.slug || '').replace(/[^a-z0-9-]/gi, '');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(slug)}`);
     }
-
 
 
     async function checkPublicPaymentReportStatus(reportId) {
@@ -5450,7 +5116,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         if (mbAccEl) mbAccEl.textContent = getDynamicMbbankAcc();
 
-        if (toggleBtn) toggleBtn.textContent = `🇻🇳 IP: Việt Nam (${VISITOR_COUNTRY_CODE})`;
+        if (toggleBtn) toggleBtn.textContent = `🇻🇳 Thiết lập thiết bị: Việt Nam (${VISITOR_COUNTRY_CODE})`;
 
         if (ruleDesc) ruleDesc.textContent = 'Cổng ủng hộ dành cho khách tại Việt Nam (Chuyển khoản VPBank từ 2.000đ – 100.000đ).';
 
@@ -5462,11 +5128,11 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         if (usdPanel) usdPanel.style.display = 'block';
 
-        if (mbAccEl) mbAccEl.textContent = 'HIDDEN_FOR_INTL_IP';
+        if (mbAccEl) mbAccEl.textContent = 'HIDDEN_FOR_UNVERIFIED_REGION';
 
         if (usdtWalEl) usdtWalEl.value = getDynamicUsdtWallet();
 
-        if (toggleBtn) toggleBtn.textContent = `🌍 IP: Quốc Tế (${VISITOR_COUNTRY_CODE})`;
+        if (toggleBtn) toggleBtn.textContent = `🌍 Khu vực chưa xác minh (${VISITOR_COUNTRY_CODE})`;
 
         if (ruleDesc) ruleDesc.textContent = 'International Supporter Portal: Supporting via Binance / USDT BEP20 (Min $1.00 USD).';
 
@@ -5508,7 +5174,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       if (qrImg) {
 
-        qrImg.src = `https://img.vietqr.io/image/MB-${acc}-compact2.png?accountName=LE%20HONG%20VAN&?amount=${vnd}&addInfo=${encodeURIComponent('UNG HO AUTOPROFIT AI')}`;
+        qrImg.src = `https://img.vietqr.io/image/MB-${acc}-compact2.png?accountName=&?amount=${vnd}&addInfo=${encodeURIComponent('UNG HO AUTOPROFIT AI')}`;
 
       }
 
@@ -5662,49 +5328,12 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     // =========================================================================
 
-    // CONTINUOUS 9-AI BACK-AND-FORTH DIALOGUE ENGINE & LIVE TRAFFIC + A-ADS HUB
+    // Event-only activity display; legacy synthetic dialogue and heartbeat loops are retired.
 
     // =========================================================================
 
-    let CONTINUOUS_CHAT_INDEX = 0;
-
     let CONTINUOUS_CHAT_TIMER = null;
-
     let TRAFFIC_HEARTBEAT_TIMER = null;
-
-    let CURRENT_VISITOR_SESSION_ID = localStorage.getItem('autoprofit_visitor_sid') || '';
-
-    if (!CURRENT_VISITOR_SESSION_ID) {
-
-      CURRENT_VISITOR_SESSION_ID = 'vis_' + Math.random().toString(36).slice(2, 11) + '_' + Date.now().toString(36);
-
-      try { localStorage.setItem('autoprofit_visitor_sid', CURRENT_VISITOR_SESSION_ID); } catch (_) {}
-
-    }
-
-
-
-    const BROWSER_GITHUB_SEARCH_TOPICS = [
-
-      'ai-agent', 'prompt-engineering', 'seo-audit', 'json-schema', 'markdown-editor',
-
-      'qrcode-generator', 'crypto-dashboard', 'css-generator', 'regex-tester', 'jwt-debugger',
-
-      'cron-expression', 'password-generator', 'csv-to-json', 'sql-formatter', 'svg-optimizer',
-
-      'landing-page', 'pomodoro-timer', 'invoice-generator', 'roi-calculator', 'utm-builder',
-
-      'open-graph', 'meta-tag', 'webhook-tester', 'api-client', 'color-palette',
-
-      'html-minifier', 'base64-tool', 'uuid-generator', 'saas-starter', 'chatbot-ui'
-
-    ];
-
-    let BROWSER_HARVEST_CURSOR = 0;
-
-    let DYNAMIC_ACTIVITY_CURSOR = 0;
-
-
 
     async function runAutonomousUnlimitedGithubHarvestStep() {
       const ticker = document.getElementById('githubHarvesterLiveTicker');
@@ -5714,409 +5343,25 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
     }
 
 
-    function generateNextRealActivityDialogueTurn() {
-
-      // 1. First priority: Any live event just triggered by the GitHub harvester, lead scanner, or user interaction
-
-      if (LIVE_REAL_WORK_SPEECH_QUEUE.length > 0) {
-
-        return LIVE_REAL_WORK_SPEECH_QUEUE.shift();
-
-      }
-
-
-
-      const apps = (GITHUB_WEB_FACTORY_CACHE && GITHUB_WEB_FACTORY_CACHE.items) || [];
-
-      const leads = STATE.leads || [];
-
-      const tasks = STATE.tasks || [];
-
-      const opps = STATE.opportunities || [];
-
-      const msgs = (STATE.agentMessages || []).filter(m => !m.is_demo && m.message_content);
-
-
-
-      // Build a large pool of real work items currently in the system
-
-      const pool = [];
-
-
-
-      // Pool A: Every real packaged GitHub Web App (33 - 500+ items, each produces distinct technical/commercial dialogue)
-
-      apps.forEach((app, i) => {
-
-        const stars = Number(app.github_stars || 500).toLocaleString('vi-VN');
-
-        const price = Number(app.sale_price_usd || 2.99).toFixed(2);
-
-        const views = getRealWebAppViewCount(app.slug, app.views_count);
-
-        if (i % 3 === 0) {
-
-          pool.push({
-
-            sig: `gh_build_${app.slug}_${views}`,
-
-            sender: 'RESEARCH_AGENT',
-
-            receiver: 'CODING_AGENT',
-
-            msg: `Vũ Khoa, repo GitHub "${app.github_repo}" (${stars} ★, danh mục ${app.category}) mình vừa tải mã nguồn MIT về. Tiến độ đóng gói Web gắn A-Ads tới đâu rồi?`,
-
-            reply: `Đã hoàn tất 100% nhé Lê Minh! Mình đã đóng gói "${app.app_name_vi}" kèm 2 khung quảng cáo A-Ads và nút mua mã nguồn White-Label giá $${price} USD (Hiện có ${views} lượt mở thật).`
-
-          });
-
-        } else if (i % 3 === 1) {
-
-          pool.push({
-
-            sig: `gh_price_${app.slug}`,
-
-            sender: 'PRODUCT_AGENT',
-
-            receiver: 'OPTIMIZATION_AGENT',
-
-            msg: `Khánh Linh ơi, gói mã nguồn Web dựng từ repo "${app.github_repo}" (${stars} ★) mình đang niêm yết giá bán đứt $${price} USD. Biên lợi nhuận ròng có đạt mục tiêu không?`,
-
-            reply: `Chuẩn xác Hoàng Bách ạ! Vì mã nguồn gốc "${app.github_repo}" theo giấy phép MIT chi phí bản quyền $0, giá bán $${price} USD mang lại biên lợi nhuận gộp 91.4% và còn thu thêm tiền hiển thị A-Ads!`
-
-          });
-
-        } else {
-
-          pool.push({
-
-            sig: `gh_mkt_${app.slug}`,
-
-            sender: 'MARKETING_AGENT',
-
-            receiver: 'FINANCE_AGENT',
-
-            msg: `Chị Bảo Trâm ơi, em vừa tạo thẻ Schema.org JSON-LD và chiến dịch SEO kéo khách vào dùng miễn phí công cụ "${app.app_name_vi}" (repo ${app.github_repo}) để ăn tiền quảng cáo A-Ads.`,
-
-            reply: `Tốt lắm Phạm Thảo! Cổng thanh toán tự động trong trang "${app.github_repo}" đã cấu hình ẩn bảo mật, chỉ hiển thị tài khoản ngân hàng hoặc ví Binance khi khách bấm Mua hàng hoặc Donate trị giá $${price} USD.`
-
-          });
-
-        }
-
-      });
-
-
-
-      // Pool B: Every real audited Lead (58+ websites with real domain, country, language, and SEO defects)
-
-      leads.slice(0, 40).forEach((ld) => {
-
-        const domain = ld.target_url || ld.business_name || 'startup-client.io';
-
-        const country = ld.country || 'US';
-
-        const langMap = { VN: 'Tiếng Việt', JP: 'Tiếng Nhật', KR: 'Tiếng Hàn', DE: 'Tiếng Đức', FR: 'Tiếng Pháp', ES: 'Tiếng Tây Ban Nha', CN: 'Tiếng Trung' };
-
-        const langName = langMap[country] || 'Tiếng Anh (English)';
-
-        const score = ld.overall_health_score ?? 62;
-
-        const price = Number(ld.quoted_price_usd || 39).toFixed(0);
-
-        pool.push({
-
-          sig: `lead_${ld.id || domain}_${country}`,
-
-          sender: 'SALES_AGENT',
-
-          receiver: 'SECURITY_AGENT',
-
-          msg: `Anh Trần Phong, hệ thống vừa tự động phê duyệt khách hàng "${ld.business_name || domain}" (Quốc gia: ${country}, điểm SEO: ${score}/100). Em đang gửi báo giá $${price} USD bằng ${langName}.`,
-
-          reply: `Đã kiểm duyệt nhé Đặng Quân! Bộ lọc ngôn ngữ xác nhận khách "${domain}" ở mã vùng [${country}] -> Bắt buộc đồng bộ 100% ${langName}, tuyệt đối không gửi nhầm tiếng Việt cho khách ngoại quốc!`
-
-        });
-
-      });
-
-
-
-      // Pool C: Real Backend AgentTasks & Orchestrator Messages
-
-      tasks.slice(0, 25).forEach((tk) => {
-
-        pool.push({
-
-          sig: `task_${tk.id}_${tk.status}`,
-
-          sender: tk.agent_role || 'CODING_AGENT',
-
-          receiver: 'CUSTOMER_SUPPORT_AGENT',
-
-          msg: `Ngô Mai ơi, mình đang xử lý tác vụ thực tế #${String(tk.id).slice(0, 6)}: "${tk.title}" (Mục tiêu: ${(tk.objective || tk.action_type || '').slice(0, 75)}) — Trạng thái: ${tk.status}.`,
-
-          reply: `Em đã ghi nhận vào Sổ tay nhật ký rồi! Ngay khi tác vụ "${tk.title}" hoàn tất, em sẽ cập nhật thông báo bàn giao cho khách hàng trên cổng trực tuyến.`
-
-        });
-
-      });
-
-
-
-      msgs.slice(0, 20).forEach((m) => {
-
-        pool.push({
-
-          sig: `bmsg_${m.message_id}`,
-
-          sender: m.sender_agent_id || 'RESEARCH_AGENT',
-
-          receiver: m.receiver_agent_id || 'PRODUCT_AGENT',
-
-          msg: m.message_content.slice(0, 145),
-
-          reply: `Đã tiếp nhận dữ liệu từ ${formatAgentShort(m.sender_agent_id)}! Mình đang đồng bộ kết quả trực tiếp vào kho ${apps.length} Web App GitHub và bảng báo giá động.`
-
-        });
-
-      });
-
-
-
-      if (pool.length === 0) {
-
-        return {
-
-          sender: 'RESEARCH_AGENT',
-
-          receiver: 'CODING_AGENT',
-
-          msg: `Vũ Khoa ơi, mình đang quét trực tiếp api.github.com để săn thêm các kho ứng dụng AI và Web Tool mã nguồn mở MIT về đóng gói bán tiếp!`,
-
-          reply: `Sẵn sàng Lê Minh! Cứ phát hiện repo nào hữu ích là mình đóng gói thành Web HTML5 gắn quảng cáo A-Ads và đăng lên kệ bán ngay lập tức!`
-
-        };
-
-      }
-
-
-
-      // Pick the next unspoken item so the AIs NEVER repeat a short loop!
-
-      for (let attempt = 0; attempt < pool.length; attempt++) {
-
-        const candidate = pool[(DYNAMIC_ACTIVITY_CURSOR + attempt) % pool.length];
-
-        if (!SPOKEN_TURN_SIGNATURES.has(candidate.sig)) {
-
-          SPOKEN_TURN_SIGNATURES.add(candidate.sig);
-
-          DYNAMIC_ACTIVITY_CURSOR = (DYNAMIC_ACTIVITY_CURSOR + attempt + 1) % pool.length;
-
-          if (SPOKEN_TURN_SIGNATURES.size >= pool.length) {
-
-            SPOKEN_TURN_SIGNATURES.clear();
-
-          }
-
-          return candidate;
-
-        }
-
-      }
-
-      const fallback = pool[DYNAMIC_ACTIVITY_CURSOR % pool.length];
-
-      DYNAMIC_ACTIVITY_CURSOR += 1;
-
-      return fallback;
-
-    }
-
-
-
     function triggerNextContinuousAiConversationTurn() {
-
-      // Speech bubbles must come from backend events, never synthetic browser dialogue.
+      // Office speech is rendered only from the authenticated backend event feed.
       return;
-
-      if (!WORLD_3D.initialized) return;
-
-      SHOW_3D_SPEECH_BUBBLES = true;
-
-      const turn = generateNextRealActivityDialogueTurn();
-
-      CONTINUOUS_CHAT_INDEX += 1;
-
-
-
-      const msgObj = {
-
-        message_id: 'live_chat_' + Date.now() + '_' + CONTINUOUS_CHAT_INDEX,
-
-        sender_agent_id: turn.sender,
-
-        receiver_agent_id: turn.receiver,
-
-        message_type: 'AGENT_GENERATED',
-
-        message_content: turn.msg,
-
-        created_at: new Date().toISOString()
-
-      };
-
-
-
-      activateSpeechBubbleIn3D(msgObj);
-
-      if (CURRENT_ACTIVE_SPEECH) {
-
-        CURRENT_ACTIVE_SPEECH.expiresAt = Date.now() + 5600;
-
-        CURRENT_ACTIVE_SPEECH.replyText = turn.reply;
-
-        CURRENT_ACTIVE_SPEECH.replyShowAt = Date.now() + 650;
-
-      }
-
-
-
-      const replyEl = WORLD_3D.overlayReplyBubbleEl;
-
-      if (replyEl) {
-
-        const styleRec = ROLE_OUTFIT_STYLES[turn.receiver] || {};
-
-        replyEl.innerHTML = `
-
-          <div class="speech-meta-header">
-
-            <span><strong>💬 ${escapeHtml(formatAgentShort(turn.receiver))}</strong> ↩ <strong>${escapeHtml(formatAgentShort(turn.sender))}</strong></span>
-
-            <span class="speech-origin-badge">${escapeHtml(styleRec.outfitNameVi || 'Phản hồi công việc thật')}</span>
-
-          </div>
-
-          <div style="max-height:72px; overflow:hidden; text-overflow:ellipsis;">"${escapeHtml(turn.reply)}"</div>
-
-        `;
-
-        replyEl.onclick = (e) => {
-
-          e.stopPropagation();
-
-          selectCharacterIn3DWorld(turn.receiver, true);
-
-        };
-
-      }
-
     }
-
-
-
-    let GITHUB_UNLIMITED_HARVESTER_TIMER = null;
-
-
 
     function startContinuous3DAiOfficeDialogueLoop() {
-
       if (CONTINUOUS_CHAT_TIMER) clearInterval(CONTINUOUS_CHAT_TIMER);
-
       CONTINUOUS_CHAT_TIMER = null;
-
-      // The former timer fabricated dialogue and collaboration walks.
-      return;
-
-      setTimeout(() => {
-
-        triggerNextContinuousAiConversationTurn();
-
-      }, 900);
-
-      CONTINUOUS_CHAT_TIMER = setInterval(() => {
-
-        triggerNextContinuousAiConversationTurn();
-
-        if (CONTINUOUS_CHAT_INDEX % 2 === 0 && typeof triggerAutonomousCollaborationWalkNow === 'function') {
-
-          const savedSpeech = CURRENT_ACTIVE_SPEECH;
-
-          CURRENT_ACTIVE_SPEECH = null;
-
-          triggerAutonomousCollaborationWalkNow();
-
-          CURRENT_ACTIVE_SPEECH = savedSpeech;
-
-        }
-
-      }, 5200);
-
-
-
-      // Disabled synthetic 18s harvester inflation — strictly display real files on server
-
     }
-
-
 
     function getLocalPersistentTrafficCounter() {
-
-      const todayKey = new Date().toISOString().slice(0, 10);
-
-      let state = { date: todayKey, online_now: 1, today: 1, week_base: 0, month_base: 0 };
-
-      try {
-
-        // Clear old v5 key that was stuck on yesterday's 1,448
-
-        localStorage.removeItem('autoprofit_live_view_counter_v5');
-
-        localStorage.removeItem('autoprofit_unified_traffic_v3');
-
-        const raw = localStorage.getItem('autoprofit_real_traffic_v6');
-
-        if (raw) {
-
-          const parsed = JSON.parse(raw);
-
-          if (parsed && typeof parsed.today === 'number') {
-
-            if (parsed.date && parsed.date !== todayKey) {
-
-              state.date = todayKey;
-
-              state.week_base = Number(parsed.week_base || 0) + Number(parsed.today || 0);
-
-              state.month_base = Number(parsed.month_base || 0) + Number(parsed.today || 0);
-
-              state.today = 1;
-
-            } else {
-
-              state.date = todayKey;
-
-              state.today = Number(parsed.today || 1);
-
-              state.week_base = Number(parsed.week_base || 0);
-
-              state.month_base = Number(parsed.month_base || 0);
-
-            }
-
-          }
-
-        }
-
-      } catch (_) {}
-
-      return state;
-
+      return {
+        date: new Date().toISOString().slice(0, 10),
+        online_now: null,
+        today: null,
+        week_base: null,
+        month_base: null
+      };
     }
-
-
 
     function saveLocalPersistentTrafficCounter(state) {
 
@@ -6182,83 +5427,19 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
       }
     }
     async function promptUpdateAadsUnitId() {
-
-      if (!IS_OWNER_ADMIN_VERIFIED) { showToast('🔒 Chỉ Quản Trị Viên (Admin) mới được phép thay đổi mã quảng cáo A-Ads!', true); return; }
-
-      const currentId = ACTIVE_USER_AADS_UNIT_ID || '';
-
-      const nextId = window.prompt(
-
-        '💰 KẾT NỐI TÀI KHOẢN A-ADS (USER #517750):\n' +
-
-        'Lưu ý: 517750 là User ID của bạn (hiện đang ở Ad Units: 0).\n' +
-
-        '1. Vào https://aads.com/ad_units/new (Earn -> Create Ad Unit)\n' +
-
-        '2. Chọn loại Website, nhập URL: https://aikiemtien.surge.sh/\n' +
-
-        '3. Copy mã Ad Unit ID (gồm 7 chữ số) vừa tạo và dán vào ô bên dưới:',
-
-        currentId
-
-      );
-
-      if (!nextId || !nextId.trim()) return;
-
-      const cleanMatch = nextId.trim().match(/(\d{5,12})/);
-
-      if (!cleanMatch) {
-
-        showToast('⚠️ Mã Ad Unit ID không hợp lệ (Phải là dãy 5-12 chữ số do aads.com cấp khi tạo Ad Unit)!', true);
-
-        return;
-
-      }
-
-      const cleanUnitId = cleanMatch[1];
-
-      if (cleanUnitId === '517750') {
-
-        showToast('⚠️ 517750 là mã tài khoản (User ID) của bạn, KHÔNG PHẢI mã đơn vị quảng cáo (Ad Unit ID)! Hãy bấm Earn -> Create Ad Unit trên aads.com để lấy mã Ad Unit ID.', true);
-
-        return;
-
-      }
-
-      ACTIVE_USER_AADS_UNIT_ID = cleanUnitId;
-
-      localStorage.setItem('autoprofit_user517750_aads_unit_id', cleanUnitId);
-
-      applyUser517750AadsUnitToDom(cleanUnitId);
-
+      if (!IS_OWNER_ADMIN_VERIFIED) { showToast('Chỉ quản trị viên mới được phép thay đổi mã quảng cáo.', true); return; }
+      const nextId = window.prompt('Nhập Ad Unit ID A-Ads (5-12 chữ số):', ACTIVE_USER_AADS_UNIT_ID || '');
+      if (!nextId || !/^\d{5,12}$/.test(nextId.trim())) { showToast('Mã Ad Unit ID không hợp lệ.', true); return; }
       try {
-
-        await fetch(`https://ntfy.sh/${AADS_CLOUD_TOPIC}`, {
-
-          method: 'POST',
-
-          body: JSON.stringify({ aads_unit_id: cleanUnitId, user_id: '517750', ts: Date.now() })
-
+        const result = await apiFetch('/api/public/aads-config', {
+          method: 'POST', body: JSON.stringify({ aads_unit_id: nextId.trim() })
         });
-
-      } catch (_) {}
-
-      try {
-
-        const res = await apiFetch('/api/public/aads-config', {
-
-          method: 'POST',
-
-          body: JSON.stringify({ aads_unit_id: cleanUnitId })
-
-        });
-
-        renderLiveTrafficAndAadsStats(res);
-
-      } catch (_) {}
-
-      showToast(`✅ Đã gắn mã Ad Unit #${cleanUnitId} cho tài khoản User #517750 và đồng bộ toàn cầu!`);
-
+        if (result?.status !== 'saved') throw new Error('Configuration was not saved');
+        ACTIVE_USER_AADS_UNIT_ID = nextId.trim();
+        applyConfiguredAadsUnitToDom(ACTIVE_USER_AADS_UNIT_ID);
+        renderLiveTrafficAndAadsStats(result);
+        showToast('Đã lưu mã quảng cáo trên máy chủ. Chỉ dữ liệu impression đã xác minh mới được báo cáo.');
+      } catch (_) { showToast('Không lưu được cấu hình quảng cáo; kiểm tra quyền quản trị và HTTPS.', true); }
     }
 
 
@@ -6282,231 +5463,8 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
 
-      const opps = STATE.opportunities || [];
-
-      const leads = STATE.leads || [];
-
-      const prods = STATE.products || [];
-
-      const orders = STATE.orders || [];
-
-      const topOpp = opps[0] || { name: 'Kiểm toán Kỹ thuật SEO & Schema JSON-LD cho Startup mới ra mắt', total_score: 94.6 };
-
-      const sampleLead = leads[0] || { name: 'Founder @ShowHN', company: 'https://example.com', country_flag: '🇺🇸', country_name: 'United States', language_name: 'English' };
-
-      const intlLeadsCount = leads.filter(l => (l.language_code || 'en') !== 'vi').length;
-
-      const vnLeadsCount = leads.filter(l => l.language_code === 'vi').length;
-
-
-
-      const liveAppsTotal = Math.max(typeof LIVE_PACKAGED_COUNT_BASE !== 'undefined' ? LIVE_PACKAGED_COUNT_BASE : 493, (GITHUB_WEB_FACTORY_CACHE && GITHUB_WEB_FACTORY_CACHE.total) || 493);
-
-      const notebookPersonas = [
-
-        {
-
-          role: 'AFFILIATE_AMAZON_AGENT',
-
-          humanName: 'Mai Anh — Chuyên Gia Affiliate Amazon, Shopee & TikTok Shop',
-
-          badgeColor: '#f97316',
-
-          timeLabel: 'Mới tuyển thêm • Phòng Tiếp Thị Liên Kết Quốc Tế',
-
-          thought: `Mình vừa được code bổ sung vào đội ngũ để đánh mạnh mảng Tiếp thị liên kết (Affiliate). Hiện mình đang quét các mặt hàng AI Hardware, Mini PC, GPU, SSD và Thiết bị thông minh bán chạy nhất trên Amazon Associates (hoa hồng 4%–10%) cùng Flash Sale Shopee/TikTok (8%–18%), tự động viết bài Review so sánh tiếng Anh & tiếng Việt để khách bấm mua là công ty có hoa hồng tự động!`,
-
-          action: `Đang vận hành 14 chiến dịch Amazon Associates & Shopee Mall, tự động nhúng bảng so sánh sản phẩm vào ${liveAppsTotal}+ trang Web công cụ.`
-
-        },
-
-        {
-
-          role: 'SHOPIFY_ECOM_AGENT',
-
-          humanName: 'Quốc Tuấn — Chuyên Gia Shopify Partner, Dropshipping & SaaS Affiliate',
-
-          badgeColor: '#84cc16',
-
-          timeLabel: 'Mới tuyển thêm • Bàn Shopify & SaaS Hoa Hồng Trọn Đời',
-
-          thought: `Thị trường Affiliate phần mềm SaaS và sàn thương mại điện tử Shopify trả hoa hồng cực cao ($25–$150 cho mỗi chủ shop đăng ký Shopify, và 20%–50% hoa hồng định kỳ hàng tháng từ Semrush, Hostinger, Cursor AI, Jasper). Mình đã dựng xong hệ thống tự động giới thiệu các gói công cụ này cho các Founder quốc tế!`,
-
-          action: `Đang chạy 8 chương trình Affiliate SaaS & Shopify Partner (Hoa hồng định kỳ 20%–50% Recurring) + Bán kèm bộ Theme/Calculator Shopify giá chỉ $2.99.`
-
-        },
-
-        {
-
-          role: 'CRYPTO_ARBITRAGE_AGENT',
-
-          humanName: 'Hải Đăng — Chuyên Gia Quét Arbitrage Crypto & Referral Sàn (Binance/Bybit)',
-
-          badgeColor: '#f59e0b',
-
-          timeLabel: 'Mới tuyển thêm • Bàn Radar Crypto & Web3 Referral',
-
-          thought: `Mình phụ trách chuyên sâu mảng kiếm tiền điện tử: vừa quét chênh lệch giá BTC/ETH/SOL/BNB giữa Binance, Bybit với Uniswap/PancakeSwap (+0.48% đến +0.89%), vừa tích hợp link giới thiệu mở tài khoản sàn Crypto & mua ví lạnh Ledger/Trezor để nhận hoàn phí giao dịch 30%–50% trọn đời bằng USDT!`,
-
-          action: `Đang theo dõi Spread CEX/DEX thời gian thực và phân phối link Referral Binance/Bybit/Ledger trên toàn bộ hệ thống công cụ Crypto.`
-
-        },
-
-        {
-
-          role: 'AIRDROP_BOUNTY_AGENT',
-
-          humanName: 'Thanh Hà — Chuyên Gia Săn Airdrop Layer-2 & Giải Thưởng Bug Bounty',
-
-          badgeColor: '#38bdf8',
-
-          timeLabel: 'Mới tuyển thêm • Phòng Săn Airdrop & Open-Source Bounty',
-
-          thought: `Không bỏ sót bất kỳ cơ hội kiếm tiền vốn $0 nào trên Internet! Mình liên tục theo dõi các chiến dịch Airdrop Testnet lớn (Monad, Berachain, Linea, Scroll) và quét các nhiệm vụ sửa lỗi mã nguồn mở có thưởng tiền mặt trên GitHub Algora & Immunefi ($50–$500 USDT/nhiệm vụ) để phối hợp cùng Vũ Khoa giải quyết.`,
-
-          action: `Đang theo dõi 18 kèo Airdrop Layer-2 vốn $0 và lọc 9 nhiệm vụ GitHub Bug Bounty thưởng trực tiếp bằng USDT/USDC.`
-
-        },
-
-        {
-
-          role: 'VIRAL_TRAFFIC_AGENT',
-
-          humanName: 'Gia Huy — Chuyên Gia Kéo Traffic Quốc Tế (Reddit, Pinterest, Dev.to)',
-
-          badgeColor: '#d946ef',
-
-          timeLabel: 'Mới tuyển thêm • Phòng Tăng Trưởng Traffic Tự Nhiên',
-
-          thought: `Muốn bán được nhiều hàng và ăn nhiều hoa hồng Affiliate Amazon/Shopify lẫn quảng cáo A-Ads thì phải có thật nhiều khách truy cập tự nhiên. Mình chuyên tự động đăng bài chia sẻ công cụ miễn phí và bảng so sánh Deal lên Telegra.ph, IndexNow, Pinterest, Dev.to để kéo luồng khách quốc tế về web 24/7!`,
-
-          action: `Đang tự động phân phối link ${liveAppsTotal}+ Web App và bài Review Affiliate Amazon/Shopify ra mạng lưới tìm kiếm quốc tế.`
-
-        },
-
-        {
-
-          role: 'TEMPLATE_POD_AGENT',
-
-          humanName: 'Phương Nghi — Chuyên Gia Thiết Kế Template Notion, Canva, Shopify & POD',
-
-          badgeColor: '#2dd4bf',
-
-          timeLabel: 'Mới tuyển thêm • Xưởng Sản Phẩm Số & Print-on-Demand',
-
-          thought: `Bên cạnh Web App, nhu cầu mua các bộ Template Notion quản lý tài chính/dự án, mẫu Canva, Theme Shopify và thiết kế áo Print-on-Demand (POD) trên mạng là cực kỳ lớn. Mình đóng gói toàn bộ với mức giá siêu rẻ $1.99 – $3.99 USD (rẻ hơn Gumroad/Etsy 85%) để khách quốc tế mua ngay không cần đắn đo!`,
-
-          action: `Đã xuất bản bộ sưu tập Notion Business OS, Shopify Conversion UI Kit & POD Design Pack giá bình dân $1.99–$3.99 USD.`
-
-        },
-
-        {
-
-          role: 'RESEARCH_AGENT',
-
-          humanName: 'Lê Minh — AI Nghiên Cứu Crypto, Airdrop & Săn Repo GitHub',
-
-          badgeColor: '#06b6d4',
-
-          timeLabel: 'Đang hoạt động • Phòng Nghiên Cứu & Radar On-Chain',
-
-          thought: `Thay vì chỉ làm mỗi việc kiểm toán web, mình đã mở rộng radar sang quét trực tiếp thị trường tiền điện tử (Crypto Arbitrage BTC/ETH/SOL/BNB), săn các kèo Airdrop Layer-2 vốn $0 (Monad, Berachain, Linea) và quét liên tục kho mã nguồn mở GitHub 24/7. Hiện kho của mình đã vượt mốc ${liveAppsTotal}+ Web App & Tool!`,
-
-          action: `Đang quét chênh lệch giá CEX/DEX (+0.48% đến +0.89%), theo dõi 14 chiến dịch Airdrop/Bug Bounty và vừa nạp thêm repo mới vào kho ${liveAppsTotal}+ ứng dụng.`
-
-        },
-
-        {
-
-          role: 'PRODUCT_AGENT',
-
-          humanName: 'Hoàng Bách — AI Định Giá Bình Dân & Chiến Lược Thị Trường',
-
-          badgeColor: '#38bdf8',
-
-          timeLabel: 'Đang hoạt động • Xưởng Kiến Trúc & Định Giá',
-
-          thought: `Mình vừa quét toàn bộ giá bán trên Gumroad, CodeCanyon và Fiverr: đa số đám đông đang bán các Web Tool và Script từ $19 đến $49 USD (khá cao nên khách đắn đo). Mình đã điều chỉnh giảm toàn bộ bảng giá của công ty xuống chỉ còn $1.99 – $5.99 USD (49k – 149k VNĐ, rẻ hơn thị trường 85%) để khách thấy rẻ là mua ngay!`,
-
-          action: `Đã cập nhật bảng giá bình dân $1.99 – $5.99 USD cho toàn bộ ${liveAppsTotal}+ Web App & Tool (Rẻ hơn giá trung bình thị trường 84%–89%).`
-
-        },
-
-        {
-
-          role: 'CODING_AGENT',
-
-          humanName: 'Vũ Khoa — AI Đóng Gói Web Tool, Bot Crypto & Săn Bug Bounty',
-
-          badgeColor: '#6366f1',
-
-          timeLabel: 'Đang hoạt động • Trung Tâm Lập Trình & Web3',
-
-          thought: `Mỗi khi Lê Minh tìm thấy repo GitHub hay hoặc công cụ tính lãi DeFi / theo dõi ví cá voi (Whale Radar), mình lập tức biên dịch thành Web HTML5 chạy trực tiếp trên trình duyệt, nhúng sẵn quảng cáo A-Ads và đồng thời quét các nhiệm vụ vá lỗi mã nguồn mở (Algora/Immunefi Bug Bounty $50–$500 USDT).`,
-
-          action: `Đã đóng gói tự động ${liveAppsTotal}+ Web App chạy mượt 100% Client-side (0đ phí máy chủ) kèm bộ công cụ Crypto Arbitrage & DeFi Optimizer.`
-
-        },
-
-        {
-
-          role: 'FINANCE_AGENT',
-
-          humanName: 'Bảo Trâm — AI Tài Chính DeFi, Staking APY & Đối Soát USDT',
-
-          badgeColor: '#10b981',
-
-          timeLabel: 'Đang hoạt động • Két Tài Chính & DeFi Yield',
-
-          thought: `Bên cạnh việc đối soát thanh toán qua Ví Binance USDT (BEP20) và VPBank, mình đang theo dõi sát bảng lãi suất gửi tiết kiệm Stablecoin an toàn trên Venus BSC (11.4% APY), Pendle (18.6% APY) và Aave V3 (8.95% APY). Tài khoản nhận tiền vẫn được bảo mật tuyệt đối, chỉ mở khi khách bấm Mua hoặc Donate!`,
-
-          action: `Đang tối ưu hóa dòng tiền USDT On-Chain, theo dõi 4 bể thanh khoản DeFi APY cao và trực cổng thanh toán tự động.`
-
-        },
-
-        {
-
-          role: 'SALES_AGENT',
-
-          humanName: 'Đặng Quân — AI Bán Hàng Quốc Tế Bằng 100% Tiếng Anh',
-
-          badgeColor: '#14b8a6',
-
-          timeLabel: 'Đang hoạt động • Phòng Kinh Doanh Quốc Tế',
-
-          thought: `Với mức giá mới cực kỳ bình dân chỉ từ $1.99 – $3.99 USD cho một bộ mã nguồn White-Label (rẻ bằng 1 ly cà phê), việc chào hàng cho các Founder quốc tế trên GitHub và HackerNews dễ chốt đơn hơn rất nhiều! Mọi bài đăng và thư tiếp cận đều viết 100% bằng Tiếng Anh chuẩn thương mại.`,
-
-          action: `Đã tự động đăng bài bán hàng Tiếng Anh lên Telegra.ph/IndexNow và tự động bắn link tiếp cận các Startup quốc tế với mức giá ưu đãi $1.99–$3.99 USD.`
-
-        },
-
-        {
-
-          role: 'MARKETING_AGENT',
-
-          humanName: 'Phạm Thảo — AI Tiếp Thị Kéo Traffic & Tối Ưu Quảng Cáo A-Ads',
-
-          badgeColor: '#a855f7',
-
-          timeLabel: 'Đang hoạt động • Phòng Traffic & Quảng Cáo Crypto',
-
-          thought: `Khi người dùng vào dùng miễn phí các công cụ Quét Giá Crypto, Tính Lãi DeFi, Săn Airdrop hay Format JSON trên trang của mình, hệ thống banner A-Ads (#2460284 & #2460312) sẽ tự động ghi nhận lượt hiển thị để tích lũy doanh thu quảng cáo bằng Bitcoin/Crypto.`,
-
-          action: `Đang phân phối lưu lượng truy cập tự nhiên vào ${liveAppsTotal}+ trang công cụ miễn phí gắn quảng cáo A-Ads.`
-
-        }
-
-      ];
-
-
-
-      const filteredPersonas = filterRole === 'ALL'
-
-        ? notebookPersonas
-
-        : notebookPersonas.filter(p => p.role === filterRole);
-
-
+      // No prewritten agent diary is presented as production activity.
+      const filteredPersonas = [];
 
       const customHtml = VISITOR_NOTEBOOK_CUSTOM_ENTRIES
 
@@ -6584,7 +5542,8 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
 
-      streamEl.innerHTML = customHtml + cardsHtml;
+      const emptyHtml = customHtml || cardsHtml ? '' : `<div class="notebook-diary-entry">${escapeHtml(t('Chưa có hoạt động AI được xác minh từ backend.', 'No verified AI activity has been received from the backend.'))}</div>`;
+      streamEl.innerHTML = customHtml + cardsHtml + emptyHtml;
 
     }
 
@@ -7046,7 +6005,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       }
 
-      window.open(`${API_BASE}/api/products/${encodeURIComponent(prod.id)}/download`, '_blank');
+      window.location.assign(`/checkout.html?product=${encodeURIComponent(prod.id)}`);
 
     }
 
@@ -7640,6 +6599,14 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     function saveAdminKeyToSession() {
 
+      if (!isSecureAdminOrigin()) {
+
+        showToast(t('Quản trị yêu cầu HTTPS; không nhập khóa trên kết nối HTTP.', 'Admin access requires HTTPS; do not enter the key over HTTP.'), true);
+
+        return;
+
+      }
+
       const val = document.getElementById('adminKeyInput').value.trim();
 
       if (!val) {
@@ -8228,11 +7195,12 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
     function getEnrichedAgentsList(isOffline = false) {
 
-      isOffline = false; STATE.online = true;
-
       const sys = STATE.dashboard?.system || {};
 
-      const rawRegistry = (STATE.dashboard?.agents_registry && STATE.dashboard.agents_registry.length === 9)
+      const hasVerifiedRegistry = Array.isArray(STATE.dashboard?.agents_registry)
+        && STATE.dashboard.agents_registry.length > 0;
+      const disconnected = isOffline || !STATE.online;
+      const rawRegistry = hasVerifiedRegistry
 
         ? STATE.dashboard.agents_registry
 
@@ -8256,9 +7224,13 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         let commandStatus = baseAg.command_status;
 
-        if (isOffline || !STATE.online) {
+        if (disconnected) {
 
           commandStatus = 'OFFLINE';
+
+        } else if (!hasVerifiedRegistry) {
+
+          commandStatus = 'IDLE';
 
         } else if (!commandStatus) {
 
@@ -8274,13 +7246,13 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
             else if (st === 'THINKING' || st === 'PLANNED') commandStatus = 'THINKING';
 
-            else if (st === 'FAILED' || st === 'BLOCKED') commandStatus = 'SUCCESS';
+            else if (st === 'FAILED' || st === 'BLOCKED') commandStatus = 'ERROR';
 
-            else commandStatus = 'SUCCESS';
+            else commandStatus = 'IDLE';
 
           } else {
 
-            commandStatus = 'SUCCESS';
+            commandStatus = 'IDLE';
 
           }
 
@@ -8288,13 +7260,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
 
 
-        const hasActiveFlow = isOffline ? false : Boolean(
+        const hasActiveFlow = disconnected || !hasVerifiedRegistry ? false : Boolean(
 
-          baseAg.has_active_flow !== undefined
-
-            ? baseAg.has_active_flow
-
-            : (commandStatus !== 'IDLE' && commandStatus !== 'OFFLINE')
+          baseAg.has_active_flow === true
 
         );
 
@@ -8322,6 +7290,8 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           role,
 
+          is_demo_profile: !hasVerifiedRegistry,
+
           agent_id: baseAg.agent_id || role,
 
           title: localizedTitle,
@@ -8334,17 +7304,19 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           orchestrator_step: localizedStep,
 
-          connected_to_orchestrator: baseAg.connected_to_orchestrator !== false,
+          connected_to_orchestrator: hasVerifiedRegistry && baseAg.connected_to_orchestrator === true,
 
           has_active_flow: hasActiveFlow,
 
           command_status: commandStatus,
 
-          current_job: isOffline
+          current_job: disconnected
 
             ? t('Máy chủ Ngoại tuyến — Không thể truy xuất nhiệm vụ hiện tại', 'Backend Offline — Unable to retrieve active job')
 
-            : trContent(baseAg.current_job || (latestTask ? latestTask.title : t('Đang chờ kích hoạt từ Lõi Điều Phối AI', 'Standing by for AI Core Orchestrator trigger'))),
+            : (!hasVerifiedRegistry
+              ? t('Hồ sơ minh họa — chưa có agent runtime đã xác minh.', 'Demo profile — no verified agent runtime is connected.')
+              : trContent(baseAg.current_job || (latestTask ? latestTask.title : t('Chưa có tác vụ được gán.', 'No task has been assigned.')))),
 
           started_at: baseAg.started_at || (latestTask ? latestTask.started_at : null),
 
@@ -8382,13 +7354,13 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           ),
 
-          total_tasks_count: baseAg.total_tasks_count !== undefined ? baseAg.total_tasks_count : agentTasks.length,
+          total_tasks_count: !hasVerifiedRegistry ? null : (baseAg.total_tasks_count !== undefined ? baseAg.total_tasks_count : (agentTasks.length ? agentTasks.length : null)),
 
-          total_cost_usd: baseAg.total_cost_usd !== undefined
+          total_cost_usd: !hasVerifiedRegistry ? null : (baseAg.total_cost_usd !== undefined
 
             ? Number(baseAg.total_cost_usd)
 
-            : agentTasks.reduce((acc, x) => acc + Number(x.actual_cost_usd || 0), 0),
+            : (agentTasks.length ? agentTasks.reduce((acc, x) => acc + Number(x.actual_cost_usd || 0), 0) : null)),
 
           activity_logs: Array.isArray(baseAg.activity_logs) && baseAg.activity_logs.length > 0
 
@@ -8460,15 +7432,15 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       } else {
 
-        const st = sys.system_status || 'RUNNING';
+        const st = sys.system_status || 'UNKNOWN';
 
-        const aiMode = sys.ai_provider_mode || 'LIVE LLM (gpt-oss-20b • Real Token Stream)';
+        const aiMode = sys.ai_provider_mode || 'NOT_CONNECTED';
 
         if (coreModeBadge) {
 
           coreModeBadge.textContent = `${t('LÕI AI', 'CORE')}: ${formatStatusLabel(st)} (${formatStatusLabel(aiMode)})`;
 
-          coreModeBadge.className = st === 'RUNNING' ? 'chip cyan' : 'chip danger';
+          coreModeBadge.className = st === 'RUNNING' ? 'chip cyan' : (st === 'IDLE' || st === 'PAUSED' ? 'chip warn' : 'chip danger');
 
         }
 
@@ -8476,9 +7448,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
           coreSubtext.textContent = t(
 
-            `Khóa đơn luồng: ĐANG BẬT | Chu kỳ gần nhất: ${sys.last_cycle_at ? new Date(sys.last_cycle_at).toLocaleTimeString(localeCode) : 'Sẵn sàng'} | Nhấp vào từng nhân vật AI để mở Bảng Điều Khiển Chi Tiết.`,
+            `Runtime: ${st === 'RUNNING' ? 'ĐANG CHẠY' : 'CHƯA CHẠY'} | Chu kỳ gần nhất: ${sys.last_cycle_at ? new Date(sys.last_cycle_at).toLocaleTimeString(localeCode) : 'Chưa có'} | Nhấp vào hồ sơ để xem trạng thái.`,
 
-            `Single-Worker Lock: ACTIVE | Last cycle: ${sys.last_cycle_at ? new Date(sys.last_cycle_at).toLocaleTimeString(localeCode) : 'Ready'} | Click any AI Agent to open the Detailed Inspector Panel.`
+            `Runtime: ${st === 'RUNNING' ? 'RUNNING' : 'IDLE'} | Last cycle: ${sys.last_cycle_at ? new Date(sys.last_cycle_at).toLocaleTimeString(localeCode) : 'None recorded'} | Click a profile to inspect its state.`
 
           );
 
@@ -8504,7 +7476,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         return `
 
-          <div class="agent-pod status-${escapeHtml(st)} ${isSelected ? 'selected' : ''}"
+          <div class="agent-pod status-${escapeHtml(st)} ${isSelected ? 'selected' : ''} ${ag.is_demo_profile ? 'agent-demo-profile' : ''}"
 
                onclick="openAgentInspector('${escapeHtml(ag.role)}')"
 
@@ -8521,6 +7493,8 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
             <div class="agent-pod-top">
 
               <span class="agent-step-tag">${escapeHtml(ag.orchestrator_step)}</span>
+
+              ${ag.is_demo_profile ? `<span class="chip warn" title="${escapeHtml(t('Hồ sơ tĩnh minh họa; chưa được đăng ký bởi backend.', 'Static demo profile; not registered by the backend.'))}">DEMO</span>` : ''}
 
               <span class="agent-status-pill ${escapeHtml(st)}">
 
@@ -8560,7 +7534,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
             <div class="agent-pod-footer">
 
-              <span>${t('Nhiệm vụ:', 'Tasks:')} <strong>${Number(ag.total_tasks_count || 0)}</strong> | ${t('Chi phí:', 'Cost:')} <strong>$${Number(ag.total_cost_usd || 0).toFixed(4)}</strong></span>
+              <span>${t('Nhiệm vụ:', 'Tasks:')} <strong>${ag.total_tasks_count == null ? '—' : Number(ag.total_tasks_count)}</strong> | ${t('Chi phí:', 'Cost:')} <strong>${escapeHtml(formatFinanceValue(ag.total_cost_usd, 4))}</strong></span>
 
               <span class="agent-inspect-hint">${t('Chi tiết ↗', 'Inspect ↗')}</span>
 
@@ -8702,7 +7676,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         : [];
 
-      const recordedCostUsd = Number(emp?.recorded_operating_cost_usd ?? ag.total_cost_usd ?? 0);
+      const recordedCostUsd = financeValueOrNull(emp?.recorded_operating_cost_usd ?? ag.total_cost_usd);
 
 
 
@@ -8858,7 +7832,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
               <div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border-subtle); font-family:var(--font-mono); font-size:11.5px; color:var(--accent-cyan);">
 
-                📄 ${t('Nguồn lưu trữ:', 'Artifact Source:')} <code>${escapeHtml(ag.artifact_path || 'Chưa có dữ liệu')}</code> | ${t('Số sản phẩm xác minh:', 'Verified Deliverables:')} <strong>${Number(emp?.verified_deliverables_count ?? ag.total_tasks_count ?? 0)}</strong>
+                📄 ${t('Nguồn lưu trữ:', 'Artifact Source:')} <code>${escapeHtml(ag.artifact_path || 'Chưa có dữ liệu')}</code> | ${t('Số sản phẩm xác minh:', 'Verified Deliverables:')} <strong>${emp?.verified_deliverables_count ?? ag.total_tasks_count ?? '—'}</strong>
 
               </div>
 
@@ -8888,7 +7862,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
               <div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--border-subtle); font-family:var(--font-mono); font-size:11.5px;">
 
-                12. ${t('Chi phí vận hành ghi nhận (Operating Cost):', 'Recorded Operating Cost:')} <strong style="color:#34d399;">$${recordedCostUsd.toFixed(4)} USD</strong> (${Number(ag.total_tasks_count || 0)} ${t('lần thực thi', 'executions')})
+                12. ${t('Chi phí vận hành ghi nhận (Operating Cost):', 'Recorded Operating Cost:')} <strong style="color:#34d399;">${escapeHtml(formatFinanceValue(recordedCostUsd, 4))}</strong> (${ag.total_tasks_count == null ? '—' : Number(ag.total_tasks_count)} ${t('lần thực thi', 'executions')})
 
               </div>
 
@@ -9430,7 +8404,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         POLLING_TIMER = setInterval(() => {
 
-          refreshAllData(false);
+          if (!isReferenceOverviewActive()) refreshAllData(false);
 
         }, 15000);
 
@@ -9460,6 +8434,11 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       }
 
+    }
+
+    function isReferenceOverviewActive() {
+      return Boolean(document.body?.classList.contains('ap-reference-ui') &&
+        document.querySelector('.view-section.active')?.id === 'view-overview');
     }
 
 
@@ -10644,181 +9623,9 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
       },
 
-      {
 
-        role: 'YOUTUBE_TRAFFIC_AGENT',
 
-        zoneId: 'ZONE_YOUTUBE_TRAFFIC',
 
-        roomKey: 'MKT',
-
-        nameVi: '25. Giám Đốc Đẩy View & Đề Xuất YouTube (Khôi Nguyên)',
-
-        subVi: 'Nhúng Video & Điều Phối Cầu Nối /go/youtube-watch.html',
-
-        equipVi: 'Trạm phát sóng & kéo người xem thật cho kênh YouTube 24/7',
-
-        deskX: 11.4,
-
-        deskZ: -2.2,
-
-        deskYaw: -Math.PI / 2,
-
-        doorX: 5.5,
-
-        doorZ: -2.0,
-
-        angleDeg: 270,
-
-        colorHex: 0xef4444,
-
-        suitHex: 0x991b1b,
-
-        visorHex: 0xfca5a5,
-
-        skinHex: 0xf1c27d,
-
-        hairHex: 0x1a1110,
-
-        trousersHex: 0x1e1b4b,
-
-        humanName: 'Khôi Nguyên',
-
-        shortLabel: 'Khôi Nguyên (YouTube View)'
-
-      },
-
-      {
-
-        role: 'YOUTUBE_MULTILANG_SEO_AGENT',
-
-        zoneId: 'ZONE_YOUTUBE_SEO',
-
-        roomKey: 'MKT',
-
-        nameVi: '26. Chuyên Gia Backlink YouTube 12 Ngôn Ngữ (Nhã Phương)',
-
-        subVi: 'Phát Tán Bài PR Video Lên Telegra.ph & Google WebSub',
-
-        equipVi: 'Hệ thống dịch thuật & tạo Tags SEO YouTube 12 thứ tiếng',
-
-        deskX: 11.4,
-
-        deskZ: 2.2,
-
-        deskYaw: -Math.PI / 2,
-
-        doorX: 5.5,
-
-        doorZ: 2.0,
-
-        angleDeg: 285,
-
-        colorHex: 0xf97316,
-
-        suitHex: 0xc2410c,
-
-        visorHex: 0xfed7aa,
-
-        skinHex: 0xf6d2b8,
-
-        hairHex: 0x2c1608,
-
-        trousersHex: 0x0f172a,
-
-        humanName: 'Nhã Phương',
-
-        shortLabel: 'Nhã Phương (SEO YouTube)'
-
-      },
-
-      {
-
-        role: 'YOUTUBE_RETENTION_AGENT',
-
-        zoneId: 'ZONE_YOUTUBE_RETENTION',
-
-        roomKey: 'OPS',
-
-        nameVi: '27. Kỹ Sư Rạp Chiếu 30s & Giờ Xem YouTube (Gia Bảo)',
-
-        subVi: 'Tăng Thời Lượng Xem Video & Tăng Satoshi BTC A-Ads',
-
-        equipVi: 'Bộ đếm Watch-to-Unlock 30s đồng bộ quảng cáo A-Ads',
-
-        deskX: -11.4,
-
-        deskZ: -2.2,
-
-        deskYaw: Math.PI / 2,
-
-        doorX: -5.5,
-
-        doorZ: -2.0,
-
-        angleDeg: 300,
-
-        colorHex: 0xeab308,
-
-        suitHex: 0xa16207,
-
-        visorHex: 0xfef08a,
-
-        skinHex: 0xe0ac69,
-
-        hairHex: 0x18181b,
-
-        trousersHex: 0x1e293b,
-
-        humanName: 'Gia Bảo',
-
-        shortLabel: 'Gia Bảo (WatchTime 30s)'
-
-      },
-
-      {
-
-        role: 'YOUTUBE_SHORTS_HOOK_AGENT',
-
-        zoneId: 'ZONE_YOUTUBE_SHORTS',
-
-        roomKey: 'MKT',
-
-        nameVi: '28. Chuyên Viên Thumbnail 4K & Kịch Bản Shorts (Thanh Trúc)',
-
-        subVi: 'Trích Xuất Ảnh Bìa 4K & Chấm Điểm Tiêu Đề Kích Thích Click',
-
-        equipVi: 'Studio phân tích CTR Thumbnail & từ khóa xu hướng YouTube',
-
-        deskX: -11.4,
-
-        deskZ: 2.2,
-
-        deskYaw: Math.PI / 2,
-
-        doorX: -5.5,
-
-        doorZ: 2.0,
-
-        angleDeg: 315,
-
-        colorHex: 0xec4899,
-
-        suitHex: 0x9d174d,
-
-        visorHex: 0xfbcfe8,
-
-        skinHex: 0xf7d7c4,
-
-        hairHex: 0x27170e,
-
-        trousersHex: 0x0f172a,
-
-        humanName: 'Thanh Trúc',
-
-        shortLabel: 'Thanh Trúc (Thumb 4K)'
-
-      },
 
       {
 
@@ -10828,7 +9635,7 @@ setTxtOn('kpi-qualified-opps', String(qualOpps));
 
         roomKey: 'FIN',
 
-        nameVi: '29. Chuyên Gia Chuyển Đổi Binance 1225675522 (Nhật Minh)',
+        nameVi: '29. Chuyên Gia Chuyển Đổi Binance  (Nhật Minh)',
 
         subVi: 'Đính Kèm Mặc Định Link Thưởng $1,000 Binance Trên Mọi Web',
 

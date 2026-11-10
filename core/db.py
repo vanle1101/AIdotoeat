@@ -8,6 +8,7 @@ import re
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional
 from core.config import DB_PATH
+from core.redaction import redact_long_numbers_preserving_ids
 
 def get_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(str(DB_PATH))
@@ -159,7 +160,7 @@ def sanitize_text(value: Any, max_length: int = 1200) -> str:
         text,
     )
     text = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", text)
-    text = re.sub(r"(?<!\d)\d{8,18}(?!\d)", "[REDACTED_NUMBER]", text)
+    text = redact_long_numbers_preserving_ids(text)
     return text[:max_length]
 
 

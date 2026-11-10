@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Đặt hàng và thanh toán | AUTOProfit AI</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08111f;--panel:#101d2d;--line:#2b4057;--text:#edf4fa;--muted:#b2c1d0;--accent:#40d3b2;--warn:#f4d189;--err:#ff9b9b}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#142c3e,var(--bg) 58%);color:var(--text);font:16px/1.55 system-ui,sans-serif;padding:24px 14px}
+    main{width:min(760px,100%);margin:0 auto}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:clamp(18px,4vw,30px);margin-bottom:16px;box-shadow:0 16px 48px #0004}
+    h1{font-size:clamp(1.65rem,5vw,2.25rem);line-height:1.15;margin:0 0 12px}h2{font-size:1.2rem;margin:0 0 10px}.muted{color:var(--muted)}label{display:block;font-weight:650;margin:12px 0 5px}
+    input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px 12px;border-radius:9px;border:1px solid #496077;background:#081421;color:var(--text)}input[type=checkbox]{width:auto;min-width:20px;min-height:20px;accent-color:var(--accent)}
+    button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border:0;border-radius:9px;background:var(--accent);color:#06231d;font-weight:750;text-decoration:none;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.secondary{background:#263a4f;color:var(--text);border:1px solid var(--line)}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.check{display:flex;gap:10px;align-items:flex-start;font-weight:450}.check input{margin-top:3px}.price{font-size:1.3rem;font-weight:750;color:var(--accent)}.callout{padding:12px;border:1px solid var(--line);border-radius:10px;background:#0b1725;margin:12px 0}.warning{color:var(--warn)}#status{min-height:1.5em;margin:10px 0 0}.error{color:var(--err)}.good{color:var(--accent)}code{overflow-wrap:anywhere}.hidden{display:none!important}
+    @media(max-width:520px){body{padding:12px 9px}.panel{padding:17px}.row>*{flex-basis:100%}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="panel">
+    <p class="muted">AUTOProfit AI · checkout trực tiếp bằng chuyển khoản ngân hàng</p>
+    <h1>Đặt hàng có đối soát thủ công</h1>
+    <p class="muted">Không thu phí qua cổng thanh toán. Giá USD trong catalog chỉ là ước tính tham khảo; chủ cửa hàng sẽ gửi báo giá VND và duyệt trước khi tạo hóa đơn.</p>
+    <p id="catalogStatus" class="muted" role="status">Đang tải catalog…</p>
+  </section>
+
+  <section class="panel" id="newOrderPanel">
+    <h2>1. Gửi yêu cầu</h2>
+    <form id="leadForm">
+      <label for="product">Sản phẩm hoặc bản demo</label>
+      <select id="product" required></select>
+      <label for="buyerName">Tên</label>
+      <input id="buyerName" maxlength="120" autocomplete="name" required>
+      <label for="buyerEmail">Email nhận phản hồi và quyền truy cập đơn</label>
+      <input id="buyerEmail" type="email" maxlength="254" autocomplete="email" required>
+      <label class="check"><input id="contactConsent" type="checkbox" required><span>Tôi đồng ý để chủ cửa hàng phản hồi về yêu cầu này. Không có email quảng cáo tự động.</span></label>
+      <p><button id="startOrder" type="submit">Gửi yêu cầu</button></p>
+    </form>
+  </section>
+
+  <section class="panel hidden" id="orderPanel" aria-live="polite">
+    <h2>2. Báo giá, thanh toán và giao hàng</h2>
+    <div id="orderSummary"></div>
+    <div id="quoteBox" class="callout hidden"></div>
+    <div id="paymentBox" class="callout hidden"></div>
+    <form id="claimForm" class="hidden">
+      <h2>Gửi yêu cầu đối soát</h2>
+      <p class="muted">Mã tham chiếu và nội dung chuyển khoản do người mua nhập chỉ giúp tìm giao dịch. Chúng không chứng minh tiền đã vào tài khoản.</p>
+      <label for="claimAmount">Số tiền bạn đã chuyển (VND)</label>
+      <input id="claimAmount" type="number" min="1" step="1" required>
+      <label for="claimReference">Mã tham chiếu (không bắt buộc)</label>
+      <input id="claimReference" maxlength="120" autocomplete="off">
+      <label for="claimNote">Ghi chú (không bắt buộc)</label>
+      <input id="claimNote" maxlength="300">
+      <button type="submit">Gửi yêu cầu đối soát</button>
+    </form>
+    <div id="deliveryBox" class="callout hidden"></div>
+    <div class="row"><button id="refreshOrder" class="secondary" type="button">Làm mới trạng thái</button><button id="forgetOrder" class="secondary" type="button">Xóa quyền truy cập khỏi tab này</button></div>
+  </section>
+
+  <section class="panel">
+    <h2>Trạng thái thanh toán</h2>
+    <p class="muted">Đơn chỉ được ghi nhận là doanh thu sau khi chủ cửa hàng đối chiếu sao kê tài khoản nhận tiền và xác nhận thủ công. Ảnh chụp, mã chuyển khoản, mã QR và yêu cầu gửi từ trình duyệt không xác nhận thanh toán.</p>
+    <p id="status" role="status" aria-live="polite"></p>
+  </section>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const productQuery = new URLSearchParams(location.search).get('product') || '';
+  const storageKey = 'autoprofit.cash.order.v1';
+  const leadRequestStorageKey = 'autoprofit.cash.pending-lead.v1';
+  const makeKey = (prefix) => `${prefix}:${crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`}`;
+  let session = null;
+  let catalog = [];
+
+  function message(text, kind='') { const node=$('status'); node.textContent=text; node.className=kind; }
+  function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function authHeaders(extra={}) { return {...extra, Authorization:`Bearer ${session.token}`}; }
+  async function api(path, options={}) {
+    const response=await fetch(path,{credentials:'same-origin',cache:'no-store',...options,headers:{...(options.headers||{})}});
+    const data=await response.json().catch(()=>({detail:'Máy chủ trả phản hồi không hợp lệ.'}));
+    if(!response.ok) throw new Error(data.detail||`Yêu cầu thất bại (${response.status}).`);
+    return data;
+  }
+  function saveSession(value) { session=value; sessionStorage.setItem(storageKey,JSON.stringify(value)); }
+
+  async function loadCatalog() {
+    try {
+      const data=await api('/api/cash/catalog'); catalog=data.items||[];
+      const select=$('product'); select.replaceChildren();
+      for(const item of catalog){
+        const option=document.createElement('option');option.value=item.id;
+        option.textContent=`${item.name} · ước tính $${(item.estimate.amount_minor/100).toFixed(2)} USD (chưa phải hóa đơn)`;
+        select.appendChild(option);
+      }
+      if(productQuery&&catalog.some(x=>x.id===productQuery)) select.value=productQuery;
+      $('catalogStatus').textContent=data.payment_configured
+        ? 'Chuyển khoản miễn phí đang được cấu hình. Mọi khoản nhận vẫn cần chủ cửa hàng đối chiếu.'
+        : 'Checkout đang chờ chủ cửa hàng cấu hình thông tin ngân hàng trong biến môi trường.';
+    } catch(error) { $('catalogStatus').textContent=`Không tải được catalog: ${error.message}`; $('startOrder').disabled=true; }
+  }
+
+  function renderOrder(data) {
+    $('orderPanel').classList.remove('hidden');
+    const amount=data.pending_invoice||data.invoice_total||data.proposal_amount||data.estimated_value;
+    const label=amount?.label||'Chưa có báo giá';
+    const value=amount?`${Number(amount.amount_minor).toLocaleString('vi-VN')} ${amount.currency}`:'Chưa có giá trị';
+    if(data.state!=='AWAITING_PAYMENT') { delete session.claimRequest; saveSession(session); }
+    const receipts=data.owner_confirmed_receipts||{};
+    const settled=data.settled_balance||{};
+    $('orderSummary').innerHTML=`<p><strong>Mã đơn:</strong> <code>${escapeHtml(data.order_number||data.order_id)}</code></p><p><strong>Trạng thái:</strong> ${escapeHtml(data.state)}</p><p><strong>Số tiền:</strong> ${escapeHtml(value)} <span class="muted">(${escapeHtml(label)})</span></p><p><strong>Chủ cửa hàng xác nhận đã nhận:</strong> ${Number(receipts.amount_minor||0).toLocaleString('vi-VN')} ${escapeHtml(receipts.currency||'VND')} <span class="muted">(${escapeHtml(receipts.assurance_level||'chưa có xác nhận')})</span></p><p><strong>Số dư đã quyết toán:</strong> ${Number(settled.amount_minor||0).toLocaleString('vi-VN')} ${escapeHtml(settled.currency||'VND')} · <strong>Hoàn tiền:</strong> ${Number(data.refunded_minor||0).toLocaleString('vi-VN')} VND · <strong>Chargeback:</strong> ${Number(data.charged_back_minor||0).toLocaleString('vi-VN')} VND</p>`;
+    const quote=data.quote; const quoteBox=$('quoteBox'); quoteBox.classList.toggle('hidden',!quote);
+    if(quote){
+      session.quoteId=quote.id; saveSession(session);
+      quoteBox.innerHTML=`<strong>Báo giá v${quote.version||''} · ${escapeHtml(quote.status)}</strong><p>${escapeHtml(quote.scope)}</p><p>${Number(quote.proposal_minor).toLocaleString('vi-VN')} ${escapeHtml(quote.currency)} · hết hạn ${escapeHtml(quote.expires_at)}</p>`;
+      if(quote.status==='APPROVED'&&data.state==='QUOTE_APPROVED'){
+        const button=document.createElement('button');button.textContent='Chấp nhận báo giá và tạo hóa đơn';button.addEventListener('click',acceptQuote);quoteBox.appendChild(button);
+      }
+    }
+    const paymentBox=$('paymentBox'); paymentBox.classList.add('hidden'); $('claimForm').classList.add('hidden');
+    if(data.state==='AWAITING_PAYMENT'||data.state==='PAYMENT_EVIDENCE_REVIEW') loadPaymentInstructions(data);
+    const delivery=$('deliveryBox');delivery.classList.add('hidden');
+    if(data.delivery?.status==='ACTIVE'){
+      session.deliveryId=data.delivery.id;session.productSlug=data.product.id;saveSession(session);
+      delivery.classList.remove('hidden');delivery.innerHTML=`<strong>Quyền tải sản phẩm đã được cấp</strong><p>Liên kết hết hạn ${escapeHtml(data.delivery.expires_at)}. Chỉ sử dụng trong tab được cấp quyền.</p>`;
+      const button=document.createElement('button');button.textContent='Tải sản phẩm đã thanh toán';button.addEventListener('click',downloadDelivery);delivery.appendChild(button);
+    }
+    message(`Đã tải trạng thái đơn: ${data.state}. Đơn giá trị tham khảo và khiếu nại của người mua không được tính là doanh thu.`, data.state==='FULFILLED'?'good':'');
+  }
+
+  async function refreshOrder() {
+    if(!session) return;
+    try { const data=await api(`/api/cash/orders/${encodeURIComponent(session.orderId)}`,{headers:authHeaders()});renderOrder(data); }
+    catch(error){message(error.message,'error');}
+  }
+  async function loadPaymentInstructions(order) {
+    try {
+      const instructions=await api(`/api/cash/orders/${encodeURIComponent(session.orderId)}/payment-instructions`,{headers:authHeaders()});
+      const box=$('paymentBox');box.classList.remove('hidden');
+      box.innerHTML=`<strong>Hướng dẫn chuyển khoản</strong><p>${escapeHtml(instructions.bank)} · ${escapeHtml(instructions.account_name)} · <code>${escapeHtml(instructions.account_number)}</code></p><p>Số dư hóa đơn cần chuyển: <strong>${Number(instructions.amount.amount_minor).toLocaleString('vi-VN')} VND</strong></p><p>Đã xác nhận nhận trước đó: ${Number(instructions.owner_confirmed_receipts_minor||0).toLocaleString('vi-VN')} VND</p><p>Nội dung bắt buộc: <code>${escapeHtml(instructions.transfer_memo)}</code></p><p class="warning">${escapeHtml(instructions.warning)}</p>`;
+      $('claimForm').classList.toggle('hidden',order.state!=='AWAITING_PAYMENT');
+      $('claimAmount').value=order.pending_invoice?.amount_minor?Math.max(1,order.pending_invoice.amount_minor-(order.paid_minor||0)):'';
+    } catch(error) { $('paymentBox').classList.remove('hidden');$('paymentBox').textContent=error.message; }
+  }
+  async function acceptQuote(event) {
+    const button=event.currentTarget;button.disabled=true;
+    try { const quote=session.quoteId; session.acceptKey=session.acceptKey||makeKey('accept'); saveSession(session); await api(`/api/cash/quotes/${encodeURIComponent(quote)}/accept`,{method:'POST',headers:authHeaders({'Idempotency-Key':session.acceptKey})}); await refreshOrder(); }
+    catch(error){message(error.message,'error');button.disabled=false;}
+  }
+  $('leadForm').addEventListener('submit',async(event)=>{
+    event.preventDefault();if(!$('leadForm').reportValidity())return;
+    const button=$('startOrder');button.disabled=true;
+    try {
+      const requestBody={product_id:$('product').value,email:$('buyerEmail').value.trim(),name:$('buyerName').value.trim(),contact_consent:$('contactConsent').checked};
+      const fingerprint=JSON.stringify(requestBody);
+      let pendingLead=null;try{pendingLead=JSON.parse(sessionStorage.getItem(leadRequestStorageKey)||'null');}catch(_){pendingLead=null;}
+      if(!pendingLead||pendingLead.fingerprint!==fingerprint) pendingLead={fingerprint,key:makeKey('lead')};
+      sessionStorage.setItem(leadRequestStorageKey,JSON.stringify(pendingLead));
+      const result=await api('/api/cash/leads',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':pendingLead.key},body:JSON.stringify(requestBody)});
+      sessionStorage.removeItem(leadRequestStorageKey);
+      session={orderId:result.order_id,token:result.buyer_access_token};saveSession(session);$('newOrderPanel').classList.add('hidden');
+      message('Yêu cầu đã lưu. Đây chưa phải đơn đã thanh toán; chủ cửa hàng cần lập và duyệt báo giá.','good');await refreshOrder();
+    } catch(error){message(error.message,'error');button.disabled=false;}
+  });
+  $('claimForm').addEventListener('submit',async(event)=>{
+    event.preventDefault();if(!$('claimForm').reportValidity())return;
+    const button=$('claimForm').querySelector('button[type="submit"]');button.disabled=true;
+    try {
+      const requestBody={claimed_minor:Number($('claimAmount').value),transfer_reference:$('claimReference').value.trim(),note:$('claimNote').value.trim()};
+      const fingerprint=JSON.stringify(requestBody);
+      if(!session.claimRequest||session.claimRequest.fingerprint!==fingerprint) session.claimRequest={fingerprint,key:makeKey('claim')};
+      saveSession(session);
+      const result=await api(`/api/cash/orders/${encodeURIComponent(session.orderId)}/claims`,{method:'POST',headers:authHeaders({'Content-Type':'application/json','Idempotency-Key':session.claimRequest.key}),body:JSON.stringify(requestBody)});
+      message(`Đã lưu khiếu nại ${result.claim_id}. Chưa xác minh thanh toán và chưa ghi nhận doanh thu.`, 'warning');await refreshOrder();
+    } catch(error){message(error.message,'error');} finally{button.disabled=false;}
+  });
+  async function downloadDelivery(event) {
+    const button=event.currentTarget;button.disabled=true;
+    try {
+      const response=await fetch(`/api/cash/deliveries/${encodeURIComponent(session.deliveryId||'')}/download`,{headers:authHeaders(),credentials:'same-origin',cache:'no-store'});
+      if(!response.ok)throw new Error('Quyền tải đã hết hạn hoặc bị thu hồi. Làm mới trạng thái đơn.');
+      const blob=await response.blob();const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;const disposition=response.headers.get('Content-Disposition')||'';const match=disposition.match(/filename="?([^";]+)"?/i);link.download=match?.[1]||`${session.productSlug||'product'}.zip`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    } catch(error){message(error.message,'error');} finally{button.disabled=false;}
+  }
+  $('refreshOrder').addEventListener('click',refreshOrder);
+  $('forgetOrder').addEventListener('click',()=>{sessionStorage.removeItem(storageKey);session=null;$('orderPanel').classList.add('hidden');$('newOrderPanel').classList.remove('hidden');message('Đã xóa quyền buyer khỏi tab này.');});
+  try{session=JSON.parse(sessionStorage.getItem(storageKey)||'null');}catch(_){session=null;}
+  loadCatalog().then(refreshOrder);
+})();
+</script>
+</body>
+</html>

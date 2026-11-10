@@ -1,0 +1,17 @@
+{
+  "source": "official_stackexchange_public_api",
+  "captured_at": "2026-11-08T09:21:02Z",
+  "content_retained": "question title and attribution only; question body omitted",
+  "item": {
+    "question_id": 79995680,
+    "title": "Importing L2 history: CSV rows have different column counts, extractTextSchema + loadTextEx throws &quot;Number of columns is inconsistent&quot;",
+    "link": "https://stackoverflow.com/questions/79995680/importing-l2-history-csv-rows-have-different-column-counts-extracttextschema",
+    "creation_date": 1786935596,
+    "last_activity_date": 1787560304,
+    "score": 0,
+    "answer_count": 0,
+    "content_license": "CC BY-SA 4.0",
+    "tags": ["csv", "data-import", "dolphindb"],
+    "owner": {"display_name": "Lorne_S"}
+  }
+}

@@ -4,6 +4,8 @@ Verifies compliance with the 18 ZERO-COST Rules.
 """
 import unittest
 import sys
+import os
+import tempfile
 from pathlib import Path
 
 # Add project root to sys.path
@@ -15,8 +17,28 @@ from core.roles import list_all_roles, get_role
 from core.db import init_db, get_connection
 from core.orchestrator import ZeroCostOrchestrator
 from modules.qr_vault import VietQRVault
+from modules.product_builder import ProductBuilder
+import core.config as core_config
+import core.db as core_db
+import core.orchestrator as orchestrator_module
+import modules.product_builder as product_builder_module
 
 class TestZeroCostPolicy(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls._temporary = tempfile.TemporaryDirectory(prefix="autoprofit-engine-tests-")
+        temp_root = Path(cls._temporary.name)
+        core_db.DB_PATH = temp_root / "company.db"
+        core_config.OUTPUTS_DIR = temp_root / "outputs"
+        core_config.OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+        orchestrator_module.OUTPUTS_DIR = core_config.OUTPUTS_DIR
+        product_builder_module.OUTPUTS_DIR = core_config.OUTPUTS_DIR
+        os.environ["AUTOPROFIT_BUDGET_KILL_SWITCH"] = "false"
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._temporary.cleanup()
 
     def setUp(self):
         init_db()
@@ -40,7 +62,11 @@ class TestZeroCostPolicy(unittest.TestCase):
             BudgetAuditor.audit_action("Auto-billing subscription", {"auto_billing": True})
 
         # Zero cost action must pass cleanly
-        passed, msg = BudgetAuditor.audit_action("Free Local Python Script", {"estimated_cost_vnd": 0.0})
+        passed, msg = BudgetAuditor.audit_action(
+            "local.file_generation",
+            {"estimated_cost_vnd": 0.0, "provider": "offline_rule_based",
+             "operation": ProductBuilder.build_chrome_extension},
+        )
         self.assertTrue(passed)
 
     def test_03_fifty_logical_roles_integrity(self):
@@ -62,19 +88,14 @@ class TestZeroCostPolicy(unittest.TestCase):
         self.assertIn("0123456789", qr_url)
         self.assertIn("amount=500000", qr_url)
 
-    def test_05_end_to_end_venture_run(self):
-        """Rules 14 & 15: Run actual value-producing cycle without inter-agent chatter."""
+    def test_05_venture_cycle_fails_closed_without_source_or_ready_model(self):
+        """Static catalogs and templates must not be presented as researched AI output."""
         orchestrator = ZeroCostOrchestrator()
         result = orchestrator.run_zero_cost_venture(
-            bank_code="TCB",
-            account_no="190367888888",
-            account_name="NGUYEN TEST OWNER"
+            bank_code="TCB", account_no="190367888888", account_name="NGUYEN TEST OWNER"
         )
-        self.assertEqual(result["status"], "SUCCESS")
-        self.assertEqual(result["total_budget_spent_vnd"], 0)
-        self.assertTrue(Path(result["deliverable_paths"]["chrome_extension"]).exists())
-        self.assertTrue(Path(result["deliverable_paths"]["python_scraper"]).exists())
-        self.assertTrue(Path(result["deliverable_paths"]["vietqr_image"]).exists())
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertEqual(result["reason_code"], "source_material_required")
 
 if __name__ == "__main__":
     unittest.main()

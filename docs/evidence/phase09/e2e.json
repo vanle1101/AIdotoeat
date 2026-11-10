@@ -1,0 +1,124 @@
+{
+  "backup_restore": {
+    "backup_integrity": "ok",
+    "backup_schema_version": 13,
+    "restored_schema_version": 13,
+    "restored_test_flag": 1,
+    "source_database_changed": false,
+    "status": "PASS"
+  },
+  "crash_restart": {
+    "attempts": 2,
+    "crash_exit_code": 73,
+    "event_count": 7,
+    "final_state": "DONE",
+    "recovered_tasks": 1,
+    "resume_exit_code": 0,
+    "status": "PASS",
+    "task_idempotent": true
+  },
+  "drafts": {
+    "customer_contact_created": false,
+    "lead_capture": "PENDING_REVIEW",
+    "marketing": "PENDING_REVIEW",
+    "publication_sent": false
+  },
+  "environment": "isolated local staging; temporary backend/core databases; no production paths used",
+  "generated_at_utc": "2026-11-08T12:08:37Z",
+  "hard_kill_switch": {
+    "external_publish_tool_status": "BLOCKED",
+    "optimizer_run_count_unchanged": true,
+    "optimizer_status": "blocked",
+    "queued_task_id": 2,
+    "reason_code": "kill_switch_enabled",
+    "worker_claim": null
+  },
+  "limitations": [
+    "Owner side effects were not executed; all public drafts remain pending review.",
+    "No bank transfer occurred. Owner manual statement attestation was simulated against a TEST order only.",
+    "No production VPS was modified; the deployment canary is documented but not installed."
+  ],
+  "migrations": {
+    "first_run_version": 13,
+    "idempotent": true,
+    "second_run_version": 13
+  },
+  "network_requests_during_e2e": 0,
+  "performance_smoke": {
+    "interpretation": "In-process smoke only; not a production capacity or GPU benchmark.",
+    "max_ms": 6.05,
+    "median_ms": 4.12,
+    "p95_ms": 5.39,
+    "request": "local TestClient GET /api/ready",
+    "sample_count": 20,
+    "status": "PASS",
+    "threshold_ms_p95": 2000
+  },
+  "product": {
+    "acceptance_check_count": 6,
+    "all_acceptance_checks_passed": true,
+    "artifact_id": "csv-workflow-pack-adea58f5a564-v1.0.0",
+    "bytes": 9777,
+    "external_publish": false,
+    "license_ip_review": "PROJECT_AUTHORED_CODE_WITH_SOURCE_LINKED_EVIDENCE",
+    "path": "csv-workflow-pack-adea58f5a564-v1.0.0.zip",
+    "quality_score": 100.0,
+    "sha256": "6ede8add614e1fa3c5469dffa64d44515eabd95763a1981f885b3eed678026e9",
+    "staging_root": "<output_dir>/staging",
+    "status": "PASS"
+  },
+  "provider_degrade": {
+    "outbound_llm_requests": 0,
+    "provider_off_reason_code": "dedicated_api_key_missing",
+    "quota_exhausted_reason_code": "daily_request_quota_exhausted"
+  },
+  "readiness": {
+    "interpretation": "Database is ready; LLM is optional and accurately reported unavailable; no provider probe/network request was made.",
+    "model_provider": "unavailable_missing_config",
+    "status": "PASS"
+  },
+  "secrets_printed": false,
+  "security_smoke": {
+    "admin_authentication": "PASS",
+    "artifact_path_traversal": "PASS (rejected)",
+    "cross_origin_mutation": "PASS",
+    "http_admin_denied": "PASS",
+    "permissive_cors": "PASS (none emitted)",
+    "public_form_rate_limits": "PASS (regression suite)",
+    "secrets_redacted": "PASS",
+    "sql_injection_input": "PASS (rejected catalog identifier)",
+    "ssrf_allowlist": "PASS (private endpoint rejected before request)",
+    "xss_handling": "PASS (escaped report output and text-only app rendering regression suite)"
+  },
+  "source": {
+    "attribution": "Lorne_S on stackoverflow.com; CC BY-SA 4.0",
+    "captured_at": "2026-11-08T09:21:02Z",
+    "license": "CC BY-SA 4.0",
+    "provider": "official_stackexchange_public_api",
+    "retained_content": "question title and attribution only; question body omitted",
+    "score": 48.8,
+    "score_interpretation": "source-triage heuristic; not proof of paying demand",
+    "source_date": "2026-08-17T02:59:56Z",
+    "status": "PASS",
+    "url": "https://stackoverflow.com/questions/79995680/importing-l2-history-csv-rows-have-different-column-counts-extracttextschema"
+  },
+  "test_order": {
+    "authorized_test_download_status": 200,
+    "catalog_product_id": "phase09-e2e-csv-workflow-pack",
+    "catalog_product_matches_delivered_workflow": true,
+    "delivered_artifact_id": "csv-workflow-pack-adea58f5a564-v1.0.0",
+    "delivery_idempotent_replay": true,
+    "exactly_one_delivery": true,
+    "explicit_test_mode": true,
+    "false_claim_created_transaction": false,
+    "false_claim_http_status": 422,
+    "owner_verified_test_revenue_recorded": false,
+    "production_test_mode_denied_status": 403,
+    "real_transactions_after_test": 0,
+    "settled_balances_after_test_receipt": [],
+    "settled_balances_before": [],
+    "status": "PASS",
+    "test_order_excluded_count": 1,
+    "unauthorized_download_status": 401
+  }
+}

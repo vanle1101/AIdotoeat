@@ -1,0 +1,35 @@
+Phase 11 local and VPS dry-run evidence
+Observed: 2026-11-09 UTC
+Cost: 0 VND
+
+Local full suite
+Command: python -m pytest -q -rs
+Result: 153 passed, 1 skipped, 70 subtests passed in 43.36s
+Skip: tests/test_phase09_production.py:192 — systemd release symlink rollback is Linux/POSIX-only
+
+Local targeted safety suite before the final full run
+Command: python -m pytest tests/test_phase11_security.py tests/test_phase00_safety.py -q
+Result: 38 passed, 50 subtests passed in 2.73s
+
+Static checks
+Command: python -m py_compile backend/product_studio_api.py backend/apps_library.py scripts/phase11_ops.py tests/test_phase00_safety.py tests/test_phase11_security.py
+Result: PASS
+Command: git diff --check
+Result: PASS; Git emitted only line-ending normalization warnings for existing CRLF-configured files.
+
+VPS systemd dry-run
+Command: systemd-analyze verify /tmp/autoprofit-backend-phase11.service
+Result: exit 0; no error for the Phase 11 unit. It printed an unrelated existing warning: /etc/systemd/system/codex-lb.service:23 has invalid syntax (ignored). Temporary unit file removed after verification.
+
+VPS Nginx validation
+Command: nginx -t
+Result: syntax is ok; test is successful. Existing duplicate TLS option warnings from shared vhosts remain. No reload performed.
+
+Existing PR CI before Phase 11 changes
+Preflight HEAD: 49c815d514a0659fb368ce3a9ddb403d2652096b
+Result: verify job PASS; verify job PASS. Final commit CI is pending after push.
+
+Phase 11 implementation commit CI
+Commit: 0cd8d36c2bfde50212449bb627a37b50d5f5ad22
+Result: verify job PASS in 1m12s — https://github.com/vanle1101/AIdotoeat/actions/runs/42665753947/job/129328827811
+Result: verify job PASS in 1m8s — https://github.com/vanle1101/AIdotoeat/actions/runs/42665761253/job/129328850403

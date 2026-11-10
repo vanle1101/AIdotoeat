@@ -507,6 +507,7 @@ body.ap-overview-mode #view-overview > :not(.ap-dashboard) { display: none !impo
 @media (prefers-reduced-motion: reduce) {
   .ap-wave-glow { animation: none !important; }
   .ap-zone-panel, .ap-dashboard button { transition: none !important; }
+  body.ap-reference-ui .content-area { scroll-behavior: auto !important; }
 }
 
 @media (max-width: 560px) {
@@ -615,7 +616,7 @@ body.ap-reference-ui:not(.ap-overview-mode) .toast-box { border-color: #0a8fc6; 
 .ap-traffic-period > b { font-size: clamp(15px, 1.05vw, 19px); }
 
 /* Keep unknown states legible without letting long status copy dominate the KPI. */
-.ap-metric-line strong:is([data-status="unknown"], [data-status="not_connected"], [data-status="insufficient_coverage"], [data-status="error"], [data-status="no_verified_records"], [data-status="no_data"], [data-status="no_verified_amounts"]) {
+.ap-metric-line strong:is([data-status="unknown"], [data-status="not_connected"], [data-status="owner_auth_required"], [data-status="degraded_demo"], [data-status="pending_review"], [data-status="insufficient_coverage"], [data-status="error"], [data-status="no_verified_records"], [data-status="no_data"], [data-status="no_verified_amounts"]) {
   max-width: 100%;
   color: #a9c9df;
   font-size: clamp(10px, .78vw, 13px);
@@ -630,6 +631,16 @@ body.ap-reference-ui:not(.ap-overview-mode) .toast-box { border-color: #0a8fc6; 
   line-height: 1.2;
   white-space: normal;
   overflow-wrap: anywhere;
+}
+.ap-online-copy b:is([data-status="unknown"], [data-status="not_connected"], [data-status="owner_auth_required"], [data-status="no_data"], [data-status="insufficient_coverage"], [data-status="error"]) {
+  max-width: 100%;
+  color: #a9c9df;
+  font-size: clamp(12px, .9vw, 15px);
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-shadow: none;
 }
 .ap-scene-fallback { z-index: 2; font-size: 13px; line-height: 1.5; }
 

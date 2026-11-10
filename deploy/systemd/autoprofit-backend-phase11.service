@@ -1,0 +1,56 @@
+# Phase 11 least-privilege production unit template.
+# Review and install only after the owner approves the separate production
+# maintenance window. This file is not enabled or installed by repository CI.
+[Unit]
+Description=AUTOProfit AI API (least privilege)
+After=network.target
+ConditionPathIsDirectory=/var/www/autoprofit/current
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=autoprofit
+Group=autoprofit
+WorkingDirectory=/var/www/autoprofit/current
+EnvironmentFile=/etc/autoprofit/backend.env
+Environment=AUTOPROFIT_ENV=production
+Environment=AUTOPROFIT_DATA_DIR=/var/lib/autoprofit/backend-data
+Environment=AUTOPROFIT_CORE_DATA_DIR=/var/lib/autoprofit/core-data
+Environment=AUTOPROFIT_OUTPUTS_DIR=/var/lib/autoprofit/outputs
+Environment=AUTOPROFIT_APPS_DIR=/var/lib/autoprofit/apps
+Environment=AUTOPROFIT_ENGINE_WORKER=false
+Environment=AUTOPROFIT_ENGINE_KILL_SWITCH=true
+Environment=AUTOPROFIT_BUDGET_KILL_SWITCH=true
+Environment=AUTOPROFIT_TEST_MODE_ENABLED=false
+Environment=PYTHONPATH=/var/www/autoprofit/current:/var/www/autoprofit/current/backend
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/var/www/autoprofit/current/.venv/bin/uvicorn main:app --app-dir /var/www/autoprofit/current/backend --host 127.0.0.1 --port 8450 --workers 1
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=45
+TimeoutStopSec=30
+KillSignal=SIGTERM
+UMask=0077
+StateDirectory=autoprofit
+StateDirectoryMode=0711
+StandardOutput=journal
+StandardError=journal
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+SystemCallArchitectures=native
+ReadWritePaths=/var/lib/autoprofit
+
+[Install]
+WantedBy=multi-user.target
